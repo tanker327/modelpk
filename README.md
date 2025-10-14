@@ -4,7 +4,7 @@ A React-based web application for comparing outputs from different AI models usi
 
 ## Project Status
 
-All essential libraries installed and configured! Ready to build features.
+✅ **LLM Provider Configuration** - Complete! Configure and test connections to OpenAI, Gemini, Anthropic, xAI, and Ollama.
 
 ## Tech Stack
 
@@ -12,10 +12,12 @@ All essential libraries installed and configured! Ready to build features.
 - **React 18.3** - UI framework
 - **TypeScript 5.6** - Type safety
 - **Vite 6** - Build tool and dev server
+- **React Router 7** - Client-side routing
 
 ### State & Data
 - **Zedux 1.3** - Atomic state management
 - **Zod 4.1** - Runtime schema validation
+- **idb 8** - IndexedDB wrapper for local persistence
 
 ### Styling & Components
 - **Tailwind CSS 4.1** - Utility-first CSS framework
@@ -61,16 +63,26 @@ npm run preview
 ai-racers/
 ├── src/
 │   ├── components/
+│   │   ├── config/      # Configuration page components
 │   │   └── ui/          # shadcn/ui components
 │   ├── lib/             # Utility functions
+│   ├── pages/
+│   │   └── ConfigPage.tsx # Provider configuration page
 │   ├── schemas/         # Zod schemas
+│   ├── services/
+│   │   ├── providers/   # Provider connection testers
+│   │   └── storage/     # IndexedDB operations
 │   ├── state/
 │   │   ├── atoms/       # Zedux atoms
 │   │   └── ecosystem.ts # Zedux configuration
-│   ├── App.tsx          # Main application component
+│   ├── App.tsx          # Main application component with routing
 │   ├── App.test.tsx     # App tests
 │   ├── main.tsx         # Application entry point
 │   └── index.css        # Global styles with Tailwind
+├── docs/                # Documentation
+│   ├── user-guide/
+│   │   └── configuration.md # User guide for provider config
+│   └── IMPLEMENTATION.md    # Technical implementation docs
 ├── public/              # Static assets
 ├── dist/                # Production build output
 ├── openspec/            # OpenSpec documentation
@@ -91,23 +103,49 @@ This project follows the OpenSpec workflow for spec-driven development:
 
 - `init-hello-world-app` - ✅ Basic React + TypeScript + Vite setup
 - `setup-project-libraries` - ✅ All libraries installed and configured
+- `add-llm-config-page` - ✅ LLM provider configuration with testing
 
-## Library Examples
+## Features
 
-The App component (`src/App.tsx`) demonstrates all libraries working together:
-- Tailwind CSS utility classes for styling
-- shadcn/ui Button component
-- Zedux atom for state management
-- Zod schema for validation
-- Jest tests in `src/App.test.tsx`
+### LLM Provider Configuration
+
+Configure and test connections to multiple LLM providers:
+
+**Supported Providers:**
+- 🤖 **OpenAI** - GPT models (gpt-4o, gpt-4-turbo, etc.)
+- 🧠 **Gemini** - Google's Gemini models
+- 💬 **Anthropic** - Claude models (claude-3.5-sonnet, etc.)
+- ⚡ **xAI** - Grok models
+- 🏠 **Ollama** - Local open-source models
+
+**Key Features:**
+- ✅ Easy API key configuration
+- ✅ Test connection to validate credentials
+- ✅ View available models for each provider
+- ✅ Automatic persistence in browser (IndexedDB)
+- ✅ Secure API key masking
+- ✅ Helpful error messages and troubleshooting
+
+**Getting Started:**
+1. Start the dev server: `npm run dev`
+2. Navigate to the config page: `http://localhost:5174/config`
+3. Enter your API keys for desired providers
+4. Click "Test" to validate and see available models
+
+**Known Limitations:**
+- ⚠️ **Anthropic API**: Cannot be tested directly from the browser due to CORS restrictions. Your API key will be saved and can be used when the app has a backend proxy. The other providers (OpenAI, Gemini, xAI, Ollama) support browser testing.
+
+**Documentation:**
+- User Guide: See `docs/user-guide/configuration.md`
+- Implementation Details: See `docs/IMPLEMENTATION.md`
 
 ## Next Steps
 
-Now that all libraries are configured, the next phase will implement:
+With provider configuration complete, upcoming features include:
 - Prompt input interface
 - Model selection UI
-- Model comparison display
-- Configuration management
+- Side-by-side model comparison
+- Race history and analytics
 
 ## License
 
