@@ -121,7 +121,8 @@ Configure and test connections to multiple LLM providers:
 **Key Features:**
 - ✅ Easy API key configuration
 - ✅ Test connection to validate credentials
-- ✅ View available models for each provider
+- ✅ View all available models for each provider
+- ✅ Select specific models for racing (click to toggle)
 - ✅ Automatic persistence in browser (IndexedDB)
 - ✅ Secure API key masking
 - ✅ Helpful error messages and troubleshooting
@@ -131,6 +132,8 @@ Configure and test connections to multiple LLM providers:
 2. Navigate to the config page: `http://localhost:5174/config`
 3. Enter your API keys for desired providers
 4. Click "Test" to validate and see available models
+5. Click on model names to select them for racing (selected models have blue background)
+6. Your selections are automatically saved and persist across sessions
 
 **Known Limitations:**
 - ⚠️ **Anthropic API**: Cannot be tested directly from the browser due to CORS restrictions. Your API key will be saved and can be used when the app has a backend proxy. The other providers (OpenAI, Gemini, xAI, Ollama) support browser testing.

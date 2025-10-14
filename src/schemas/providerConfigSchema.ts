@@ -16,6 +16,7 @@ export const ProviderConfigDataSchema = z.object({
   apiKey: z.string().optional(),
   endpoint: z.string().url().optional(),
   baseUrl: z.string().url().optional(),
+  selectedModels: z.array(z.string()).optional().default([]),
 })
 
 export type ProviderConfigData = z.infer<typeof ProviderConfigDataSchema>

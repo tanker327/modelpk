@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { ModelTag } from '@/components/config/ModelTag'
 import { providerConfigsActions } from '@/state/atoms/providerConfigsAtom'
 import type { ProviderConfig, TestResult, ProviderId } from '@/schemas/providerConfigSchema'
 import { DEFAULT_BASE_URLS, DEFAULT_PROVIDERS } from '@/schemas/providerConfigSchema'
@@ -100,9 +101,32 @@ function ProviderCard({ config, testResult, onTestUpdate }: ProviderCardProps) {
   )
   const [showKey, setShowKey] = useState(false)
   const [testing, setTesting] = useState(false)
+  const [selectedModels, setSelectedModels] = useState<string[]>(
+    config.config.selectedModels || []
+  )
 
   const needsApiKey = config.id !== 'ollama'
   const needsEndpoint = config.id === 'ollama'
+
+  // Sync selectedModels when config changes (on page load/refresh)
+  useEffect(() => {
+    setSelectedModels(config.config.selectedModels || [])
+  }, [config.config.selectedModels])
+
+  const handleModelToggle = async (modelName: string) => {
+    const newSelectedModels = selectedModels.includes(modelName)
+      ? selectedModels.filter((m) => m !== modelName)
+      : [...selectedModels, modelName]
+
+    setSelectedModels(newSelectedModels)
+
+    // Save to IndexedDB immediately
+    await providerConfigsActions.updateConfig(config.id, {
+      config: {
+        selectedModels: newSelectedModels,
+      },
+    })
+  }
 
   const handleSave = async () => {
     const updates: Partial<ProviderConfig> = {
@@ -234,6 +258,25 @@ function ProviderCard({ config, testResult, onTestUpdate }: ProviderCardProps) {
           />
         </div>
 
+        {/* Show selected models even when no test has been run */}
+        {selectedModels.length > 0 && (!testResult || testResult.status === 'idle') && (
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="text-sm text-gray-600 mb-2">
+              Selected models ({selectedModels.length}):
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {selectedModels.map((model: string) => (
+                <ModelTag
+                  key={model}
+                  modelName={model}
+                  isSelected={true}
+                  onToggle={() => handleModelToggle(model)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
         {testResult && testResult.status !== 'idle' && (
           <div className="mt-4 pt-4 border-t border-gray-200">
             {testResult.status === 'testing' && (
@@ -247,21 +290,18 @@ function ProviderCard({ config, testResult, onTestUpdate }: ProviderCardProps) {
                 </div>
                 {testResult.models && testResult.models.length > 0 && (
                   <div className="mt-2">
-                    <div className="text-sm text-gray-600 mb-1">Available models:</div>
+                    <div className="text-sm text-gray-600 mb-1">
+                      Available models (click to select for racing):
+                    </div>
                     <div className="flex flex-wrap gap-2">
-                      {testResult.models.slice(0, 10).map((model: string) => (
-                        <span
+                      {testResult.models.map((model: string) => (
+                        <ModelTag
                           key={model}
-                          className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded"
-                        >
-                          {model}
-                        </span>
+                          modelName={model}
+                          isSelected={selectedModels.includes(model)}
+                          onToggle={() => handleModelToggle(model)}
+                        />
                       ))}
-                      {testResult.models.length > 10 && (
-                        <span className="px-2 py-1 text-gray-500 text-xs">
-                          +{testResult.models.length - 10} more
-                        </span>
-                      )}
                     </div>
                   </div>
                 )}
