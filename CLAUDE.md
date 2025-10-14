@@ -1,3 +1,20 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+This is an AI Racers project currently in its initial setup phase. The repository uses OpenSpec for spec-driven development.
+
+## Development Workflow
+
+This project follows the OpenSpec workflow for all significant changes:
+1. Create proposals for new features or architectural changes
+2. Implement approved changes following the spec
+3. Archive completed changes and update specs
+
+See the OpenSpec instructions below for detailed workflow guidance.
+
 <!-- OPENSPEC:START -->
 # OpenSpec Instructions
 
