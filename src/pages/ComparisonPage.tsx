@@ -284,14 +284,86 @@ export default function ComparisonPage() {
   if (configs.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="text-center space-y-4">
-          <h2 className="text-2xl font-bold text-gray-900">No Providers Configured</h2>
-          <p className="text-gray-600">
-            Please configure at least one provider before creating comparisons
-          </p>
-          <Link to="/config">
-            <Button>Configure Providers</Button>
-          </Link>
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-white rounded-lg shadow-lg p-8 space-y-6">
+            {/* Welcome Header */}
+            <div className="text-center space-y-3">
+              <h1 className="text-4xl font-bold text-gray-900">Welcome to AI Racers!</h1>
+              <p className="text-lg text-gray-600">
+                Compare multiple AI models side-by-side and see which one performs best for your needs
+              </p>
+            </div>
+
+            {/* Getting Started Info */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 space-y-4">
+              <h2 className="text-xl font-semibold text-gray-900">Getting Started</h2>
+              <div className="space-y-3 text-gray-700">
+                <p className="flex items-start gap-2">
+                  <span className="text-blue-600 font-bold mt-0.5">1.</span>
+                  <span>Configure at least one AI provider (OpenAI, Gemini, Anthropic, xAI, Ollama, or OpenRouter)</span>
+                </p>
+                <p className="flex items-start gap-2">
+                  <span className="text-blue-600 font-bold mt-0.5">2.</span>
+                  <span>Add your API keys and select which models you want to compare</span>
+                </p>
+                <p className="flex items-start gap-2">
+                  <span className="text-blue-600 font-bold mt-0.5">3.</span>
+                  <span>Start racing! Submit your prompts and compare responses in real-time</span>
+                </p>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <Link to="/config" className="flex-1">
+                <Button className="w-full" size="lg">
+                  Configure Providers
+                </Button>
+              </Link>
+              <Button
+                variant="outline"
+                size="lg"
+                className="flex-1"
+                onClick={() => {
+                  const input = document.createElement('input')
+                  input.type = 'file'
+                  input.accept = '.json'
+                  input.onchange = async (e) => {
+                    const file = (e.target as HTMLInputElement).files?.[0]
+                    if (!file) return
+
+                    try {
+                      const text = await file.text()
+                      const importedConfigs = JSON.parse(text)
+
+                      // Import configs using the actions
+                      for (const config of importedConfigs) {
+                        await providerConfigsActions.updateConfig(config.id, config)
+                      }
+
+                      // Reload the page to show the imported configs
+                      window.location.reload()
+                    } catch (error) {
+                      alert(`Failed to import configuration: ${error instanceof Error ? error.message : 'Unknown error'}`)
+                    }
+                  }
+                  input.click()
+                }}
+              >
+                Import Configuration
+              </Button>
+            </div>
+
+            {/* Quick Tips */}
+            <div className="text-sm text-gray-500 space-y-2 pt-4 border-t border-gray-200">
+              <p className="font-semibold text-gray-700">Quick Tips:</p>
+              <ul className="space-y-1 list-disc list-inside pl-2">
+                <li>You can export/import configurations from the Config page to backup or share settings</li>
+                <li>Ollama is great for running models locally without API costs</li>
+                <li>OpenRouter provides access to many models with a single API key</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     )
