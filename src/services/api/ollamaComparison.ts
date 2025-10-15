@@ -8,21 +8,39 @@ export async function sendOllamaComparison(
   const endpoint = request.config.endpoint || DEFAULT_BASE_URLS.ollama
 
   try {
-    // Ollama combines system and user prompts
-    const combinedPrompt = request.systemPrompt
-      ? `${request.systemPrompt}\n\n${request.userPrompt}`
-      : request.userPrompt
+    console.info(`[Ollama] Sending request to ${endpoint}/api/chat for model ${request.modelId}`)
 
-    const response = await fetch(`${endpoint}/api/generate`, {
+    // Build messages array with proper role-based structure
+    // Reference: https://github.com/ollama/ollama/blob/main/docs/api.md#generate-a-chat-completion
+    const messages: Array<{ role: string; content: string }> = []
+
+    // Add system message first if provided
+    if (request.systemPrompt) {
+      messages.push({
+        role: 'system',
+        content: request.systemPrompt,
+      })
+      console.debug(`[Ollama] Using system prompt: ${request.systemPrompt.substring(0, 50)}...`)
+    }
+
+    // Add user message
+    messages.push({
+      role: 'user',
+      content: request.userPrompt,
+    })
+
+    const requestBody = {
+      model: request.modelId,
+      messages,
+      stream: false,
+    }
+
+    const response = await fetch(`${endpoint}/api/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        model: request.modelId,
-        prompt: combinedPrompt,
-        stream: false,
-      }),
+      body: JSON.stringify(requestBody),
     })
 
     if (!response.ok) {
@@ -34,7 +52,10 @@ export async function sendOllamaComparison(
     }
 
     const data = await response.json()
-    const content = data.response
+
+    // /api/chat returns { message: { role: "assistant", content: "..." }, ... }
+    // /api/generate returns { response: "..." }
+    const content = data.message?.content
 
     if (!content) {
       return {
@@ -43,7 +64,9 @@ export async function sendOllamaComparison(
       }
     }
 
-    // Extract token usage (Ollama format)
+    console.debug(`[Ollama] Received response: ${content.substring(0, 100)}...`)
+
+    // Extract token usage (Ollama chat format)
     const tokenUsage = data.prompt_eval_count || data.eval_count
       ? {
           promptTokens: data.prompt_eval_count,
