@@ -396,7 +396,39 @@ export default function ComparisonPage() {
             onClick={() => setIsPromptsExpanded(!isPromptsExpanded)}
             className="w-full flex items-center justify-between text-left mb-3"
           >
-            <h2 className="text-lg font-semibold">Prompts</h2>
+            <div className="flex items-center gap-3">
+              <h2 className="text-lg font-semibold">Prompts</h2>
+              {!isPromptsExpanded && Object.keys(responses).length > 0 && (() => {
+                const responseValues = Object.values(responses)
+                const allCompleted = responseValues.every(r => r.status === 'success' || r.status === 'error')
+                const hasErrors = responseValues.some(r => r.status === 'error')
+                const allSuccess = allCompleted && !hasErrors
+
+                if (isSubmitting) {
+                  return (
+                    <span className="text-sm text-blue-600 font-medium flex items-center gap-1">
+                      <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-solid border-blue-600 border-r-transparent"></span>
+                      Running...
+                    </span>
+                  )
+                } else if (allSuccess) {
+                  return (
+                    <span className="text-sm text-green-600 font-medium flex items-center gap-1">
+                      <span className="text-base">✓</span>
+                      Completed
+                    </span>
+                  )
+                } else if (hasErrors) {
+                  return (
+                    <span className="text-sm text-red-600 font-medium flex items-center gap-1">
+                      <span className="text-base">⚠</span>
+                      Failed
+                    </span>
+                  )
+                }
+                return null
+              })()}
+            </div>
             <span className="text-gray-500 text-sm">
               {isPromptsExpanded ? '▼' : '▶'}
             </span>
@@ -462,25 +494,25 @@ export default function ComparisonPage() {
                   className="w-full px-3 py-2 border border-input rounded-md min-h-[120px]"
                 />
               </div>
+
+              {/* Actions - inside expanded view */}
+              <div className="flex gap-4 pt-2">
+                <Button onClick={handleReset} variant="outline" disabled={isSubmitting}>
+                  Reset
+                </Button>
+                <Button
+                  onClick={handleSubmit}
+                  disabled={
+                    isSubmitting ||
+                    !userPrompt.trim() ||
+                    !providerSelections.some(s => s.modelIds.length > 0)
+                  }
+                >
+                  {isSubmitting ? 'Running...' : 'Submit'}
+                </Button>
+              </div>
             </div>
           )}
-        </div>
-
-        {/* Actions */}
-        <div className="flex gap-4 mb-6">
-          <Button onClick={handleReset} variant="outline" disabled={isSubmitting}>
-            Reset
-          </Button>
-          <Button
-            onClick={handleSubmit}
-            disabled={
-              isSubmitting ||
-              !userPrompt.trim() ||
-              !providerSelections.some(s => s.modelIds.length > 0)
-            }
-          >
-            {isSubmitting ? 'Running...' : 'Submit'}
-          </Button>
         </div>
 
         {/* Results */}

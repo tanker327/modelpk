@@ -75,11 +75,11 @@ export function ResponsePanel({
     }`}>
       {/* Header */}
       <div className="border-b pb-3 mb-3 flex items-start justify-between">
-        <div>
+        <div className="flex items-baseline gap-2">
           <h3 className="text-lg font-semibold text-gray-900">{providerName}</h3>
           <p className="text-sm text-gray-600">{modelName}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-shrink-0">
           {onRefresh && (status === 'pending' || status === 'success' || status === 'error') && (
             <button
               onClick={onRefresh}
