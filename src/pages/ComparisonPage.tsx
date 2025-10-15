@@ -8,6 +8,7 @@ import { providerConfigsActions } from '@/state/atoms/providerConfigsAtom'
 import type { ProviderConfig, ProviderId } from '@/schemas/providerConfigSchema'
 import type { ComparisonResponse } from '@/schemas/comparisonSchema'
 import { sendComparisonRequest } from '@/services/api/comparisonService'
+import { useLocalStorage } from '@/hooks/useLocalStorage'
 
 interface ProviderSelection {
   providerId: ProviderId
@@ -18,18 +19,18 @@ export default function ComparisonPage() {
   const [configs, setConfigs] = useState<ProviderConfig[]>([])
   const [loading, setLoading] = useState(true)
 
-  // Form state
-  const [testName, setTestName] = useState('')
-  const [systemPrompt, setSystemPrompt] = useState('You are a helpful assistant.')
-  const [userPrompt, setUserPrompt] = useState('')
+  // Form state - cached in localStorage
+  const [testName, setTestName] = useLocalStorage('airacers-testName', '')
+  const [systemPrompt, setSystemPrompt] = useLocalStorage('airacers-systemPrompt', 'You are a helpful assistant.')
+  const [userPrompt, setUserPrompt] = useLocalStorage('airacers-userPrompt', '')
 
-  // Selection state
-  const [providerSelections, setProviderSelections] = useState<ProviderSelection[]>([])
-  const [isSelectionExpanded, setIsSelectionExpanded] = useState(true)
-  const [isPromptsExpanded, setIsPromptsExpanded] = useState(true)
+  // Selection state - cached in localStorage
+  const [providerSelections, setProviderSelections] = useLocalStorage<ProviderSelection[]>('airacers-providerSelections', [])
+  const [isSelectionExpanded, setIsSelectionExpanded] = useLocalStorage('airacers-isSelectionExpanded', true)
+  const [isPromptsExpanded, setIsPromptsExpanded] = useLocalStorage('airacers-isPromptsExpanded', true)
 
-  // Response state
-  const [responses, setResponses] = useState<Record<string, ComparisonResponse>>({})
+  // Response state - cached in localStorage
+  const [responses, setResponses] = useLocalStorage<Record<string, ComparisonResponse>>('airacers-responses', {})
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Load configs on mount
