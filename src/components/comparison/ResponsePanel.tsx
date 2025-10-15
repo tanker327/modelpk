@@ -32,6 +32,7 @@ export function ResponsePanel({
   onRefresh,
 }: ResponsePanelProps) {
   const [isMarkdownView, setIsMarkdownView] = useState(true)
+  const [isStatsExpanded, setIsStatsExpanded] = useState(false)
 
   // Check if a string is valid JSON
   const isValidJSON = (str: string): boolean => {
@@ -189,41 +190,72 @@ export function ResponsePanel({
         )}
       </div>
 
-      {/* Footer with timing and token usage */}
+      {/* Footer with timing and token usage - clickable to toggle between summary and detailed view */}
       {(durationMs !== undefined || tokenUsage) && (status === 'success' || status === 'error') && (
-        <div className="border-t pt-3 mt-3">
-          {durationMs !== undefined && (
-            <div className={`text-xs mb-2 font-semibold ${
-              isFastest ? 'text-green-600' : isSlowest ? 'text-orange-600' : 'text-gray-500'
-            }`}>
-              {isFastest && '🏆 '}
-              {isSlowest && '🐢 '}
-              {!isFastest && !isSlowest && '⏱ '}
-              {formatDuration(durationMs)}
-              {isFastest && ' (Fastest)'}
-              {isSlowest && ' (Slowest)'}
+        <button
+          onClick={() => setIsStatsExpanded(!isStatsExpanded)}
+          className="border-t pt-3 mt-3 w-full text-left hover:bg-gray-50 transition-colors cursor-pointer"
+        >
+          {isStatsExpanded ? (
+            // Expanded view - detailed stats
+            <div>
+              {durationMs !== undefined && (
+                <div className={`text-xs mb-2 font-semibold ${
+                  isFastest ? 'text-green-600' : isSlowest ? 'text-orange-600' : 'text-gray-500'
+                }`}>
+                  {isFastest && '🏆 '}
+                  {isSlowest && '🐢 '}
+                  {!isFastest && !isSlowest && '⏱ '}
+                  {formatDuration(durationMs)}
+                  {isFastest && ' (Fastest)'}
+                  {isSlowest && ' (Slowest)'}
+                </div>
+              )}
+              {tokenUsage && (
+                <div className="text-xs text-gray-500 space-y-1">
+                  {tokenUsage.promptTokens !== undefined && (
+                    <div>📥 Prompt: {tokenUsage.promptTokens.toLocaleString()} tokens</div>
+                  )}
+                  {tokenUsage.completionTokens !== undefined && (
+                    <div>📤 Completion: {tokenUsage.completionTokens.toLocaleString()} tokens</div>
+                  )}
+                  {tokenUsage.totalTokens !== undefined && (
+                    <div>📊 Total: {tokenUsage.totalTokens.toLocaleString()} tokens</div>
+                  )}
+                  {tokenUsage.cachedTokens !== undefined && tokenUsage.cachedTokens > 0 && (
+                    <div>💾 Cached: {tokenUsage.cachedTokens.toLocaleString()} tokens</div>
+                  )}
+                  {tokenUsage.reasoningTokens !== undefined && tokenUsage.reasoningTokens > 0 && (
+                    <div>🧠 Reasoning: {tokenUsage.reasoningTokens.toLocaleString()} tokens</div>
+                  )}
+                </div>
+              )}
+            </div>
+          ) : (
+            // Collapsed view - one line summary
+            <div className="text-xs text-gray-600 flex items-center gap-3">
+              {durationMs !== undefined && (
+                <span className={`font-semibold ${
+                  isFastest ? 'text-green-600' : isSlowest ? 'text-orange-600' : 'text-gray-500'
+                }`}>
+                  {isFastest && '🏆 '}
+                  {isSlowest && '🐢 '}
+                  {!isFastest && !isSlowest && '⏱ '}
+                  {formatDuration(durationMs)}
+                </span>
+              )}
+              {tokenUsage?.totalTokens !== undefined && (
+                <span>📊 {tokenUsage.totalTokens.toLocaleString()} tokens</span>
+              )}
+              {tokenUsage?.cachedTokens !== undefined && tokenUsage.cachedTokens > 0 && (
+                <span>💾 {tokenUsage.cachedTokens.toLocaleString()}</span>
+              )}
+              {tokenUsage?.reasoningTokens !== undefined && tokenUsage.reasoningTokens > 0 && (
+                <span>🧠 {tokenUsage.reasoningTokens.toLocaleString()}</span>
+              )}
             </div>
           )}
-          {tokenUsage && (
-            <div className="text-xs text-gray-500 space-y-1">
-              {tokenUsage.promptTokens !== undefined && (
-                <div>📥 Prompt: {tokenUsage.promptTokens.toLocaleString()} tokens</div>
-              )}
-              {tokenUsage.completionTokens !== undefined && (
-                <div>📤 Completion: {tokenUsage.completionTokens.toLocaleString()} tokens</div>
-              )}
-              {tokenUsage.totalTokens !== undefined && (
-                <div>📊 Total: {tokenUsage.totalTokens.toLocaleString()} tokens</div>
-              )}
-              {tokenUsage.cachedTokens !== undefined && tokenUsage.cachedTokens > 0 && (
-                <div>💾 Cached: {tokenUsage.cachedTokens.toLocaleString()} tokens</div>
-              )}
-              {tokenUsage.reasoningTokens !== undefined && tokenUsage.reasoningTokens > 0 && (
-                <div>🧠 Reasoning: {tokenUsage.reasoningTokens.toLocaleString()} tokens</div>
-              )}
-            </div>
-          )}
-        </div>
+        </button>
       )}
     </div>
   )
