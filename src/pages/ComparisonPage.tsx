@@ -9,6 +9,7 @@ import type { ProviderConfig, ProviderId } from '@/schemas/providerConfigSchema'
 import type { ComparisonResponse } from '@/schemas/comparisonSchema'
 import { sendComparisonRequest } from '@/services/api/comparisonService'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
+import { useAlert } from '@/components/ui/alert-dialog'
 
 interface ProviderSelection {
   providerId: ProviderId
@@ -18,6 +19,9 @@ interface ProviderSelection {
 export default function ComparisonPage() {
   const [configs, setConfigs] = useState<ProviderConfig[]>([])
   const [loading, setLoading] = useState(true)
+
+  // Alert hook
+  const { showAlert, AlertComponent } = useAlert()
 
   // Form state - cached in localStorage
   const [testName, setTestName] = useLocalStorage('airacers-testName', '')
@@ -182,7 +186,7 @@ export default function ComparisonPage() {
 
   const handleSubmit = async () => {
     if (!userPrompt.trim()) {
-      alert('User prompt is required')
+      showAlert('User Prompt Required', 'Please enter a user prompt before submitting.')
       return
     }
 
@@ -195,7 +199,7 @@ export default function ComparisonPage() {
     })
 
     if (combinations.length === 0) {
-      alert('Please select at least one model')
+      showAlert('Model Selection Required', 'Please select at least one model before submitting.')
       return
     }
 
@@ -283,7 +287,9 @@ export default function ComparisonPage() {
 
   if (configs.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <>
+        <AlertComponent />
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="max-w-2xl mx-auto">
           <div className="bg-white rounded-lg shadow-lg p-8 space-y-6">
             {/* Welcome Header */}
@@ -333,18 +339,40 @@ export default function ComparisonPage() {
                     if (!file) return
 
                     try {
+                      console.info('[ComparisonPage] Importing configuration file...')
                       const text = await file.text()
-                      const importedConfigs = JSON.parse(text)
+                      const data = JSON.parse(text)
+
+                      // Check if the data has the expected format
+                      if (!data.configs || !Array.isArray(data.configs)) {
+                        throw new Error('Invalid configuration file format. Expected a configs array.')
+                      }
+
+                      console.info(`[ComparisonPage] Found ${data.configs.length} configurations to import`)
 
                       // Import configs using the actions
-                      for (const config of importedConfigs) {
+                      for (const config of data.configs) {
+                        console.info(`[ComparisonPage] Importing config for ${config.id}`)
                         await providerConfigsActions.updateConfig(config.id, config)
                       }
 
-                      // Reload the page to show the imported configs
-                      window.location.reload()
+                      console.info('[ComparisonPage] Import completed successfully')
+                      showAlert(
+                        'Import Successful',
+                        `Successfully imported ${data.configs.length} configurations!\n\nThe page will now reload.`
+                      )
+
+                      // Reload the page after a short delay to show the alert
+                      setTimeout(() => {
+                        window.location.reload()
+                      }, 2000)
                     } catch (error) {
-                      alert(`Failed to import configuration: ${error instanceof Error ? error.message : 'Unknown error'}`)
+                      console.error('[ComparisonPage] Failed to import configuration:', error)
+                      showAlert(
+                        'Import Failed',
+                        `Failed to import configuration:\n\n${error instanceof Error ? error.message : 'Unknown error'}`,
+                        'destructive'
+                      )
                     }
                   }
                   input.click()
@@ -365,13 +393,16 @@ export default function ComparisonPage() {
             </div>
           </div>
         </div>
-      </div>
+        </div>
+      </>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
+    <>
+      <AlertComponent />
+      <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+        <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold text-gray-900">AI Racers</h1>
@@ -682,6 +713,7 @@ export default function ComparisonPage() {
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </>
   )
 }

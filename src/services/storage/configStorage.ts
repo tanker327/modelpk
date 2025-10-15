@@ -318,3 +318,36 @@ export async function clearAllConfigs(): Promise<void> {
     throw new Error('Failed to clear configurations.')
   }
 }
+
+/**
+ * Clear all data from the website (IndexedDB + localStorage)
+ */
+export async function clearAllData(): Promise<void> {
+  try {
+    // Clear IndexedDB
+    const db = await initDB()
+    await db.clear(STORE_NAME)
+    await db.clear(ENCRYPTION_STORE)
+    console.info('[ConfigStorage] Cleared all IndexedDB data')
+
+    // Clear localStorage items with 'airacers-' prefix
+    const keysToRemove: string[] = []
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i)
+      if (key && key.startsWith('airacers-')) {
+        keysToRemove.push(key)
+      }
+    }
+
+    keysToRemove.forEach(key => localStorage.removeItem(key))
+    console.info(`[ConfigStorage] Cleared ${keysToRemove.length} localStorage items`)
+
+    // Reset master salt
+    masterSalt = null
+
+    console.info('[ConfigStorage] Cleared all website data')
+  } catch (error) {
+    console.error('[ConfigStorage] Failed to clear all data:', error)
+    throw new Error('Failed to clear all data.')
+  }
+}

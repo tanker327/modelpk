@@ -15,6 +15,8 @@ import { testXAIConnection } from '@/services/providers/xaiProvider'
 import { testOllamaConnection } from '@/services/providers/ollamaProvider'
 import { testOpenRouterConnection } from '@/services/providers/openrouterProvider'
 import { useConfigBackup } from '@/hooks/useConfigBackup'
+import { clearAllConfigs, clearAllData } from '@/services/storage/configStorage'
+import { useAlert, useConfirm } from '@/components/ui/alert-dialog'
 
 interface TestResultsState {
   results: Record<ProviderId, TestResult>
@@ -36,6 +38,10 @@ export default function ConfigPage() {
     },
   })
   const [loading, setLoading] = useState(true)
+
+  // Alert and Confirm hooks
+  const { showAlert, AlertComponent } = useAlert()
+  const { showConfirm, ConfirmComponent } = useConfirm()
 
   // Use backup hook for export/import functionality
   const {
@@ -69,8 +75,11 @@ export default function ConfigPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto">
+    <>
+      <AlertComponent />
+      <ConfirmComponent />
+      <div className="min-h-screen bg-gray-50 p-8">
+        <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Provider Configuration</h1>
@@ -148,8 +157,139 @@ export default function ConfigPage() {
             </div>
           )}
         </div>
+
+        {/* Danger Zone Section */}
+        <div className="bg-white rounded-lg shadow p-6 mt-8 border-2 border-red-200">
+          <div className="flex items-center gap-2 mb-2">
+            <h2 className="text-xl font-semibold text-red-900">Danger Zone</h2>
+            <span className="text-red-600 text-lg">⚠️</span>
+          </div>
+          <p className="text-sm text-gray-600 mb-6">
+            These actions cannot be undone. Please proceed with caution.
+          </p>
+
+          <div className="space-y-4">
+            {/* Clear Provider Configurations */}
+            <div className="flex items-center justify-between p-4 bg-red-50 border border-red-200 rounded-lg">
+              <div className="flex-1">
+                <h3 className="font-semibold text-gray-900 mb-1">Clear All Provider Configurations</h3>
+                <p className="text-sm text-gray-600">
+                  Remove all API keys, endpoints, and selected models. Provider list will reset to defaults.
+                </p>
+              </div>
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  showConfirm(
+                    'Clear All Provider Configurations',
+                    'Are you sure you want to clear all provider configurations?\n\n' +
+                    'This will remove:\n' +
+                    '• All API keys\n' +
+                    '• All custom endpoints\n' +
+                    '• All selected models\n\n' +
+                    'This action cannot be undone!',
+                    async () => {
+                      try {
+                        console.info('[ConfigPage] Clearing all provider configurations...')
+                        await clearAllConfigs()
+                        console.info('[ConfigPage] Provider configurations cleared successfully')
+                        showAlert(
+                          'Success',
+                          'All provider configurations have been cleared.\n\nThe page will now reload.'
+                        )
+                        setTimeout(() => {
+                          window.location.reload()
+                        }, 2000)
+                      } catch (error) {
+                        console.error('[ConfigPage] Failed to clear configurations:', error)
+                        showAlert(
+                          'Error',
+                          `Failed to clear configurations:\n\n${error instanceof Error ? error.message : 'Unknown error'}`,
+                          'destructive'
+                        )
+                      }
+                    },
+                    {
+                      confirmText: 'Clear Providers',
+                      variant: 'destructive',
+                    }
+                  )
+                }}
+                className="ml-4 flex-shrink-0"
+              >
+                Clear Providers
+              </Button>
+            </div>
+
+            {/* Clear All Website Data */}
+            <div className="flex items-center justify-between p-4 bg-red-50 border border-red-200 rounded-lg">
+              <div className="flex-1">
+                <h3 className="font-semibold text-gray-900 mb-1">Clear All Website Data</h3>
+                <p className="text-sm text-gray-600">
+                  Remove all data including provider configs, test history, prompts, and responses.
+                </p>
+              </div>
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  showConfirm(
+                    'WARNING: Delete ALL Data',
+                    '🚨 This will delete ALL data from AI Racers!\n\n' +
+                    'This includes:\n' +
+                    '• All provider configurations and API keys\n' +
+                    '• All test names and prompts\n' +
+                    '• All response history\n' +
+                    '• All saved preferences\n\n' +
+                    'Are you absolutely sure? This action cannot be undone!',
+                    () => {
+                      // Second confirmation
+                      showConfirm(
+                        'FINAL WARNING',
+                        '⚠️ This is your last chance to cancel.\n\n' +
+                        'Click "Delete All Data" to permanently delete everything, or "Cancel" to keep your data safe.',
+                        async () => {
+                          try {
+                            console.info('[ConfigPage] Clearing all website data...')
+                            await clearAllData()
+                            console.info('[ConfigPage] All website data cleared successfully')
+                            showAlert(
+                              'Success',
+                              'All website data has been cleared.\n\nThe page will now reload.'
+                            )
+                            setTimeout(() => {
+                              window.location.reload()
+                            }, 2000)
+                          } catch (error) {
+                            console.error('[ConfigPage] Failed to clear all data:', error)
+                            showAlert(
+                              'Error',
+                              `Failed to clear all data:\n\n${error instanceof Error ? error.message : 'Unknown error'}`,
+                              'destructive'
+                            )
+                          }
+                        },
+                        {
+                          confirmText: 'Delete All Data',
+                          variant: 'destructive',
+                        }
+                      )
+                    },
+                    {
+                      confirmText: 'Continue',
+                      variant: 'destructive',
+                    }
+                  )
+                }}
+                className="ml-4 flex-shrink-0"
+              >
+                Clear All Data
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }
 
