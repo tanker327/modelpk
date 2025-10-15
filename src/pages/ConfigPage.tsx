@@ -321,7 +321,7 @@ function ProviderCard({ config, testResult, onTestUpdate }: ProviderCardProps) {
                       // Use tag list for other providers
                       <>
                         <div className="text-sm text-gray-600 mb-1">
-                          Available models (click to select for racing):
+                          Available models (click to select as racing options):
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {testResult.models.map((model: string) => (
@@ -338,8 +338,8 @@ function ProviderCard({ config, testResult, onTestUpdate }: ProviderCardProps) {
                   </div>
                 )}
                 {testResult.testedAt && (
-                  <div className="text-xs text-gray-500 mt-2">
-                    Tested {new Date(testResult.testedAt).toLocaleTimeString()}
+                  <div className="text-xs text-gray-500 mt-3 text-right">
+                    Latest test is at: {new Date(testResult.testedAt).toLocaleTimeString()}
                   </div>
                 )}
               </div>
