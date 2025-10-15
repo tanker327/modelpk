@@ -110,6 +110,7 @@ function ProviderCard({ config, testResult, onTestUpdate }: ProviderCardProps) {
 
   const needsApiKey = config.id !== 'ollama'
   const needsEndpoint = config.id === 'ollama'
+  const isDisabled = config.id === 'anthropic'
 
   // Sync selectedModels when config changes (on page load/refresh)
   useEffect(() => {
@@ -213,12 +214,19 @@ function ProviderCard({ config, testResult, onTestUpdate }: ProviderCardProps) {
   const canTest = needsApiKey ? apiKey.length > 0 : endpoint.length > 0
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
+    <div className={`bg-white rounded-lg shadow p-6 ${isDisabled ? 'opacity-60' : ''}`}>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-gray-900">{config.name}</h2>
+        <div className="flex-1">
+          <h2 className="text-xl font-semibold text-gray-900">{config.name}</h2>
+          {isDisabled && (
+            <p className="text-sm text-orange-600 mt-1">
+              ⚠ Cannot make requests from front-end UI directly. Please use OpenRouter.
+            </p>
+          )}
+        </div>
         <Button
           onClick={handleTest}
-          disabled={!canTest || testing}
+          disabled={!canTest || testing || isDisabled}
           size="sm"
           variant={testResult?.status === 'success' ? 'default' : 'outline'}
         >
@@ -239,12 +247,14 @@ function ProviderCard({ config, testResult, onTestUpdate }: ProviderCardProps) {
                 onBlur={handleSave}
                 placeholder="Enter API key"
                 className="flex-1"
+                disabled={isDisabled}
               />
               <Button
                 type="button"
                 onClick={() => setShowKey(!showKey)}
                 variant="outline"
                 size="sm"
+                disabled={isDisabled}
               >
                 {showKey ? 'Hide' : 'Show'}
               </Button>
@@ -263,6 +273,7 @@ function ProviderCard({ config, testResult, onTestUpdate }: ProviderCardProps) {
             onChange={(e) => setEndpoint(e.target.value)}
             onBlur={handleSave}
             placeholder={DEFAULT_BASE_URLS[config.id]}
+            disabled={isDisabled}
           />
         </div>
 
