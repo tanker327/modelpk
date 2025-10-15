@@ -14,6 +14,7 @@ interface ResponsePanelProps {
   tokenUsage?: TokenUsage
   isFastest?: boolean
   isSlowest?: boolean
+  showThinking?: boolean
   onRefresh?: () => void
 }
 
@@ -27,10 +28,10 @@ export function ResponsePanel({
   tokenUsage,
   isFastest,
   isSlowest,
+  showThinking = false,
   onRefresh,
 }: ResponsePanelProps) {
   const [isMarkdownView, setIsMarkdownView] = useState(true)
-  const [isThinkingSectionExpanded, setIsThinkingSectionExpanded] = useState(false)
 
   // Check if a string is valid JSON
   const isValidJSON = (str: string): boolean => {
@@ -122,23 +123,12 @@ export function ResponsePanel({
 
         {status === 'success' && response && (
           <div className="space-y-3">
-            {/* Thinking Section - Collapsible */}
-            {hasThinking && (
-              <div className="border border-amber-200 bg-amber-50 rounded-lg overflow-hidden">
-                <button
-                  onClick={() => setIsThinkingSectionExpanded(!isThinkingSectionExpanded)}
-                  className="w-full px-3 py-2 flex items-center justify-between text-left bg-amber-100 hover:bg-amber-200 transition-colors"
-                >
-                  <span className="text-sm font-medium text-amber-900 flex items-center gap-2">
-                    <span>💭</span>
-                    <span>Thinking Process</span>
-                  </span>
-                  <span className="text-amber-700 text-xs">
-                    {isThinkingSectionExpanded ? '▼' : '▶'}
-                  </span>
-                </button>
-                {isThinkingSectionExpanded && (
-                  <div className="p-3 prose prose-sm max-w-none">
+            {/* Content - Toggle between thinking and main content based on global state */}
+            {showThinking ? (
+              // Show Thinking Content (or message if no thinking)
+              hasThinking ? (
+                <div className="prose prose-sm max-w-none">
+                  <div className="border border-amber-200 bg-amber-50 rounded-lg p-3">
                     {isMarkdownView ? (
                       <div className="text-amber-900">
                         <MarkdownPreview
@@ -152,37 +142,42 @@ export function ResponsePanel({
                       </div>
                     )}
                   </div>
+                </div>
+              ) : (
+                // No thinking content available
+                <div className="flex items-center justify-center h-32 text-gray-400 text-sm">
+                  No thinking content available
+                </div>
+              )
+            ) : (
+              // Show Main Content (default)
+              <div className="prose prose-sm max-w-none">
+                {isValidJSON(mainContent) ? (
+                  // Render JSON with react-json-view
+                  <ReactJson
+                    src={JSON.parse(mainContent)}
+                    theme="rjv-default"
+                    collapsed={1}
+                    displayDataTypes={false}
+                    displayObjectSize={true}
+                    enableClipboard={true}
+                    name={false}
+                    style={{ fontSize: '13px' }}
+                  />
+                ) : isMarkdownView ? (
+                  // Render as Markdown
+                  <MarkdownPreview
+                    source={mainContent}
+                    wrapperElement={{ 'data-color-mode': 'light' }}
+                  />
+                ) : (
+                  // Render as raw text
+                  <div className="whitespace-pre-wrap text-gray-800 font-mono text-xs">
+                    {mainContent}
+                  </div>
                 )}
               </div>
             )}
-
-            {/* Main Content */}
-            <div className="prose prose-sm max-w-none">
-              {isValidJSON(mainContent) ? (
-                // Render JSON with react-json-view
-                <ReactJson
-                  src={JSON.parse(mainContent)}
-                  theme="rjv-default"
-                  collapsed={1}
-                  displayDataTypes={false}
-                  displayObjectSize={true}
-                  enableClipboard={true}
-                  name={false}
-                  style={{ fontSize: '13px' }}
-                />
-              ) : isMarkdownView ? (
-                // Render as Markdown
-                <MarkdownPreview
-                  source={mainContent}
-                  wrapperElement={{ 'data-color-mode': 'light' }}
-                />
-              ) : (
-                // Render as raw text
-                <div className="whitespace-pre-wrap text-gray-800 font-mono text-xs">
-                  {mainContent}
-                </div>
-              )}
-            </div>
           </div>
         )}
 

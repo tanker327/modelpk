@@ -32,6 +32,7 @@ export default function ComparisonPage() {
   // Response state - cached in localStorage
   const [responses, setResponses] = useLocalStorage<Record<string, ComparisonResponse>>('airacers-responses', {})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showThinking, setShowThinking] = useState(false) // Global toggle for thinking vs output
 
   // Load configs on mount
   useEffect(() => {
@@ -518,7 +519,44 @@ export default function ComparisonPage() {
         {/* Results */}
         {Object.keys(responses).length > 0 && (
           <div>
-            <h2 className="text-xl font-semibold mb-4">Results</h2>
+            {(() => {
+              // Check if any response has thinking content
+              const hasAnyThinking = Object.values(responses).some(r => {
+                if (r.status !== 'success' || !r.response) return false
+                const thinkingRegex = /<think>[\s\S]*?<\/think>|<\/think>/
+                return thinkingRegex.test(r.response)
+              })
+
+              return (
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-semibold">Results</h2>
+                  {hasAnyThinking && (
+                    <div className="flex items-center gap-2 bg-gray-100 rounded-full p-1">
+                      <button
+                        onClick={() => setShowThinking(false)}
+                        className={`px-3 py-1 text-sm rounded-full transition-colors ${
+                          !showThinking
+                            ? 'bg-white text-gray-900 shadow-sm font-medium'
+                            : 'text-gray-600 hover:text-gray-900'
+                        }`}
+                      >
+                        Output
+                      </button>
+                      <button
+                        onClick={() => setShowThinking(true)}
+                        className={`px-3 py-1 text-sm rounded-full transition-colors ${
+                          showThinking
+                            ? 'bg-white text-gray-900 shadow-sm font-medium'
+                            : 'text-gray-600 hover:text-gray-900'
+                        }`}
+                      >
+                        💭 Thinking
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )
+            })()}
             <div
               className={`grid gap-4 ${
                 Object.keys(responses).length === 1
@@ -562,6 +600,7 @@ export default function ComparisonPage() {
                       tokenUsage={response.tokenUsage}
                       isFastest={isFastest}
                       isSlowest={isSlowest}
+                      showThinking={showThinking}
                       onRefresh={() => handleRefresh(response.providerId, response.modelId)}
                     />
                   )
