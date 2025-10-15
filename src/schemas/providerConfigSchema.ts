@@ -56,7 +56,7 @@ export const DEFAULT_PROVIDERS: Omit<ProviderConfig, 'config'>[] = [
   },
   {
     id: 'gemini',
-    name: 'Gemini (Google)',
+    name: 'Gemini',
     enabled: false,
   },
   {

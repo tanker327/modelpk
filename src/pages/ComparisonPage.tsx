@@ -48,58 +48,74 @@ export default function ComparisonPage() {
     loadConfigs()
   }, [])
 
-  const handleProviderToggle = (providerId: ProviderId) => {
-    const exists = providerSelections.find((s) => s.providerId === providerId)
-    if (exists) {
-      setProviderSelections(providerSelections.filter((s) => s.providerId !== providerId))
-    } else {
-      setProviderSelections([...providerSelections, { providerId, modelIds: [] }])
-    }
-  }
-
   const handleModelToggle = (providerId: ProviderId, modelId: string) => {
-    setProviderSelections((prev) =>
-      prev.map((selection) => {
-        if (selection.providerId === providerId) {
-          const hasModel = selection.modelIds.includes(modelId)
-          const newModelIds = hasModel
-            ? selection.modelIds.filter((m) => m !== modelId)
-            : [...selection.modelIds, modelId]
+    setProviderSelections((prev) => {
+      const existingSelection = prev.find((s) => s.providerId === providerId)
 
-          // When adding a model (not removing), check if results exist
-          // If so, create a pending result box for the new model
-          if (!hasModel && Object.keys(responses).length > 0) {
-            const key = `${providerId}-${modelId}`
-            setResponses((prevResponses) => ({
-              ...prevResponses,
-              [key]: {
-                providerId,
-                modelId,
-                status: 'pending',
-              },
-            }))
-            console.info(`[ComparisonPage] Added pending result for ${key}`)
-          }
+      if (existingSelection) {
+        // Provider already exists in selections
+        const hasModel = existingSelection.modelIds.includes(modelId)
+        const newModelIds = hasModel
+          ? existingSelection.modelIds.filter((m) => m !== modelId)
+          : [...existingSelection.modelIds, modelId]
 
-          // When removing a model, remove its result box
-          if (hasModel) {
-            const key = `${providerId}-${modelId}`
-            setResponses((prevResponses) => {
-              const newResponses = { ...prevResponses }
-              delete newResponses[key]
-              return newResponses
-            })
-            console.info(`[ComparisonPage] Removed result for ${key}`)
-          }
-
-          return {
-            ...selection,
-            modelIds: newModelIds,
-          }
+        // When adding a model (not removing), check if results exist
+        // If so, create a pending result box for the new model
+        if (!hasModel && Object.keys(responses).length > 0) {
+          const key = `${providerId}-${modelId}`
+          setResponses((prevResponses) => ({
+            ...prevResponses,
+            [key]: {
+              providerId,
+              modelId,
+              status: 'pending',
+            },
+          }))
+          console.info(`[ComparisonPage] Added pending result for ${key}`)
         }
-        return selection
-      })
-    )
+
+        // When removing a model, remove its result box
+        if (hasModel) {
+          const key = `${providerId}-${modelId}`
+          setResponses((prevResponses) => {
+            const newResponses = { ...prevResponses }
+            delete newResponses[key]
+            return newResponses
+          })
+          console.info(`[ComparisonPage] Removed result for ${key}`)
+        }
+
+        // If no models left, remove the provider selection entirely
+        if (newModelIds.length === 0) {
+          return prev.filter((s) => s.providerId !== providerId)
+        }
+
+        // Update the provider's model list
+        return prev.map((selection) =>
+          selection.providerId === providerId
+            ? { ...selection, modelIds: newModelIds }
+            : selection
+        )
+      } else {
+        // Provider doesn't exist, add it with this model
+        const key = `${providerId}-${modelId}`
+
+        // If results exist, create a pending result box
+        if (Object.keys(responses).length > 0) {
+          setResponses((prevResponses) => ({
+            ...prevResponses,
+            [key]: {
+              providerId,
+              modelId,
+              status: 'pending',
+            },
+          }))
+          console.info(`[ComparisonPage] Added pending result for ${key}`)
+        }
+
+        return [...prev, { providerId, modelIds: [modelId] }]
+      }
+    })
   }
 
   const handleReset = () => {
@@ -338,43 +354,32 @@ export default function ComparisonPage() {
           {isSelectionExpanded && (
             <div className="space-y-2">
               {configs.map((config) => {
-                const isSelected = providerSelections.some((s) => s.providerId === config.id)
                 const selection = providerSelections.find((s) => s.providerId === config.id)
                 const availableModels = config.config.selectedModels || []
 
                 return (
-                  <div key={config.id} className="flex items-start gap-3 py-2 border-b last:border-b-0">
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      onChange={() => handleProviderToggle(config.id)}
-                      className="h-4 w-4 mt-0.5 flex-shrink-0"
-                    />
+                  <div key={config.id} className="flex items-center gap-3 py-2 border-b last:border-b-0">
+                    <div className="font-medium text-sm min-w-[120px] flex-shrink-0">{config.name}</div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-medium text-sm mb-1">{config.name}</div>
-                      {isSelected && (
-                        <div className="space-y-1">
-                          {availableModels.length === 0 ? (
-                            <p className="text-xs text-gray-500">
-                              No models. <Link to="/config" className="text-blue-500 underline">Configure</Link>
-                            </p>
-                          ) : (
-                            <div className="flex flex-wrap gap-1.5">
-                              {availableModels.map((model) => (
-                                <button
-                                  key={model}
-                                  onClick={() => handleModelToggle(config.id, model)}
-                                  className={`px-2 py-0.5 text-xs rounded transition-colors ${
-                                    selection?.modelIds.includes(model)
-                                      ? 'bg-blue-500 text-white hover:bg-blue-600'
-                                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                  }`}
-                                >
-                                  {model}
-                                </button>
-                              ))}
-                            </div>
-                          )}
+                      {availableModels.length === 0 ? (
+                        <p className="text-xs text-gray-500">
+                          No models. <Link to="/config" className="text-blue-500 underline">Configure</Link>
+                        </p>
+                      ) : (
+                        <div className="flex flex-wrap gap-1.5">
+                          {availableModels.map((model) => (
+                            <button
+                              key={model}
+                              onClick={() => handleModelToggle(config.id, model)}
+                              className={`px-2 py-0.5 text-xs rounded transition-colors ${
+                                selection?.modelIds.includes(model)
+                                  ? 'bg-blue-500 text-white hover:bg-blue-600'
+                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                              }`}
+                            >
+                              {model}
+                            </button>
+                          ))}
                         </div>
                       )}
                     </div>
