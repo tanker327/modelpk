@@ -463,22 +463,45 @@ export default function ComparisonPage() {
                   : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
               }`}
             >
-              {Object.entries(responses).map(([key, response]) => {
-                const config = configs.find((c) => c.id === response.providerId)
-                return (
-                  <ResponsePanel
-                    key={key}
-                    providerName={config?.name || response.providerId}
-                    modelName={response.modelId}
-                    status={response.status}
-                    response={response.response}
-                    error={response.error}
-                    durationMs={response.durationMs}
-                    tokenUsage={response.tokenUsage}
-                    onRefresh={() => handleRefresh(response.providerId, response.modelId)}
-                  />
-                )
-              })}
+              {(() => {
+                // Calculate min/max durations from successful responses
+                const successfulDurations = Object.values(responses)
+                  .filter((r) => r.status === 'success' && r.durationMs !== undefined)
+                  .map((r) => r.durationMs!)
+
+                const minDuration = successfulDurations.length > 0 ? Math.min(...successfulDurations) : undefined
+                const maxDuration = successfulDurations.length > 0 ? Math.max(...successfulDurations) : undefined
+                const hasMultipleSuccesses = successfulDurations.length > 1
+
+                return Object.entries(responses).map(([key, response]) => {
+                  const config = configs.find((c) => c.id === response.providerId)
+                  const isFastest = hasMultipleSuccesses &&
+                                   response.status === 'success' &&
+                                   response.durationMs !== undefined &&
+                                   response.durationMs === minDuration
+                  const isSlowest = hasMultipleSuccesses &&
+                                   response.status === 'success' &&
+                                   response.durationMs !== undefined &&
+                                   response.durationMs === maxDuration &&
+                                   minDuration !== maxDuration // Don't mark as slowest if all have same duration
+
+                  return (
+                    <ResponsePanel
+                      key={key}
+                      providerName={config?.name || response.providerId}
+                      modelName={response.modelId}
+                      status={response.status}
+                      response={response.response}
+                      error={response.error}
+                      durationMs={response.durationMs}
+                      tokenUsage={response.tokenUsage}
+                      isFastest={isFastest}
+                      isSlowest={isSlowest}
+                      onRefresh={() => handleRefresh(response.providerId, response.modelId)}
+                    />
+                  )
+                })
+              })()}
             </div>
           </div>
         )}

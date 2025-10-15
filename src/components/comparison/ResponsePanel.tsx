@@ -12,6 +12,8 @@ interface ResponsePanelProps {
   error?: string
   durationMs?: number
   tokenUsage?: TokenUsage
+  isFastest?: boolean
+  isSlowest?: boolean
   onRefresh?: () => void
 }
 
@@ -23,6 +25,8 @@ export function ResponsePanel({
   error,
   durationMs,
   tokenUsage,
+  isFastest,
+  isSlowest,
   onRefresh,
 }: ResponsePanelProps) {
   const [isMarkdownView, setIsMarkdownView] = useState(true)
@@ -66,7 +70,9 @@ export function ResponsePanel({
     : { thinkingContent: '', mainContent: '', hasThinking: false }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 flex flex-col h-full min-h-[300px]">
+    <div className={`bg-white rounded-lg shadow-md p-4 flex flex-col h-full min-h-[300px] ${
+      isFastest ? 'ring-2 ring-green-500' : isSlowest ? 'ring-2 ring-orange-500' : ''
+    }`}>
       {/* Header */}
       <div className="border-b pb-3 mb-3 flex items-start justify-between">
         <div>
@@ -188,8 +194,15 @@ export function ResponsePanel({
       {(durationMs !== undefined || tokenUsage) && (status === 'success' || status === 'error') && (
         <div className="border-t pt-3 mt-3">
           {durationMs !== undefined && (
-            <div className="text-xs text-gray-500 mb-2">
-              ⏱ {formatDuration(durationMs)}
+            <div className={`text-xs mb-2 font-semibold ${
+              isFastest ? 'text-green-600' : isSlowest ? 'text-orange-600' : 'text-gray-500'
+            }`}>
+              {isFastest && '🏆 '}
+              {isSlowest && '🐢 '}
+              {!isFastest && !isSlowest && '⏱ '}
+              {formatDuration(durationMs)}
+              {isFastest && ' (Fastest)'}
+              {isSlowest && ' (Slowest)'}
             </div>
           )}
           {tokenUsage && (
