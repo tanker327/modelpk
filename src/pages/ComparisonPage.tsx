@@ -62,11 +62,39 @@ export default function ComparisonPage() {
       prev.map((selection) => {
         if (selection.providerId === providerId) {
           const hasModel = selection.modelIds.includes(modelId)
+          const newModelIds = hasModel
+            ? selection.modelIds.filter((m) => m !== modelId)
+            : [...selection.modelIds, modelId]
+
+          // When adding a model (not removing), check if results exist
+          // If so, create a pending result box for the new model
+          if (!hasModel && Object.keys(responses).length > 0) {
+            const key = `${providerId}-${modelId}`
+            setResponses((prevResponses) => ({
+              ...prevResponses,
+              [key]: {
+                providerId,
+                modelId,
+                status: 'pending',
+              },
+            }))
+            console.info(`[ComparisonPage] Added pending result for ${key}`)
+          }
+
+          // When removing a model, remove its result box
+          if (hasModel) {
+            const key = `${providerId}-${modelId}`
+            setResponses((prevResponses) => {
+              const newResponses = { ...prevResponses }
+              delete newResponses[key]
+              return newResponses
+            })
+            console.info(`[ComparisonPage] Removed result for ${key}`)
+          }
+
           return {
             ...selection,
-            modelIds: hasModel
-              ? selection.modelIds.filter((m) => m !== modelId)
-              : [...selection.modelIds, modelId],
+            modelIds: newModelIds,
           }
         }
         return selection

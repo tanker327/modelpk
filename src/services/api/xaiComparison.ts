@@ -72,6 +72,15 @@ export async function sendXAIComparison(
     }
   } catch (error) {
     console.error('[xAI Comparison] Error:', error)
+
+    // Check for CORS error
+    if (error instanceof TypeError && error.message === 'Failed to fetch') {
+      return {
+        success: false,
+        error: 'Cannot access xAI API from browser due to CORS restrictions. Consider using a local proxy or server-side implementation.',
+      }
+    }
+
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

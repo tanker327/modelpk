@@ -72,6 +72,15 @@ export async function sendOpenAIComparison(
     }
   } catch (error) {
     console.error('[OpenAI Comparison] Error:', error)
+
+    // Check for CORS error
+    if (error instanceof TypeError && error.message === 'Failed to fetch') {
+      return {
+        success: false,
+        error: 'Cannot access OpenAI API from browser due to CORS restrictions. Consider using a local proxy or server-side implementation.',
+      }
+    }
+
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

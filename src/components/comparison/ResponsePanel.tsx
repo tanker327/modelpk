@@ -80,11 +80,11 @@ export function ResponsePanel({
           <p className="text-sm text-gray-600">{modelName}</p>
         </div>
         <div className="flex items-center gap-2">
-          {onRefresh && (status === 'success' || status === 'error') && (
+          {onRefresh && (status === 'pending' || status === 'success' || status === 'error') && (
             <button
               onClick={onRefresh}
               className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded transition-colors flex items-center gap-1"
-              title="Refresh this result"
+              title={status === 'pending' ? 'Fetch this result' : 'Refresh this result'}
             >
               🔄
             </button>
@@ -104,7 +104,11 @@ export function ResponsePanel({
       {/* Content */}
       <div className="flex-1 overflow-auto">
         {status === 'pending' && (
-          <div className="text-gray-500 text-sm">Ready to submit...</div>
+          <div className="flex flex-col items-center justify-center h-full text-center space-y-2">
+            <div className="text-gray-400 text-4xl">⏳</div>
+            <div className="text-gray-600 font-medium">Not fetched yet</div>
+            <div className="text-gray-500 text-sm">Click the refresh button to fetch this result</div>
+          </div>
         )}
 
         {status === 'loading' && (
