@@ -50,13 +50,9 @@ export function ModelTypeahead({
     }
   }, [])
 
-  // Reset highlighted index when filtered models change
-  useEffect(() => {
-    setHighlightedIndex(0)
-  }, [searchTerm])
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value)
+    setHighlightedIndex(0) // Reset highlighted index when search changes
     setIsDropdownOpen(true)
   }
 

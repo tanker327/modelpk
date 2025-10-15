@@ -26,7 +26,7 @@ async function initDB(): Promise<IDBPDatabase> {
 
   try {
     dbInstance = await openDB(DB_NAME, DB_VERSION, {
-      upgrade(db, oldVersion) {
+      upgrade(db, _oldVersion) {
         // Create the providers object store if it doesn't exist
         if (!db.objectStoreNames.contains(STORE_NAME)) {
           db.createObjectStore(STORE_NAME, { keyPath: 'id' })
