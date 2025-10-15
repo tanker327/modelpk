@@ -16,25 +16,41 @@ export async function sendGeminiComparison(
   }
 
   try {
-    // Gemini combines system and user prompts
-    const combinedPrompt = request.systemPrompt
-      ? `${request.systemPrompt}\n\n${request.userPrompt}`
-      : request.userPrompt
+    console.info(`[Gemini] Sending request to ${baseUrl} for model ${request.modelId}`)
 
+    // Build request body with proper system instruction support
+    // Reference: https://ai.google.dev/gemini-api/docs/text-generation
+    // system_instruction.parts is an array of Part objects
+    const requestBody: {
+      contents: Array<{ parts: Array<{ text: string }> }>
+      systemInstruction?: { parts: Array<{ text: string }> }
+    } = {
+      contents: [
+        {
+          parts: [{ text: request.userPrompt }],
+        },
+      ],
+    }
+
+    // Add system instruction if provided
+    if (request.systemPrompt) {
+      requestBody.systemInstruction = {
+        parts: [{ text: request.systemPrompt }],
+      }
+      console.debug(`[Gemini] Using system instruction: ${request.systemPrompt.substring(0, 50)}...`)
+    }
+
+    // Use x-goog-api-key header instead of URL parameter for better security
+    // Reference: https://ai.google.dev/gemini-api/docs/api-key
     const response = await fetch(
-      `${baseUrl}/models/${request.modelId}:generateContent?key=${encodeURIComponent(apiKey)}`,
+      `${baseUrl}/models/${request.modelId}:generateContent`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey,
         },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [{ text: combinedPrompt }],
-            },
-          ],
-        }),
+        body: JSON.stringify(requestBody),
       }
     )
 
@@ -55,6 +71,8 @@ export async function sendGeminiComparison(
         error: 'No response content received from Gemini',
       }
     }
+
+    console.debug(`[Gemini] Received response: ${content.substring(0, 100)}...`)
 
     // Extract token usage (Gemini format)
     const tokenUsage = data.usageMetadata
