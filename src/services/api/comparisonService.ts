@@ -57,6 +57,11 @@ export async function sendComparisonRequest(
         result = await sendOllamaComparison(request)
         break
       }
+      case 'openrouter': {
+        const { sendOpenRouterComparison } = await import('./openrouterComparison')
+        result = await sendOpenRouterComparison(request)
+        break
+      }
       default:
         throw new Error(`Unknown provider: ${request.providerId}`)
     }

@@ -7,6 +7,7 @@ export const ProviderIdSchema = z.enum([
   'anthropic',
   'xai',
   'ollama',
+  'openrouter',
 ])
 
 export type ProviderId = z.infer<typeof ProviderIdSchema>
@@ -74,6 +75,11 @@ export const DEFAULT_PROVIDERS: Omit<ProviderConfig, 'config'>[] = [
     name: 'Ollama',
     enabled: false,
   },
+  {
+    id: 'openrouter',
+    name: 'OpenRouter',
+    enabled: false,
+  },
 ]
 
 // Default base URLs for providers
@@ -83,6 +89,7 @@ export const DEFAULT_BASE_URLS: Record<ProviderId, string> = {
   anthropic: 'https://api.anthropic.com/v1',
   xai: 'https://api.x.ai/v1',
   ollama: 'http://localhost:11434',
+  openrouter: 'https://openrouter.ai/api/v1',
 }
 
 // Validation helpers

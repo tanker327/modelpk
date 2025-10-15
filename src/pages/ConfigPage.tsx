@@ -12,6 +12,7 @@ import { testGeminiConnection } from '@/services/providers/geminiProvider'
 import { testAnthropicConnection } from '@/services/providers/anthropicProvider'
 import { testXAIConnection } from '@/services/providers/xaiProvider'
 import { testOllamaConnection } from '@/services/providers/ollamaProvider'
+import { testOpenRouterConnection } from '@/services/providers/openrouterProvider'
 
 interface TestResultsState {
   results: Record<ProviderId, TestResult>
@@ -29,6 +30,7 @@ export default function ConfigPage() {
       anthropic: { providerId: 'anthropic', status: 'idle' },
       xai: { providerId: 'xai', status: 'idle' },
       ollama: { providerId: 'ollama', status: 'idle' },
+      openrouter: { providerId: 'openrouter', status: 'idle' },
     },
   })
   const [loading, setLoading] = useState(true)
@@ -172,6 +174,9 @@ function ProviderCard({ config, testResult, onTestUpdate }: ProviderCardProps) {
           break
         case 'ollama':
           result = await testOllamaConnection(testConfig)
+          break
+        case 'openrouter':
+          result = await testOpenRouterConnection(testConfig)
           break
         default:
           result = { success: false, error: 'Unknown provider' }
