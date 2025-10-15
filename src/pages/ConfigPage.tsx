@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ModelTag } from '@/components/config/ModelTag'
+import { ModelTypeahead } from '@/components/config/ModelTypeahead'
 import { providerConfigsActions } from '@/state/atoms/providerConfigsAtom'
 import type { ProviderConfig, TestResult, ProviderId } from '@/schemas/providerConfigSchema'
 import { DEFAULT_BASE_URLS, DEFAULT_PROVIDERS } from '@/schemas/providerConfigSchema'
@@ -297,19 +298,32 @@ function ProviderCard({ config, testResult, onTestUpdate }: ProviderCardProps) {
                 </div>
                 {testResult.models && testResult.models.length > 0 && (
                   <div className="mt-2">
-                    <div className="text-sm text-gray-600 mb-1">
-                      Available models (click to select for racing):
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {testResult.models.map((model: string) => (
-                        <ModelTag
-                          key={model}
-                          modelName={model}
-                          isSelected={selectedModels.includes(model)}
-                          onToggle={() => handleModelToggle(model)}
-                        />
-                      ))}
-                    </div>
+                    {config.id === 'openrouter' ? (
+                      // Use typeahead for OpenRouter (too many models)
+                      <ModelTypeahead
+                        availableModels={testResult.models}
+                        selectedModels={selectedModels}
+                        onModelToggle={handleModelToggle}
+                        placeholder="Type to search OpenRouter models..."
+                      />
+                    ) : (
+                      // Use tag list for other providers
+                      <>
+                        <div className="text-sm text-gray-600 mb-1">
+                          Available models (click to select for racing):
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {testResult.models.map((model: string) => (
+                            <ModelTag
+                              key={model}
+                              modelName={model}
+                              isSelected={selectedModels.includes(model)}
+                              onToggle={() => handleModelToggle(model)}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
                 {testResult.testedAt && (
