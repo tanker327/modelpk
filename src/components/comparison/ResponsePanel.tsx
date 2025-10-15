@@ -33,6 +33,19 @@ export function ResponsePanel({
 }: ResponsePanelProps) {
   const [isMarkdownView, setIsMarkdownView] = useState(true)
   const [isStatsExpanded, setIsStatsExpanded] = useState(false)
+  const [showCopyNotification, setShowCopyNotification] = useState(false)
+
+  const handleCopy = async () => {
+    if (!response) return
+
+    try {
+      await navigator.clipboard.writeText(response)
+      setShowCopyNotification(true)
+      setTimeout(() => setShowCopyNotification(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy to clipboard:', err)
+    }
+  }
 
   // Check if a string is valid JSON
   const isValidJSON = (str: string): boolean => {
@@ -72,9 +85,16 @@ export function ResponsePanel({
     : { thinkingContent: '', mainContent: '', hasThinking: false }
 
   return (
-    <div className={`bg-white rounded-lg shadow-md p-4 flex flex-col h-full min-h-[300px] ${
+    <div className={`bg-white rounded-lg shadow-md p-4 flex flex-col h-full min-h-[300px] relative ${
       isFastest ? 'ring-2 ring-green-500' : isSlowest ? 'ring-2 ring-orange-500' : ''
     }`}>
+      {/* Copy Notification */}
+      {showCopyNotification && (
+        <div className="absolute top-2 right-2 z-10 bg-green-500 text-white px-3 py-2 rounded shadow-lg text-sm flex items-center gap-2 animate-fade-in">
+          ✓ Content copied to clipboard
+        </div>
+      )}
+
       {/* Header */}
       <div className="border-b pb-3 mb-3 flex items-start justify-between">
         <div className="flex items-baseline gap-2 min-w-0 flex-1">
@@ -92,13 +112,22 @@ export function ResponsePanel({
             </button>
           )}
           {status === 'success' && response && (
-            <button
-              onClick={() => setIsMarkdownView(!isMarkdownView)}
-              className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded transition-colors flex items-center gap-1"
-              title={isMarkdownView ? 'Switch to raw text' : 'Switch to markdown view'}
-            >
-              {isMarkdownView ? '📝 Raw' : '🎨 MD'}
-            </button>
+            <>
+              <button
+                onClick={() => setIsMarkdownView(!isMarkdownView)}
+                className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded transition-colors flex items-center gap-1"
+                title={isMarkdownView ? 'Switch to raw text' : 'Switch to markdown view'}
+              >
+                {isMarkdownView ? '📝 Raw' : '🎨 MD'}
+              </button>
+              <button
+                onClick={handleCopy}
+                className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded transition-colors flex items-center gap-1"
+                title="Copy raw output to clipboard"
+              >
+                📋 Copy
+              </button>
+            </>
           )}
         </div>
       </div>
