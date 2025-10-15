@@ -45,6 +45,12 @@ npm install
 # Start development server
 npm run dev
 
+# Run linter
+npm run lint
+
+# Run linter with auto-fix
+npm run lint:fix
+
 # Run tests
 npm test
 
@@ -57,6 +63,35 @@ npm run build
 # Preview production build
 npm run preview
 ```
+
+### Docker
+
+Run the application in a Docker container:
+
+```bash
+# Build and start with docker compose
+docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Stop and remove containers
+docker compose down
+
+# Rebuild and restart
+docker compose up -d --build
+```
+
+The application will be available at `http://localhost:3000`
+
+**Docker Features:**
+- Multi-stage build for optimized image size
+- Nginx serving with SPA routing support
+- Health checks for monitoring
+- Gzip compression and security headers
+- Static asset caching
+
+For detailed Docker documentation, see `docs/DOCKER.md`
 
 ### Project Structure
 

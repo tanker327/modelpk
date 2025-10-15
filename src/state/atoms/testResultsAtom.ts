@@ -16,6 +16,7 @@ let testResultsState: TestResultsState = {
     anthropic: { providerId: 'anthropic', status: 'idle' },
     xai: { providerId: 'xai', status: 'idle' },
     ollama: { providerId: 'ollama', status: 'idle' },
+    openrouter: { providerId: 'openrouter', status: 'idle' },
   },
 }
 
@@ -130,6 +131,7 @@ export const testResultsActions = {
         anthropic: { providerId: 'anthropic', status: 'idle' },
         xai: { providerId: 'xai', status: 'idle' },
         ollama: { providerId: 'ollama', status: 'idle' },
+        openrouter: { providerId: 'openrouter', status: 'idle' },
       },
     }
     console.info('[testResults] Cleared all test results')
