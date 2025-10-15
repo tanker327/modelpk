@@ -1,11 +1,20 @@
 import { openDB, type IDBPDatabase } from 'idb'
 import type { ProviderConfig, ProviderId } from '@/schemas/providerConfigSchema'
+import {
+  encryptApiKey,
+  decryptApiKey,
+  hasEncryptionSalt,
+  generateMasterSalt,
+} from '@/services/security/encryption'
 
 const DB_NAME = 'ai-racers-config'
-const DB_VERSION = 1
+const DB_VERSION = 2 // Incremented for new encryption store
 const STORE_NAME = 'providers'
+const ENCRYPTION_STORE = 'encryption'
+const MASTER_SALT_KEY = 'master-salt'
 
 let dbInstance: IDBPDatabase | null = null
+let masterSalt: Uint8Array | null = null
 
 /**
  * Initialize the IndexedDB database
@@ -17,11 +26,17 @@ async function initDB(): Promise<IDBPDatabase> {
 
   try {
     dbInstance = await openDB(DB_NAME, DB_VERSION, {
-      upgrade(db) {
+      upgrade(db, oldVersion) {
         // Create the providers object store if it doesn't exist
         if (!db.objectStoreNames.contains(STORE_NAME)) {
           db.createObjectStore(STORE_NAME, { keyPath: 'id' })
           console.info('[ConfigStorage] Created providers object store')
+        }
+
+        // Create the encryption object store for storing master salt
+        if (!db.objectStoreNames.contains(ENCRYPTION_STORE)) {
+          db.createObjectStore(ENCRYPTION_STORE)
+          console.info('[ConfigStorage] Created encryption object store')
         }
       },
     })
@@ -35,12 +50,64 @@ async function initDB(): Promise<IDBPDatabase> {
 }
 
 /**
+ * Get or create the master encryption salt
+ */
+async function getMasterSalt(): Promise<Uint8Array> {
+  if (masterSalt) {
+    return masterSalt
+  }
+
+  try {
+    const db = await initDB()
+
+    // Try to load existing salt
+    const stored = await db.get(ENCRYPTION_STORE, MASTER_SALT_KEY)
+
+    if (stored && stored instanceof Uint8Array) {
+      masterSalt = stored
+      console.info('[ConfigStorage] Loaded existing master salt')
+      return masterSalt
+    }
+
+    // Generate new salt
+    masterSalt = generateMasterSalt()
+    await db.put(ENCRYPTION_STORE, masterSalt, MASTER_SALT_KEY)
+    console.info('[ConfigStorage] Generated and stored new master salt')
+
+    return masterSalt
+  } catch (error) {
+    console.error('[ConfigStorage] Failed to get master salt:', error)
+    throw new Error('Failed to initialize encryption')
+  }
+}
+
+/**
  * Save a provider configuration
+ * Encrypts API key if present and not already encrypted
  */
 export async function saveConfig(config: ProviderConfig): Promise<void> {
   try {
     const db = await initDB()
-    await db.put(STORE_NAME, config)
+
+    // Clone config to avoid mutating the original
+    let configToSave = { ...config }
+
+    // Encrypt API key if it exists and is not already encrypted
+    if (config.config.apiKey && !hasEncryptionSalt(config.config.apiKey)) {
+      console.info(`[ConfigStorage] Encrypting API key for provider: ${config.id}`)
+      const salt = await getMasterSalt()
+      const encryptedKey = await encryptApiKey(config.config.apiKey, salt)
+
+      configToSave = {
+        ...config,
+        config: {
+          ...config.config,
+          apiKey: encryptedKey,
+        },
+      }
+    }
+
+    await db.put(STORE_NAME, configToSave)
     console.info(`[ConfigStorage] Saved configuration for provider: ${config.id}`)
   } catch (error) {
     if (error instanceof Error && error.name === 'QuotaExceededError') {
@@ -53,11 +120,41 @@ export async function saveConfig(config: ProviderConfig): Promise<void> {
 
 /**
  * Get a single provider configuration by ID
+ * Decrypts API key if encrypted
  */
 export async function getConfig(providerId: ProviderId): Promise<ProviderConfig | undefined> {
   try {
     const db = await initDB()
     const config = await db.get(STORE_NAME, providerId)
+
+    if (!config) {
+      return undefined
+    }
+
+    // Decrypt API key if it's encrypted
+    if (config.config.apiKey && hasEncryptionSalt(config.config.apiKey)) {
+      try {
+        const decryptedKey = await decryptApiKey(config.config.apiKey)
+        return {
+          ...config,
+          config: {
+            ...config.config,
+            apiKey: decryptedKey,
+          },
+        }
+      } catch (error) {
+        console.error(`[ConfigStorage] Failed to decrypt API key for ${providerId}:`, error)
+        // Return config without API key if decryption fails
+        return {
+          ...config,
+          config: {
+            ...config.config,
+            apiKey: undefined,
+          },
+        }
+      }
+    }
+
     return config
   } catch (error) {
     console.error(`[ConfigStorage] Failed to get configuration for ${providerId}:`, error)
@@ -67,13 +164,44 @@ export async function getConfig(providerId: ProviderId): Promise<ProviderConfig 
 
 /**
  * Get all provider configurations
+ * Decrypts API keys if encrypted
  */
 export async function getAllConfigs(): Promise<ProviderConfig[]> {
   try {
     const db = await initDB()
     const configs = await db.getAll(STORE_NAME)
     console.info(`[ConfigStorage] Retrieved ${configs.length} configurations`)
-    return configs
+
+    // Decrypt API keys for all configs
+    const decryptedConfigs = await Promise.all(
+      configs.map(async (config) => {
+        if (config.config.apiKey && hasEncryptionSalt(config.config.apiKey)) {
+          try {
+            const decryptedKey = await decryptApiKey(config.config.apiKey)
+            return {
+              ...config,
+              config: {
+                ...config.config,
+                apiKey: decryptedKey,
+              },
+            }
+          } catch (error) {
+            console.error(`[ConfigStorage] Failed to decrypt API key for ${config.id}:`, error)
+            // Return config without API key if decryption fails
+            return {
+              ...config,
+              config: {
+                ...config.config,
+                apiKey: undefined,
+              },
+            }
+          }
+        }
+        return config
+      })
+    )
+
+    return decryptedConfigs
   } catch (error) {
     console.error('[ConfigStorage] Failed to get all configurations:', error)
     return []

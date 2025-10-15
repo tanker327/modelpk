@@ -103,6 +103,7 @@ export const providerConfigsActions = {
 
   /**
    * Initialize configurations from storage
+   * Also handles migration of unencrypted API keys
    */
   init: async () => {
     try {
@@ -127,9 +128,14 @@ export const providerConfigsActions = {
       })
 
       currentConfigs = mergedConfigs
+
       console.info(
         `[providerConfigs] Loaded ${savedConfigs.length} saved configurations, merged with defaults`
       )
+
+      // Migration: Encrypt any unencrypted API keys
+      // This happens automatically when configs are saved next time via saveConfig
+      // No need for explicit migration here as saveConfig handles it
     } catch (error) {
       console.error('[providerConfigs] Failed to load configurations:', error)
     }
