@@ -224,10 +224,13 @@ export async function deleteConfig(providerId: ProviderId): Promise<void> {
 
 /**
  * Export all configurations as JSON
+ * NOTE: Exported API keys are in plain text for portability.
+ * They will be re-encrypted when imported.
  */
 export async function exportConfigs(): Promise<string> {
   try {
     const configs = await getAllConfigs()
+    console.info(`[ConfigStorage] Exporting ${configs.length} configurations with decrypted API keys`)
     const exportData = {
       version: 1,
       exportedAt: new Date().toISOString(),
@@ -268,7 +271,23 @@ export async function importConfigs(jsonData: string): Promise<{
           continue
         }
 
-        await db.put(STORE_NAME, config)
+        // Encrypt API key if it exists and is not already encrypted
+        let configToSave = { ...config }
+        if (config.config?.apiKey && !hasEncryptionSalt(config.config.apiKey)) {
+          console.info(`[ConfigStorage] Encrypting API key for imported provider: ${config.id}`)
+          const salt = await getMasterSalt()
+          const encryptedKey = await encryptApiKey(config.config.apiKey, salt)
+
+          configToSave = {
+            ...config,
+            config: {
+              ...config.config,
+              apiKey: encryptedKey,
+            },
+          }
+        }
+
+        await db.put(STORE_NAME, configToSave)
         imported++
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : 'Unknown error'
