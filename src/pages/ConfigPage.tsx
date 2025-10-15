@@ -14,6 +14,7 @@ import { testAnthropicConnection } from '@/services/providers/anthropicProvider'
 import { testXAIConnection } from '@/services/providers/xaiProvider'
 import { testOllamaConnection } from '@/services/providers/ollamaProvider'
 import { testOpenRouterConnection } from '@/services/providers/openrouterProvider'
+import { useConfigBackup } from '@/hooks/useConfigBackup'
 
 interface TestResultsState {
   results: Record<ProviderId, TestResult>
@@ -35,6 +36,17 @@ export default function ConfigPage() {
     },
   })
   const [loading, setLoading] = useState(true)
+
+  // Use backup hook for export/import functionality
+  const {
+    isExporting,
+    isImporting,
+    exportMessage,
+    fileInputRef,
+    handleExport,
+    handleImport,
+    handleImportClick,
+  } = useConfigBackup(setConfigs)
 
   // Load saved configs on mount
   useEffect(() => {
@@ -85,6 +97,56 @@ export default function ConfigPage() {
               }}
             />
           ))}
+        </div>
+
+        {/* Backup & Restore Section */}
+        <div className="bg-white rounded-lg shadow p-6 mt-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Backup & Restore</h2>
+          <p className="text-sm text-gray-600 mb-4">
+            Export or import your configurations to backup or transfer between devices.
+          </p>
+          <p className="text-xs text-orange-600 mb-4">
+            ⚠️ Warning: Exported files contain your API keys in readable format. Keep them secure!
+          </p>
+
+          {/* Hidden file input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            onChange={handleImport}
+            className="hidden"
+          />
+
+          <div className="flex gap-3">
+            <Button
+              onClick={handleExport}
+              disabled={isExporting || isImporting}
+              variant="outline"
+            >
+              {isExporting ? 'Exporting...' : '📥 Export Configuration'}
+            </Button>
+            <Button
+              onClick={handleImportClick}
+              disabled={isExporting || isImporting}
+              variant="outline"
+            >
+              {isImporting ? 'Importing...' : '📤 Import Configuration'}
+            </Button>
+          </div>
+
+          {/* Status messages */}
+          {exportMessage && (
+            <div
+              className={`mt-4 p-3 rounded-md text-sm ${
+                exportMessage.type === 'success'
+                  ? 'bg-green-50 text-green-800 border border-green-200'
+                  : 'bg-red-50 text-red-800 border border-red-200'
+              }`}
+            >
+              {exportMessage.type === 'success' ? '✓' : '✗'} {exportMessage.text}
+            </div>
+          )}
         </div>
       </div>
     </div>
