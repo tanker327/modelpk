@@ -5,6 +5,7 @@ A React-based web application for comparing outputs from different AI models usi
 ## Project Status
 
 ✅ **LLM Provider Configuration** - Complete! Configure and test connections to OpenAI, Gemini, Anthropic, xAI, and Ollama.
+✅ **Model Comparison UI** - Complete! Compare responses from multiple models side-by-side with timing metrics.
 
 ## Tech Stack
 
@@ -142,13 +143,36 @@ Configure and test connections to multiple LLM providers:
 - User Guide: See `docs/user-guide/configuration.md`
 - Implementation Details: See `docs/IMPLEMENTATION.md`
 
+### Model Comparison
+
+Compare multiple AI models side-by-side:
+
+**Key Features:**
+- ✅ Select multiple providers and models
+- ✅ Input custom system and user prompts
+- ✅ Parallel API requests for true "racing"
+- ✅ Side-by-side response panels
+- ✅ Response timing metrics
+- ✅ Graceful error handling
+- ✅ Responsive layout (mobile/tablet/desktop)
+
+**How to Use:**
+1. Navigate to the home page (/)
+2. Select providers and models you want to compare
+3. Enter optional system prompt and required user prompt
+4. Click "Submit" to run the comparison
+5. View responses side-by-side with timing information
+6. Click "Reset" to start a new comparison
+
 ## Next Steps
 
-With provider configuration complete, upcoming features include:
-- Prompt input interface
-- Model selection UI
-- Side-by-side model comparison
-- Race history and analytics
+Upcoming features:
+- Comparison history and saving
+- Export/share functionality
+- Streaming responses
+- Model-specific parameters (temperature, max_tokens, etc.)
+- Token usage tracking
+- Cost estimation
 
 ## License
 

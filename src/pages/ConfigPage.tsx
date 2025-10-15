@@ -20,7 +20,7 @@ interface TestResultsState {
 export default function ConfigPage() {
   // Use local state for configs instead of atom (simpler for now)
   const [configs, setConfigs] = useState<ProviderConfig[]>(
-    DEFAULT_PROVIDERS.map((p) => ({ ...p, config: {} }))
+    DEFAULT_PROVIDERS.map((p) => ({ ...p, config: { selectedModels: [] } }))
   )
   const [testResults, setTestResults] = useState<TestResultsState>({
     results: {
@@ -131,6 +131,7 @@ function ProviderCard({ config, testResult, onTestUpdate }: ProviderCardProps) {
   const handleSave = async () => {
     const updates: Partial<ProviderConfig> = {
       config: {
+        selectedModels,
         ...(needsApiKey && { apiKey }),
         ...(needsEndpoint ? { endpoint } : { baseUrl: endpoint }),
       },
@@ -149,6 +150,7 @@ function ProviderCard({ config, testResult, onTestUpdate }: ProviderCardProps) {
       const testConfig: ProviderConfig = {
         ...config,
         config: {
+          selectedModels,
           ...(needsApiKey && { apiKey }),
           ...(needsEndpoint ? { endpoint } : { baseUrl: endpoint }),
         },

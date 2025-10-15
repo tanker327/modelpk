@@ -11,7 +11,7 @@ export interface ProviderConfigsState {
 
 // Create initial state
 const initialState: ProviderConfigsState = {
-  configs: DEFAULT_PROVIDERS.map((p) => ({ ...p, config: {} })),
+  configs: DEFAULT_PROVIDERS.map((p) => ({ ...p, config: { selectedModels: [] } })),
   loading: false, // Changed to false by default
   error: null,
 }
@@ -86,7 +86,7 @@ export const providerConfigsActions = {
 
     const resetConfig: ProviderConfig = {
       ...defaultConfig,
-      config: {},
+      config: { selectedModels: [] },
     }
 
     currentConfigs = currentConfigs.map((c) => (c.id === providerId ? resetConfig : c))
@@ -116,11 +116,14 @@ export const providerConfigsActions = {
           return {
             ...defaultProvider,
             ...savedConfig,
-            config: savedConfig.config || {},
+            config: {
+              ...savedConfig.config,
+              selectedModels: savedConfig.config.selectedModels || [],
+            },
           }
         }
         // Use default if no saved config exists
-        return { ...defaultProvider, config: {} }
+        return { ...defaultProvider, config: { selectedModels: [] } }
       })
 
       currentConfigs = mergedConfigs
