@@ -6,7 +6,7 @@ This guide explains how to configure LLM API providers in AI Racers.
 
 AI Racers supports five LLM providers:
 - **OpenAI** - GPT models
-- **Gemini (Google)** - Gemini models
+- **Gemini** - Gemini models
 - **Anthropic** - Claude models
 - **xAI** - Grok models
 - **Ollama** - Local open-source models
@@ -32,7 +32,7 @@ AI Racers supports five LLM providers:
 3. Click "Create new secret key"
 4. Copy and paste into AI Racers
 
-### Gemini (Google)
+### Gemini
 
 **Required:**
 - API Key: Get from [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)

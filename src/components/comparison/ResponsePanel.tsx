@@ -87,9 +87,7 @@ export function ResponsePanel({
     : { thinkingContent: '', mainContent: '', hasThinking: false }
 
   return (
-    <div className={`bg-white rounded-lg shadow-md p-4 flex flex-col h-full min-h-[300px] relative ${
-      isFastest ? 'ring-2 ring-green-500' : isSlowest ? 'ring-2 ring-orange-500' : ''
-    }`}>
+    <div className="bg-white rounded-lg shadow-md p-4 flex flex-col h-full min-h-[300px] relative">
       {/* Copy Notification */}
       {showCopyNotification && (
         <div className="absolute top-2 right-2 z-10 bg-green-500 text-white px-3 py-2 rounded shadow-lg text-sm flex items-center gap-2 animate-fade-in">
@@ -100,7 +98,15 @@ export function ResponsePanel({
       {/* Header */}
       <div className="border-b pb-3 mb-3 flex items-start justify-between">
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 min-w-0 flex-1">
-          <h3 className="text-lg font-semibold text-gray-900">{providerName}</h3>
+          <h3 className={`text-lg font-semibold px-2 py-1 rounded inline-flex items-center gap-1 ${
+            isFastest ? 'bg-green-100 text-green-800' :
+            isSlowest ? 'bg-red-100 text-red-800' :
+            'text-gray-900'
+          }`}>
+            {isFastest && '🏆 '}
+            {isSlowest && '🐢 '}
+            {providerName}
+          </h3>
           <p className="text-sm text-gray-600" title={modelName}>{modelName}</p>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
