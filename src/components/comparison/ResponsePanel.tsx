@@ -3,6 +3,8 @@ import type { ResponseStatus, TokenUsage } from '@/schemas/comparisonSchema'
 import { formatDuration } from '@/services/api/comparisonService'
 import MarkdownPreview from '@uiw/react-markdown-preview'
 import ReactJson from '@microlink/react-json-view'
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
 
 interface ResponsePanelProps {
   providerName: string
@@ -114,19 +116,22 @@ export function ResponsePanel({
           {status === 'success' && response && (
             <>
               <button
-                onClick={() => setIsMarkdownView(!isMarkdownView)}
-                className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded transition-colors flex items-center gap-1"
-                title={isMarkdownView ? 'Switch to raw text' : 'Switch to markdown view'}
-              >
-                {isMarkdownView ? '📝 Raw' : '🎨 MD'}
-              </button>
-              <button
                 onClick={handleCopy}
-                className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded transition-colors flex items-center gap-1"
+                className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded transition-colors"
                 title="Copy raw output to clipboard"
               >
-                📋 Copy
+                📋
               </button>
+              <div className="flex items-center gap-2">
+                <Label htmlFor="view-toggle" className="text-xs text-gray-600 cursor-pointer w-8 text-right">
+                  {isMarkdownView ? 'MD' : 'Raw'}
+                </Label>
+                <Switch
+                  id="view-toggle"
+                  checked={!isMarkdownView}
+                  onCheckedChange={(checked) => setIsMarkdownView(!checked)}
+                />
+              </div>
             </>
           )}
         </div>
