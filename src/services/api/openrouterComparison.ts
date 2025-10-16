@@ -42,9 +42,44 @@ export async function sendOpenRouterComparison(
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
+
+      // Build comprehensive error message
+      const parts: string[] = []
+
+      // Add HTTP status code
+      parts.push(`Status: ${response.status} (${response.statusText})`)
+
+      // Add error message from response
+      if (errorData.error?.message) {
+        parts.push(`\n${errorData.error.message}`)
+      }
+
+      // Add error code if available
+      if (errorData.error?.code) {
+        parts.push(`\nError Code: ${errorData.error.code}`)
+      }
+
+      // Add detailed metadata if available (rate limits, upstream errors, etc.)
+      if (errorData.error?.metadata?.raw) {
+        parts.push(`\n\nDetails:\n${errorData.error.metadata.raw}`)
+      }
+
+      // Add provider name if available
+      if (errorData.error?.metadata?.provider_name) {
+        parts.push(`\nProvider: ${errorData.error.metadata.provider_name}`)
+      }
+
+      const errorMessage = parts.join('')
+
+      console.error('[OpenRouter] API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        errorData,
+      })
+
       return {
         success: false,
-        error: errorData.error?.message || `HTTP ${response.status}: ${response.statusText}`,
+        error: errorMessage,
       }
     }
 
