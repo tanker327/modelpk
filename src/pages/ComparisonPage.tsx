@@ -402,7 +402,7 @@ export default function ComparisonPage() {
     <>
       <AlertComponent />
       <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold text-gray-900">AI Racers</h1>
@@ -660,15 +660,14 @@ export default function ComparisonPage() {
                 </div>
               )
             })()}
-            <div
-              className={`grid gap-4 ${
-                Object.keys(responses).length === 1
-                  ? 'grid-cols-1'
-                  : Object.keys(responses).length === 2
-                  ? 'grid-cols-1 md:grid-cols-2'
-                  : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
-              }`}
-            >
+            <div className="flex gap-4 overflow-x-auto pb-4">
+              <style>{`
+                .flex.gap-4.overflow-x-auto > * {
+                  flex: 0 0 auto;
+                  width: max(400px, calc((100vw - 8rem - 3rem) / ${Object.keys(responses).length}));
+                  min-width: 400px;
+                }
+              `}</style>
               {(() => {
                 // Calculate min/max durations from successful responses
                 const successfulDurations = Object.values(responses)
