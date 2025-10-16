@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ModelTag } from '@/components/config/ModelTag'
 import { ModelTypeahead } from '@/components/config/ModelTypeahead'
+import { SecurityWarning } from '@/components/SecurityWarning'
 import { providerConfigsActions } from '@/state/atoms/providerConfigsAtom'
 import type { ProviderConfig, TestResult, ProviderId } from '@/schemas/providerConfigSchema'
 import { DEFAULT_BASE_URLS, DEFAULT_PROVIDERS } from '@/schemas/providerConfigSchema'
@@ -89,6 +90,9 @@ export default function ConfigPage() {
             <Button variant="outline">Back to Home</Button>
           </Link>
         </div>
+
+        {/* Security Warning for HTTP */}
+        <SecurityWarning />
 
         <div className="space-y-6">
           {configs.map((config) => (

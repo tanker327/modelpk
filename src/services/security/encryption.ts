@@ -1,6 +1,7 @@
 /**
  * Encryption service for API keys using Web Crypto API
  * Uses AES-GCM encryption with a master salt stored in IndexedDB
+ * Falls back to base64 encoding for non-secure contexts (HTTP)
  */
 
 const ENCRYPTION_ALGORITHM = 'AES-GCM'
@@ -8,12 +9,25 @@ const KEY_LENGTH = 256
 const IV_LENGTH = 12 // 96 bits for GCM
 
 /**
+ * Check if Web Crypto API is available
+ */
+function isCryptoAvailable(): boolean {
+  return typeof crypto !== 'undefined' &&
+         typeof crypto.subtle !== 'undefined' &&
+         typeof crypto.subtle.encrypt === 'function'
+}
+
+/**
  * Check if a value is encrypted (has salt prefix)
  */
 export function hasEncryptionSalt(value: string | undefined): boolean {
   if (!value) return false
+  // Check for encrypted format (salt:iv:ciphertext)
   const parts = value.split(':')
-  return parts.length === 3 && parts[0].length > 0
+  if (parts.length === 3 && parts[0].length > 0) return true
+  // Check for fallback format (PLAIN: prefix)
+  if (value.startsWith('PLAIN:')) return true
+  return false
 }
 
 /**
@@ -80,10 +94,19 @@ function base64ToArrayBuffer(base64: string): Uint8Array {
 
 /**
  * Encrypt a plaintext API key
- * Returns: salt:iv:ciphertext (all base64 encoded)
+ * Returns: salt:iv:ciphertext (all base64 encoded) or PLAIN:base64 for non-secure contexts
  */
 export async function encryptApiKey(plaintext: string, salt: Uint8Array): Promise<string> {
   try {
+    // Check if Web Crypto API is available (requires HTTPS or localhost)
+    if (!isCryptoAvailable()) {
+      console.warn('[Encryption] Web Crypto API not available (HTTP context). Using base64 encoding instead.')
+      console.warn('[Encryption] ⚠️ For production, use HTTPS to enable proper encryption!')
+      // Fallback: Just base64 encode with a marker
+      const encoded = btoa(plaintext)
+      return `PLAIN:${encoded}`
+    }
+
     console.info('[Encryption] Encrypting API key')
 
     // Generate IV
@@ -118,10 +141,16 @@ export async function encryptApiKey(plaintext: string, salt: Uint8Array): Promis
 
 /**
  * Decrypt an encrypted API key
- * Input format: salt:iv:ciphertext (all base64 encoded)
+ * Input format: salt:iv:ciphertext (all base64 encoded) or PLAIN:base64
  */
 export async function decryptApiKey(encrypted: string): Promise<string> {
   try {
+    // Check for fallback format (non-secure context)
+    if (encrypted.startsWith('PLAIN:')) {
+      const encoded = encrypted.substring(6) // Remove 'PLAIN:' prefix
+      return atob(encoded)
+    }
+
     // Parse the encrypted string
     const parts = encrypted.split(':')
     if (parts.length !== 3) {
