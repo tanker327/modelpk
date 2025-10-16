@@ -1,214 +1,241 @@
 # AI Racers
 
-A React-based web application for comparing outputs from different AI models using the same prompt.
+A secure, browser-based web application for comparing outputs from multiple AI models side-by-side. Race different LLMs with the same prompt and see which one performs best for your needs.
 
-## Project Status
+## 🔒 Security First
 
-✅ **LLM Provider Configuration** - Complete! Configure and test connections to OpenAI, Gemini, Anthropic, xAI, and Ollama.
-✅ **Model Comparison UI** - Complete! Compare responses from multiple models side-by-side with timing metrics.
+**Your API keys never leave your browser.** AI Racers runs entirely in your browser with no backend server:
 
-## Tech Stack
+- ✅ **Encrypted Storage** - All API keys are encrypted using Web Crypto API (AES-GCM) before being stored in IndexedDB
+- ✅ **No Server** - Direct API calls from your browser to LLM providers (OpenAI, Gemini, etc.)
+- ✅ **No Tracking** - Your prompts, responses, and API keys stay on your device
+- ✅ **Open Source** - Inspect the code yourself to verify security claims
 
-### Core
-- **React 18.3** - UI framework
-- **TypeScript 5.6** - Type safety
-- **Vite 6** - Build tool and dev server
-- **React Router 7** - Client-side routing
+**How it works:**
+1. You enter your API key in the config page
+2. The key is immediately encrypted using a randomly generated master salt
+3. Encrypted key is stored in your browser's IndexedDB
+4. When making API calls, the key is decrypted in-memory and sent directly to the provider
+5. No third-party servers or logging involved
 
-### State & Data
-- **Zedux 1.3** - Atomic state management
-- **Zod 4.1** - Runtime schema validation
-- **idb 8** - IndexedDB wrapper for local persistence
+## ✨ Features
 
-### Styling & Components
-- **Tailwind CSS 4.1** - Utility-first CSS framework
-- **shadcn/ui** - Accessible component library
-- **Radix UI** - Unstyled component primitives
+### 🏁 Model Racing
+- Compare responses from multiple AI models simultaneously
+- See which model is fastest and most accurate for your use case
+- Side-by-side comparison with timing metrics
+- Support for extended thinking (<think> tags) visualization
 
-### Testing
-- **Jest 30** - Test framework
-- **Testing Library 16** - React testing utilities
+### 🤖 Supported Providers
+- **OpenAI** - GPT-4o, GPT-4 Turbo, GPT-3.5 Turbo, and more
+- **Gemini** - Google's latest Gemini models
+- **Anthropic** - Claude 3.5 Sonnet, Claude 3 Opus, and more (via OpenRouter)
+- **xAI** - Grok models
+- **Ollama** - Local open-source models (Llama, Mistral, etc.)
+- **OpenRouter** - Access to 100+ models through a single API
 
-## Development
+### 🎯 Key Features
+- ✅ Parallel API requests for true "racing"
+- ✅ Token usage and cost tracking
+- ✅ Markdown and raw response views
+- ✅ JSON response visualization
+- ✅ Export/import configurations for backup
+- ✅ Persistent state across sessions
+- ✅ Fully responsive design
+
+## 🚀 Quick Start
 
 ### Prerequisites
+- Node.js (v18 or higher)
+- API keys for your desired LLM providers
 
-- Node.js (v18 or higher recommended)
-- npm
-
-### Setup
+### Installation
 
 ```bash
+# Clone the repository
+git clone <repository-url>
+cd ai-racers
+
 # Install dependencies
 npm install
 
 # Start development server
 npm run dev
-
-# Run linter
-npm run lint
-
-# Run linter with auto-fix
-npm run lint:fix
-
-# Run tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
 ```
 
-### Docker
+The app will be available at `http://localhost:5174`
 
-Run the application in a Docker container:
+### First-Time Setup
+
+1. **Navigate to Config Page** - Click "Configure Providers" button
+2. **Add API Keys** - Enter your API keys for desired providers
+3. **Test Connection** - Click "Test" to verify credentials and see available models
+4. **Select Models** - Click on model names to select them for racing (blue = selected)
+5. **Start Racing** - Go back to home page and start comparing!
+
+### Docker Deployment
+
+Run AI Racers in a container:
 
 ```bash
-# Build and start with docker compose
+# Build and start
 docker compose up -d
 
 # View logs
 docker compose logs -f
 
-# Stop and remove containers
+# Stop
 docker compose down
-
-# Rebuild and restart
-docker compose up -d --build
 ```
 
-The application will be available at `http://localhost:3000`
+Access at `http://localhost:3000`
 
-**Docker Features:**
-- Multi-stage build for optimized image size
-- Nginx serving with SPA routing support
-- Health checks for monitoring
-- Gzip compression and security headers
+**Docker features:**
+- Multi-stage build for small image size
+- Nginx with gzip compression
+- Security headers
+- Health checks
 - Static asset caching
 
-For detailed Docker documentation, see `docs/DOCKER.md`
+## 📖 Usage Guide
+
+### Getting Your API Keys
+
+- **OpenAI**: https://platform.openai.com/api-keys
+- **Gemini**: https://aistudio.google.com/app/apikey
+- **xAI**: https://console.x.ai/
+- **Anthropic/Claude**: Use OpenRouter (see below)
+- **Ollama**: No API key needed, just install Ollama locally
+- **OpenRouter**: https://openrouter.ai/keys (gives access to 100+ models)
+
+### Comparing Models
+
+1. Select providers and models from the "Select Providers & Models" section
+2. Enter an optional system prompt (e.g., "You are a helpful coding assistant")
+3. Enter your user prompt (required)
+4. Click "Submit" to run the comparison
+5. View responses side-by-side with:
+   - ⏱️ Response time
+   - 📊 Token usage
+   - 🏆 Fastest/slowest indicators
+   - 💭 Thinking process (for supported models)
+
+### Tips
+
+- **Start with 2-3 models** to see differences clearly
+- **Use OpenRouter** for easy access to many models with one API key
+- **Try Ollama** for free local models (no API costs)
+- **Export your config** regularly to backup your settings
+- **Compare on different tasks** - some models excel at coding, others at creative writing
+
+## 🛠️ Development
+
+### Tech Stack
+
+- **React 18** with TypeScript
+- **Vite** for fast builds
+- **Tailwind CSS** for styling
+- **Zedux** for state management
+- **IndexedDB** for encrypted storage
+- **Zod** for schema validation
+
+### Commands
+
+```bash
+# Development
+npm run dev              # Start dev server
+npm run build            # Build for production
+npm run preview          # Preview production build
+
+# Testing
+npm test                 # Run tests
+npm run test:watch       # Run tests in watch mode
+npm run test:coverage    # Run tests with coverage
+
+# Linting
+npm run lint             # Check for issues
+npm run lint:fix         # Auto-fix issues
+```
 
 ### Project Structure
 
 ```
 ai-racers/
 ├── src/
-│   ├── components/
-│   │   ├── config/      # Configuration page components
-│   │   └── ui/          # shadcn/ui components
-│   ├── lib/             # Utility functions
-│   ├── pages/
-│   │   └── ConfigPage.tsx # Provider configuration page
-│   ├── schemas/         # Zod schemas
+│   ├── components/       # React components
+│   │   ├── comparison/   # Comparison page components
+│   │   ├── config/       # Config page components
+│   │   └── ui/           # shadcn/ui components
 │   ├── services/
-│   │   ├── providers/   # Provider connection testers
-│   │   └── storage/     # IndexedDB operations
-│   ├── state/
-│   │   ├── atoms/       # Zedux atoms
-│   │   └── ecosystem.ts # Zedux configuration
-│   ├── App.tsx          # Main application component with routing
-│   ├── App.test.tsx     # App tests
-│   ├── main.tsx         # Application entry point
-│   └── index.css        # Global styles with Tailwind
-├── docs/                # Documentation
-│   ├── user-guide/
-│   │   └── configuration.md # User guide for provider config
-│   └── IMPLEMENTATION.md    # Technical implementation docs
-├── public/              # Static assets
-├── dist/                # Production build output
-├── openspec/            # OpenSpec documentation
-├── jest.config.js       # Jest configuration
-├── tailwind.config.js   # Tailwind configuration
-├── vite.config.ts       # Vite configuration
-└── tsconfig.json        # TypeScript configuration
+│   │   ├── api/          # API integration services
+│   │   ├── providers/    # Provider connection testers
+│   │   ├── security/     # Encryption utilities
+│   │   └── storage/      # IndexedDB operations
+│   ├── state/            # Zedux state management
+│   ├── schemas/          # Zod type schemas
+│   ├── hooks/            # Custom React hooks
+│   └── pages/            # Page components
+├── docs/                 # Documentation
+└── openspec/             # OpenSpec specifications
 ```
 
-## OpenSpec Workflow
+## 🔐 Security Details
 
-This project follows the OpenSpec workflow for spec-driven development:
+### API Key Encryption
 
-- **Proposals**: See `openspec/changes/` for active changes
-- **Specs**: See `openspec/specs/` for current specifications
+API keys are encrypted using the Web Crypto API:
 
-### Completed Changes
+1. **Algorithm**: AES-GCM (256-bit)
+2. **Master Salt**: Randomly generated per browser (stored separately in IndexedDB)
+3. **Per-key Salt**: Each API key gets a unique salt
+4. **Format**: `base64(salt):base64(iv):base64(encryptedData)`
 
-- `init-hello-world-app` - ✅ Basic React + TypeScript + Vite setup
-- `setup-project-libraries` - ✅ All libraries installed and configured
-- `add-llm-config-page` - ✅ LLM provider configuration with testing
+### No Backend Required
 
-## Features
+This app doesn't need a backend because:
+- Modern browsers support CORS requests to LLM APIs
+- IndexedDB provides encrypted local storage
+- All computation happens client-side
+- API keys are only decrypted in memory when needed
 
-### LLM Provider Configuration
+### Export Security Warning
 
-Configure and test connections to multiple LLM providers:
+⚠️ **Important**: Exported configuration files contain API keys in **plain text** for portability. Keep exported files secure! They will be re-encrypted when imported.
 
-**Supported Providers:**
-- 🤖 **OpenAI** - GPT models (gpt-4o, gpt-4-turbo, etc.)
-- 🧠 **Gemini** - Google's Gemini models
-- 💬 **Anthropic** - Claude models (claude-3.5-sonnet, etc.)
-- ⚡ **xAI** - Grok models
-- 🏠 **Ollama** - Local open-source models
-
-**Key Features:**
-- ✅ Easy API key configuration
-- ✅ Test connection to validate credentials
-- ✅ View all available models for each provider
-- ✅ Select specific models for racing (click to toggle)
-- ✅ Automatic persistence in browser (IndexedDB)
-- ✅ Secure API key masking
-- ✅ Helpful error messages and troubleshooting
-
-**Getting Started:**
-1. Start the dev server: `npm run dev`
-2. Navigate to the config page: `http://localhost:5174/config`
-3. Enter your API keys for desired providers
-4. Click "Test" to validate and see available models
-5. Click on model names to select them for racing (selected models have blue background)
-6. Your selections are automatically saved and persist across sessions
-
-**Known Limitations:**
-- ⚠️ **Anthropic API**: Cannot be tested directly from the browser due to CORS restrictions. Your API key will be saved and can be used when the app has a backend proxy. The other providers (OpenAI, Gemini, xAI, Ollama) support browser testing.
-
-**Documentation:**
-- User Guide: See `docs/user-guide/configuration.md`
-- Implementation Details: See `docs/IMPLEMENTATION.md`
-
-### Model Comparison
-
-Compare multiple AI models side-by-side:
-
-**Key Features:**
-- ✅ Select multiple providers and models
-- ✅ Input custom system and user prompts
-- ✅ Parallel API requests for true "racing"
-- ✅ Side-by-side response panels
-- ✅ Response timing metrics
-- ✅ Graceful error handling
-- ✅ Responsive layout (mobile/tablet/desktop)
-
-**How to Use:**
-1. Navigate to the home page (/)
-2. Select providers and models you want to compare
-3. Enter optional system prompt and required user prompt
-4. Click "Submit" to run the comparison
-5. View responses side-by-side with timing information
-6. Click "Reset" to start a new comparison
-
-## Next Steps
-
-Upcoming features:
-- Comparison history and saving
-- Export/share functionality
-- Streaming responses
-- Model-specific parameters (temperature, max_tokens, etc.)
-- Token usage tracking
-- Cost estimation
-
-## License
+## 📝 License
 
 Private project
+
+## 🤝 Contributing
+
+This project follows the OpenSpec workflow for all significant changes. See `openspec/` directory for specifications and `CLAUDE.md` for development guidelines.
+
+## 🐛 Known Issues
+
+- **Anthropic API**: Cannot be tested directly from browser due to CORS restrictions. Use OpenRouter as a proxy to access Claude models.
+- **Browser Storage**: If you clear browser data, your API keys and configs will be lost. Export regularly!
+
+## 💡 FAQ
+
+**Q: Is this safe? How do I know my API keys aren't being sent somewhere?**
+A: The app has no backend and all code is open source. You can inspect the Network tab in browser DevTools to verify that API calls only go to official LLM provider endpoints. API keys are encrypted in IndexedDB and never sent anywhere except directly to the provider you're using.
+
+**Q: Why use this instead of switching between ChatGPT, Claude, etc.?**
+A: AI Racers lets you compare responses side-by-side with identical prompts, see which is fastest, and track token usage - all in one place. Perfect for developers, researchers, and anyone choosing between models.
+
+**Q: Can I use this offline?**
+A: The app itself can be cached for offline use, but you need an internet connection to make API calls to LLM providers (except Ollama, which runs locally).
+
+**Q: Does this work on mobile?**
+A: Yes! The UI is fully responsive and works on phones and tablets.
+
+**Q: How much does this cost?**
+A: The app is free. You only pay for the API calls you make to LLM providers at their standard rates. Use Ollama for completely free local models.
+
+## 📧 Support
+
+For issues, feature requests, or questions, please open an issue on GitHub.
+
+---
+
+**Built with ❤️ for the AI community**
