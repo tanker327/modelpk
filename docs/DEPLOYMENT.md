@@ -6,11 +6,17 @@ AI Racers can be deployed at any URL path (root, subdirectory, or nested paths) 
 
 ## Build Configuration
 
-The `vite.config.ts` is configured with `base: './'` which makes all asset paths relative. This allows the app to work at:
+The app is configured to work at any URL path automatically:
 
+1. **Vite Config** - `vite.config.ts` has `base: './'` for relative asset paths
+2. **Router Config** - `main.tsx` automatically detects the base path from the URL
+
+This allows the app to work at:
 - Root level: `https://example.com/`
 - Subdirectory: `https://example.com/ai-racers/`
 - Nested paths: `https://example.com/apps/ai-racers/`
+
+**No configuration changes needed** - the same build works everywhere!
 
 ## Building for Production
 
