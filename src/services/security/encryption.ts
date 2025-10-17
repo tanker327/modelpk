@@ -2,6 +2,18 @@
  * Encryption service for API keys using Web Crypto API
  * Uses AES-GCM encryption with a master salt stored in IndexedDB
  * Falls back to base64 encoding for non-secure contexts (HTTP)
+ *
+ * SECURITY NOTE:
+ * This encryption provides obfuscation but NOT true security against determined attackers.
+ * - The master salt is stored in IndexedDB (accessible to anyone with device access)
+ * - No user password is required, so decryption is automatic
+ * - Browser storage is inherently insecure - encryption keys exist in browser memory
+ * - Anyone with physical or remote access to the device can decrypt the API keys
+ *
+ * This is acceptable for a local-first app but users should be aware:
+ * - API keys are NOT protected from malware or malicious browser extensions
+ * - Shared/public computers should not be used to store sensitive API keys
+ * - For production apps with high security requirements, use a backend proxy instead
  */
 
 const ENCRYPTION_ALGORITHM = 'AES-GCM'
@@ -45,23 +57,31 @@ function generateIV(): Uint8Array {
 }
 
 /**
- * Derive an encryption key from a salt
+ * Derive an encryption key from a master salt
+ * The master salt itself is used as the key material, and a constant known value
+ * is used as PBKDF2 salt for deterministic key derivation
  */
-async function deriveKey(salt: Uint8Array): Promise<CryptoKey> {
-  // Use the salt as key material
+async function deriveKey(masterSalt: Uint8Array): Promise<CryptoKey> {
+  // Import the master salt as raw key material for PBKDF2
   const keyMaterial = await crypto.subtle.importKey(
     'raw',
-    salt,
+    masterSalt,
     { name: 'PBKDF2' },
     false,
     ['deriveBits', 'deriveKey']
   )
 
-  // Derive actual encryption key
+  // Use a constant salt for PBKDF2 (deterministic, but that's required for decryption)
+  // The security comes from the random master salt stored in IndexedDB
+  // Note: This provides obfuscation but not true security since anyone with
+  // device access can decrypt. For true security, use a password-based approach.
+  const pbkdf2Salt = new TextEncoder().encode('modelpk-encryption-v1')
+
+  // Derive AES-GCM key
   return crypto.subtle.deriveKey(
     {
       name: 'PBKDF2',
-      salt: new Uint8Array(16), // Additional salt for PBKDF2
+      salt: pbkdf2Salt,
       iterations: 100000,
       hash: 'SHA-256',
     },
