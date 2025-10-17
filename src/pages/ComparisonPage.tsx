@@ -488,7 +488,7 @@ export default function ComparisonPage() {
           <h1 className="text-3xl font-bold text-gray-900">ModelPK</h1>
           <div className="flex gap-2">
             <Link to="/pricing">
-              <Button variant="outline">View Pricing</Button>
+              <Button variant="outline">Model Costs</Button>
             </Link>
             <Link to="/config">
               <Button variant="outline">Configure Providers</Button>
