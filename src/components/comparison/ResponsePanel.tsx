@@ -1,12 +1,15 @@
 import { useState } from 'react'
 import type { ResponseStatus, TokenUsage } from '@/schemas/comparisonSchema'
+import type { ProviderId } from '@/schemas/providerConfigSchema'
 import { formatDuration } from '@/services/api/comparisonService'
+import { calculateCost } from '@/services/pricing/pricingService'
 import MarkdownPreview from '@uiw/react-markdown-preview'
 import ReactJson from '@microlink/react-json-view'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 
 interface ResponsePanelProps {
+  providerId: ProviderId
   providerName: string
   modelName: string
   status: ResponseStatus
@@ -16,11 +19,14 @@ interface ResponsePanelProps {
   tokenUsage?: TokenUsage
   isFastest?: boolean
   isSlowest?: boolean
+  isCheapest?: boolean
+  isMostExpensive?: boolean
   showThinking?: boolean
   onRefresh?: () => void
 }
 
 export function ResponsePanel({
+  providerId,
   providerName,
   modelName,
   status,
@@ -30,6 +36,8 @@ export function ResponsePanel({
   tokenUsage,
   isFastest,
   isSlowest,
+  isCheapest,
+  isMostExpensive,
   showThinking = false,
   onRefresh,
 }: ResponsePanelProps) {
@@ -86,8 +94,11 @@ export function ResponsePanel({
     ? parseResponse(response)
     : { thinkingContent: '', mainContent: '', hasThinking: false }
 
+  // Calculate cost if token usage is available
+  const costEstimate = tokenUsage ? calculateCost(providerId, modelName, tokenUsage) : null
+
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 flex flex-col h-full min-h-[300px] relative">
+    <div className="bg-white rounded-lg shadow-md p-4 flex flex-col relative">
       {/* Copy Notification */}
       {showCopyNotification && (
         <div className="absolute top-2 right-2 z-10 bg-green-500 text-white px-3 py-2 rounded shadow-lg text-sm flex items-center gap-2 animate-fade-in">
@@ -268,6 +279,15 @@ export function ResponsePanel({
                   {tokenUsage.reasoningTokens !== undefined && tokenUsage.reasoningTokens > 0 && (
                     <div>🧠 Reasoning: {tokenUsage.reasoningTokens.toLocaleString()} tokens</div>
                   )}
+                  {costEstimate && (
+                    <div className={`pt-1 mt-1 border-t border-gray-200 font-semibold ${
+                      isCheapest ? 'text-green-600' : isMostExpensive ? 'text-red-600' : 'text-gray-600'
+                    }`}>
+                      💵 Cost: {costEstimate.formattedCost}
+                      {isCheapest && ' (Cheapest)'}
+                      {isMostExpensive && ' (Most Expensive)'}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -286,6 +306,13 @@ export function ResponsePanel({
               )}
               {tokenUsage?.totalTokens !== undefined && (
                 <span>📊 {tokenUsage.totalTokens.toLocaleString()} tokens</span>
+              )}
+              {costEstimate && (
+                <span className={`font-semibold ${
+                  isCheapest ? 'text-green-600' : isMostExpensive ? 'text-red-600' : 'text-gray-600'
+                }`}>
+                  💵 {costEstimate.formattedCost}
+                </span>
               )}
               {tokenUsage?.cachedTokens !== undefined && tokenUsage.cachedTokens > 0 && (
                 <span>💾 {tokenUsage.cachedTokens.toLocaleString()}</span>

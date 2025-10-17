@@ -10,6 +10,7 @@ import type { ComparisonResponse } from '@/schemas/comparisonSchema'
 import { sendComparisonRequest } from '@/services/api/comparisonService'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { useAlert } from '@/components/ui/alert-dialog'
+import { calculateCost } from '@/services/pricing/pricingService'
 
 interface ProviderSelection {
   providerId: ProviderId
@@ -678,6 +679,19 @@ export default function ComparisonPage() {
                 const maxDuration = successfulDurations.length > 0 ? Math.max(...successfulDurations) : undefined
                 const hasMultipleSuccesses = successfulDurations.length > 1
 
+                // Calculate min/max costs from successful responses with token usage
+                const successfulCosts = Object.values(responses)
+                  .filter((r) => r.status === 'success' && r.tokenUsage)
+                  .map((r) => {
+                    const costEstimate = calculateCost(r.providerId, r.modelId, r.tokenUsage!)
+                    return costEstimate?.totalCost
+                  })
+                  .filter((cost): cost is number => cost !== null && cost !== undefined && cost > 0)
+
+                const minCost = successfulCosts.length > 0 ? Math.min(...successfulCosts) : undefined
+                const maxCost = successfulCosts.length > 0 ? Math.max(...successfulCosts) : undefined
+                const hasMultipleCosts = successfulCosts.length > 1
+
                 return Object.entries(responses).map(([key, response]) => {
                   const config = configs.find((c) => c.id === response.providerId)
                   const isFastest = hasMultipleSuccesses &&
@@ -690,9 +704,21 @@ export default function ComparisonPage() {
                                    response.durationMs === maxDuration &&
                                    minDuration !== maxDuration // Don't mark as slowest if all have same duration
 
+                  // Calculate cost for this response
+                  let isCheapest = false
+                  let isMostExpensive = false
+                  if (response.status === 'success' && response.tokenUsage && hasMultipleCosts) {
+                    const costEstimate = calculateCost(response.providerId, response.modelId, response.tokenUsage)
+                    if (costEstimate && costEstimate.totalCost > 0) {
+                      isCheapest = costEstimate.totalCost === minCost
+                      isMostExpensive = costEstimate.totalCost === maxCost && minCost !== maxCost
+                    }
+                  }
+
                   return (
                     <ResponsePanel
                       key={key}
+                      providerId={response.providerId}
                       providerName={config?.name || response.providerId}
                       modelName={response.modelId}
                       status={response.status}
@@ -702,6 +728,8 @@ export default function ComparisonPage() {
                       tokenUsage={response.tokenUsage}
                       isFastest={isFastest}
                       isSlowest={isSlowest}
+                      isCheapest={isCheapest}
+                      isMostExpensive={isMostExpensive}
                       showThinking={showThinking}
                       onRefresh={() => handleRefresh(response.providerId, response.modelId)}
                     />
