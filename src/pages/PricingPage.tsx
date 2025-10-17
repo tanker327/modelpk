@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, memo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import modelPricingData from '@/data/modelPricing.json'
 
@@ -35,13 +35,119 @@ const providerNames: { [key: string]: string } = {
   openrouter: 'OpenRouter',
 }
 
+// Memoized table row component to prevent unnecessary re-renders
+const ModelRow = memo(({ model }: { model: {
+  providerId: string
+  providerName: string
+  modelId: string
+  data: ModelPriceData
+} }) => (
+  <tr className="hover:bg-gray-50">
+    <td className="px-6 py-4 whitespace-nowrap">
+      <div className="text-sm font-medium text-gray-900">
+        {model.modelId === '*' ? 'All Models' : model.modelId}
+      </div>
+    </td>
+    <td className="px-6 py-4 whitespace-nowrap">
+      <div className="text-sm text-gray-900">
+        {model.data.inputPrice === 0 ? (
+          <span className="text-green-600 font-semibold">Free</span>
+        ) : (
+          `$${model.data.inputPrice.toFixed(2)}`
+        )}
+      </div>
+    </td>
+    <td className="px-6 py-4 whitespace-nowrap">
+      <div className="text-sm text-gray-900">
+        {model.data.outputPrice === 0 ? (
+          <span className="text-green-600 font-semibold">Free</span>
+        ) : (
+          `$${model.data.outputPrice.toFixed(2)}`
+        )}
+      </div>
+    </td>
+    <td className="px-6 py-4 whitespace-nowrap">
+      <div className="text-sm text-gray-900">
+        {model.data.contextWindow
+          ? `${(model.data.contextWindow / 1000).toLocaleString()}K`
+          : '—'}
+      </div>
+    </td>
+    <td className="px-6 py-4">
+      <div className="text-sm text-gray-500 max-w-md">
+        {model.data.notes || '—'}
+      </div>
+    </td>
+  </tr>
+))
+
+ModelRow.displayName = 'ModelRow'
+
+// Memoized provider table component
+const ProviderTable = memo(({
+  providerId,
+  models
+}: {
+  providerId: string
+  models: Array<{
+    providerId: string
+    providerName: string
+    modelId: string
+    data: ModelPriceData
+  }>
+}) => (
+  <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    {/* Provider Header */}
+    <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+      <h2 className="text-2xl font-bold text-white">
+        {providerNames[providerId] || providerId}
+      </h2>
+      {pricingData.notes[providerId] && (
+        <p className="text-blue-100 text-sm mt-1">{pricingData.notes[providerId]}</p>
+      )}
+    </div>
+
+    {/* Pricing Table */}
+    <div className="overflow-x-auto">
+      <table className="w-full">
+        <thead className="bg-gray-50 border-b border-gray-200">
+          <tr>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Model
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Input Price
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Output Price
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Context Window
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Notes
+            </th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {models.map((model) => (
+            <ModelRow key={model.modelId} model={model} />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+))
+
+ProviderTable.displayName = 'ProviderTable'
+
 export function PricingPage() {
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedProvider, setSelectedProvider] = useState<string>('all')
 
   // Get all providers
-  const providers = Object.keys(pricingData.models)
+  const providers = useMemo(() => Object.keys(pricingData.models), [])
 
   // Filter and search models
   const filteredModels = useMemo(() => {
@@ -96,6 +202,19 @@ export function PricingPage() {
     return grouped
   }, [filteredModels])
 
+  // Memoized handlers
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value)
+  }, [])
+
+  const handleProviderChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedProvider(e.target.value)
+  }, [])
+
+  const handleBackClick = useCallback(() => {
+    navigate('/')
+  }, [navigate])
+
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-7xl mx-auto">
@@ -104,7 +223,7 @@ export function PricingPage() {
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-4xl font-bold text-gray-900">Model Pricing</h1>
             <button
-              onClick={() => navigate('/')}
+              onClick={handleBackClick}
               className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors"
             >
               ← Back to Comparison
@@ -130,7 +249,7 @@ export function PricingPage() {
                 type="text"
                 placeholder="Search by model name, provider, or notes..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -143,7 +262,7 @@ export function PricingPage() {
               <select
                 id="provider"
                 value={selectedProvider}
-                onChange={(e) => setSelectedProvider(e.target.value)}
+                onChange={handleProviderChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="all">All Providers</option>
@@ -166,83 +285,7 @@ export function PricingPage() {
         {Object.keys(groupedModels).length > 0 ? (
           <div className="space-y-6">
             {Object.entries(groupedModels).map(([providerId, models]) => (
-              <div key={providerId} className="bg-white rounded-lg shadow-md overflow-hidden">
-                {/* Provider Header */}
-                <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
-                  <h2 className="text-2xl font-bold text-white">
-                    {providerNames[providerId] || providerId}
-                  </h2>
-                  {pricingData.notes[providerId] && (
-                    <p className="text-blue-100 text-sm mt-1">{pricingData.notes[providerId]}</p>
-                  )}
-                </div>
-
-                {/* Pricing Table */}
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50 border-b border-gray-200">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Model
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Input Price
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Output Price
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Context Window
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Notes
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {models.map((model) => (
-                        <tr key={model.modelId} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-gray-900">
-                              {model.modelId === '*' ? 'All Models' : model.modelId}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">
-                              {model.data.inputPrice === 0 ? (
-                                <span className="text-green-600 font-semibold">Free</span>
-                              ) : (
-                                `$${model.data.inputPrice.toFixed(2)}`
-                              )}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">
-                              {model.data.outputPrice === 0 ? (
-                                <span className="text-green-600 font-semibold">Free</span>
-                              ) : (
-                                `$${model.data.outputPrice.toFixed(2)}`
-                              )}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">
-                              {model.data.contextWindow
-                                ? `${(model.data.contextWindow / 1000).toLocaleString()}K`
-                                : '—'}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="text-sm text-gray-500 max-w-md">
-                              {model.data.notes || '—'}
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+              <ProviderTable key={providerId} providerId={providerId} models={models} />
             ))}
           </div>
         ) : (
