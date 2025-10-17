@@ -76,7 +76,7 @@ export function getModelPrice(providerId: ProviderId, modelId: string): ModelPri
   const providerPricing = modelPricing.models[providerId as keyof typeof modelPricing.models]
 
   if (!providerPricing) {
-    console.warn(`[Pricing] No pricing data for provider: ${providerId}`)
+    log.warn(`[Pricing] No pricing data for provider: ${providerId}`)
     return null
   }
 
@@ -95,11 +95,11 @@ export function getModelPrice(providerId: ProviderId, modelId: string): ModelPri
   const bestMatch = findBestMatch(modelId, pricingKeys)
 
   if (bestMatch) {
-    console.info(`[Pricing] Using fuzzy match: "${bestMatch}" for "${modelId}"`)
+    log.debug(`Using fuzzy match: "${bestMatch}" for "${modelId}"`)
     return providerPricing[bestMatch as keyof typeof providerPricing] as ModelPrice
   }
 
-  console.warn(`[Pricing] No pricing data for model: ${providerId}/${modelId}`)
+  log.warn(`No pricing data for model: ${providerId}/${modelId}`)
   return null
 }
 

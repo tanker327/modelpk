@@ -6,6 +6,9 @@ import {
   parseApiErrorResponse,
   handleRateLimitError,
 } from './providerTester'
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('AnthropicProvider')
 
 export async function testAnthropicConnection(
   config: ProviderConfig
@@ -70,14 +73,14 @@ export async function testAnthropicConnection(
       'claude-3-haiku-20240307',
     ]
 
-    console.info(`[Anthropic] Successfully validated API key`)
+    log.debug('Successfully validated API key')
 
     return {
       success: true,
       models,
     }
   } catch (error) {
-    console.error('[Anthropic] Connection test failed:', error)
+    log.error('Connection test failed:', error)
 
     // Check if it's a CORS error (common when calling Anthropic API from browser)
     if (error instanceof TypeError && error.message === 'Failed to fetch') {

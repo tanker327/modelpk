@@ -24,6 +24,10 @@ interface ResponsePanelProps {
   onRefresh?: () => void
 }
 
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('ResponsePanel')
+
 export function ResponsePanel({
   providerId,
   providerName,
@@ -52,7 +56,7 @@ export function ResponsePanel({
       setShowCopyNotification(true)
       setTimeout(() => setShowCopyNotification(false), 2000)
     } catch (err) {
-      console.error('Failed to copy to clipboard:', err)
+      log.error('Failed to copy to clipboard:', err)
     }
   }
 

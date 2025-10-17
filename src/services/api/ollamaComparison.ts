@@ -1,6 +1,9 @@
 import type { ComparisonAPIRequest } from './comparisonService'
 import type { TokenUsage } from '@/schemas/comparisonSchema'
 import { DEFAULT_BASE_URLS } from '@/schemas/providerConfigSchema'
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('Ollama')
 
 export async function sendOllamaComparison(
   request: ComparisonAPIRequest
@@ -8,7 +11,7 @@ export async function sendOllamaComparison(
   const endpoint = request.config.endpoint || DEFAULT_BASE_URLS.ollama
 
   try {
-    console.info(`[Ollama] Sending request to ${endpoint}/api/chat for model ${request.modelId}`)
+    log.debug('Sending API request')
 
     // Build messages array with proper role-based structure
     // Reference: https://github.com/ollama/ollama/blob/main/docs/api.md#generate-a-chat-completion
@@ -20,7 +23,7 @@ export async function sendOllamaComparison(
         role: 'system',
         content: request.systemPrompt,
       })
-      console.debug(`[Ollama] Using system prompt: ${request.systemPrompt.substring(0, 50)}...`)
+      log.debug('Using system prompt')
     }
 
     // Add user message
@@ -86,7 +89,7 @@ export async function sendOllamaComparison(
       }
     }
 
-    console.debug(`[Ollama] Received response: ${content.substring(0, 100)}...`)
+    log.debug('Received response')
 
     // Extract token usage (Ollama chat format)
     const tokenUsage = data.prompt_eval_count || data.eval_count
@@ -103,7 +106,7 @@ export async function sendOllamaComparison(
       tokenUsage,
     }
   } catch (error) {
-    console.error('[Ollama Comparison] Error:', error)
+    log.error('API request failed:', error)
 
     if (error instanceof TypeError && error.message === 'Failed to fetch') {
       return {

@@ -21,6 +21,10 @@ interface UseConfigBackupReturn {
 /**
  * Hook for handling configuration export/import (backup & restore)
  */
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('useConfigBackup')
+
 export function useConfigBackup(
   setConfigs: (configs: ProviderConfig[]) => void
 ): UseConfigBackupReturn {
@@ -49,9 +53,9 @@ export function useConfigBackup(
       URL.revokeObjectURL(url)
 
       setExportMessage({ type: 'success', text: 'Configuration exported successfully!' })
-      console.info('[useConfigBackup] Configuration exported')
+      log.info('[useConfigBackup] Configuration exported')
     } catch (error) {
-      console.error('[useConfigBackup] Export failed:', error)
+      log.error('[useConfigBackup] Export failed:', error)
       setExportMessage({
         type: 'error',
         text: error instanceof Error ? error.message : 'Failed to export configuration',
@@ -90,9 +94,9 @@ export function useConfigBackup(
       const loadedConfigs = providerConfigsActions.getConfigs()
       setConfigs(loadedConfigs)
 
-      console.info('[useConfigBackup] Configuration imported:', result)
+      log.info('[useConfigBackup] Configuration imported:', result)
     } catch (error) {
-      console.error('[useConfigBackup] Import failed:', error)
+      log.error('[useConfigBackup] Import failed:', error)
       setExportMessage({
         type: 'error',
         text: error instanceof Error ? error.message : 'Failed to import configuration',

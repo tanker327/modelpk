@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('ComparisonPage')
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -128,7 +132,7 @@ export default function ComparisonPage() {
               status: 'pending',
             },
           }))
-          console.info(`[ComparisonPage] Added pending result for ${key}`)
+          log.debug(`Added pending result for ${key}`)
         }
 
         // When removing a model, remove its result box
@@ -139,7 +143,7 @@ export default function ComparisonPage() {
             delete newResponses[key]
             return newResponses
           })
-          console.info(`[ComparisonPage] Removed result for ${key}`)
+          log.debug(`Removed result for ${key}`)
         }
 
         // If no models left, remove the provider selection entirely
@@ -167,7 +171,7 @@ export default function ComparisonPage() {
               status: 'pending',
             },
           }))
-          console.info(`[ComparisonPage] Added pending result for ${key}`)
+          log.debug(`Added pending result for ${key}`)
         }
 
         return [...prev, { providerId, modelIds: [modelId] }]
@@ -189,7 +193,7 @@ export default function ComparisonPage() {
     const config = configs.find((c) => c.id === providerId)
 
     if (!config) {
-      console.error('Config not found for refresh')
+      log.error('Config not found for refresh')
       return
     }
 
@@ -394,7 +398,7 @@ export default function ComparisonPage() {
                     if (!file) return
 
                     try {
-                      console.info('[ComparisonPage] Importing configuration file...')
+                      log.debug('Importing configuration file...')
                       const text = await file.text()
                       const data = JSON.parse(text)
 
@@ -403,15 +407,15 @@ export default function ComparisonPage() {
                         throw new Error('Invalid configuration file format. Expected a configs array.')
                       }
 
-                      console.info(`[ComparisonPage] Found ${data.configs.length} configurations to import`)
+                      log.debug(`Found ${data.configs.length} configurations to import`)
 
                       // Import configs using the actions
                       for (const config of data.configs) {
-                        console.info(`[ComparisonPage] Importing config for ${config.id}`)
+                        log.debug(`Importing config for ${config.id}`)
                         await providerConfigsActions.updateConfig(config.id, config)
                       }
 
-                      console.info('[ComparisonPage] Import completed successfully')
+                      log.debug('Import completed successfully')
                       showAlert(
                         'Import Successful',
                         `Successfully imported ${data.configs.length} configurations!\n\nThe page will now reload.`
@@ -422,7 +426,7 @@ export default function ComparisonPage() {
                         window.location.reload()
                       }, 2000)
                     } catch (error) {
-                      console.error('[ComparisonPage] Failed to import configuration:', error)
+                      log.error('Failed to import configuration:', error)
                       showAlert(
                         'Import Failed',
                         `Failed to import configuration:\n\n${error instanceof Error ? error.message : 'Unknown error'}`,

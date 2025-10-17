@@ -6,6 +6,9 @@ import {
   hasEncryptionSalt,
   generateMasterSalt,
 } from '@/services/security/encryption'
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('ConfigStorage')
 
 const DB_NAME = 'modelpk-config'
 const DB_VERSION = 2 // Incremented for new encryption store
@@ -30,21 +33,21 @@ async function initDB(): Promise<IDBPDatabase> {
         // Create the providers object store if it doesn't exist
         if (!db.objectStoreNames.contains(STORE_NAME)) {
           db.createObjectStore(STORE_NAME, { keyPath: 'id' })
-          console.info('[ConfigStorage] Created providers object store')
+          log.info('Created providers object store')
         }
 
         // Create the encryption object store for storing master salt
         if (!db.objectStoreNames.contains(ENCRYPTION_STORE)) {
           db.createObjectStore(ENCRYPTION_STORE)
-          console.info('[ConfigStorage] Created encryption object store')
+          log.info('Created encryption object store')
         }
       },
     })
 
-    console.info('[ConfigStorage] Database initialized successfully')
+    log.info('Database initialized successfully')
     return dbInstance
   } catch (error) {
-    console.error('[ConfigStorage] Failed to initialize database:', error)
+    log.error('Failed to initialize database:', error)
     throw new Error('Failed to initialize IndexedDB. Please check browser storage permissions.')
   }
 }
@@ -65,18 +68,18 @@ async function getMasterSalt(): Promise<Uint8Array> {
 
     if (stored && stored instanceof Uint8Array) {
       masterSalt = stored
-      console.info('[ConfigStorage] Loaded existing master salt')
+      log.debug('Loaded existing master salt')
       return masterSalt
     }
 
     // Generate new salt
     masterSalt = generateMasterSalt()
     await db.put(ENCRYPTION_STORE, masterSalt, MASTER_SALT_KEY)
-    console.info('[ConfigStorage] Generated and stored new master salt')
+    log.info('Generated and stored new master salt')
 
     return masterSalt
   } catch (error) {
-    console.error('[ConfigStorage] Failed to get master salt:', error)
+    log.error('Failed to get master salt:', error)
     throw new Error('Failed to initialize encryption')
   }
 }
@@ -94,7 +97,7 @@ export async function saveConfig(config: ProviderConfig): Promise<void> {
 
     // Encrypt API key if it exists and is not already encrypted
     if (config.config.apiKey && !hasEncryptionSalt(config.config.apiKey)) {
-      console.info(`[ConfigStorage] Encrypting API key for provider: ${config.id}`)
+      log.debug('Encrypting API key for provider')
       const salt = await getMasterSalt()
       const encryptedKey = await encryptApiKey(config.config.apiKey, salt)
 
@@ -108,12 +111,12 @@ export async function saveConfig(config: ProviderConfig): Promise<void> {
     }
 
     await db.put(STORE_NAME, configToSave)
-    console.info(`[ConfigStorage] Saved configuration for provider: ${config.id}`)
+    log.debug('Saved configuration for provider')
   } catch (error) {
     if (error instanceof Error && error.name === 'QuotaExceededError') {
       throw new Error('Storage quota exceeded. Please clear some browser data and try again.')
     }
-    console.error('[ConfigStorage] Failed to save configuration:', error)
+    log.error('Failed to save configuration:', error)
     throw new Error('Failed to save configuration. Please try again.')
   }
 }
@@ -143,7 +146,7 @@ export async function getConfig(providerId: ProviderId): Promise<ProviderConfig 
           },
         }
       } catch (error) {
-        console.error(`[ConfigStorage] Failed to decrypt API key for ${providerId}:`, error)
+        log.error('Failed to decrypt API key for provider:', error)
         // Return config without API key if decryption fails
         return {
           ...config,
@@ -157,7 +160,7 @@ export async function getConfig(providerId: ProviderId): Promise<ProviderConfig 
 
     return config
   } catch (error) {
-    console.error(`[ConfigStorage] Failed to get configuration for ${providerId}:`, error)
+    log.error('Failed to get configuration for provider:', error)
     return undefined
   }
 }
@@ -170,7 +173,7 @@ export async function getAllConfigs(): Promise<ProviderConfig[]> {
   try {
     const db = await initDB()
     const configs = await db.getAll(STORE_NAME)
-    console.info(`[ConfigStorage] Retrieved ${configs.length} configurations`)
+    log.debug(`Retrieved ${configs.length} configurations`)
 
     // Decrypt API keys for all configs
     const decryptedConfigs = await Promise.all(
@@ -186,7 +189,7 @@ export async function getAllConfigs(): Promise<ProviderConfig[]> {
               },
             }
           } catch (error) {
-            console.error(`[ConfigStorage] Failed to decrypt API key for ${config.id}:`, error)
+            log.error('Failed to decrypt API key for config:', error)
             // Return config without API key if decryption fails
             return {
               ...config,
@@ -203,7 +206,7 @@ export async function getAllConfigs(): Promise<ProviderConfig[]> {
 
     return decryptedConfigs
   } catch (error) {
-    console.error('[ConfigStorage] Failed to get all configurations:', error)
+    log.error('Failed to get all configurations:', error)
     return []
   }
 }
@@ -215,9 +218,9 @@ export async function deleteConfig(providerId: ProviderId): Promise<void> {
   try {
     const db = await initDB()
     await db.delete(STORE_NAME, providerId)
-    console.info(`[ConfigStorage] Deleted configuration for provider: ${providerId}`)
+    log.debug('Deleted configuration for provider')
   } catch (error) {
-    console.error(`[ConfigStorage] Failed to delete configuration for ${providerId}:`, error)
+    log.error('Failed to delete configuration for provider:', error)
     throw new Error('Failed to delete configuration. Please try again.')
   }
 }
@@ -230,7 +233,7 @@ export async function deleteConfig(providerId: ProviderId): Promise<void> {
 export async function exportConfigs(): Promise<string> {
   try {
     const configs = await getAllConfigs()
-    console.info(`[ConfigStorage] Exporting ${configs.length} configurations with decrypted API keys`)
+    log.info(`Exporting ${configs.length} configurations with decrypted API keys`)
     const exportData = {
       version: 1,
       exportedAt: new Date().toISOString(),
@@ -238,7 +241,7 @@ export async function exportConfigs(): Promise<string> {
     }
     return JSON.stringify(exportData, null, 2)
   } catch (error) {
-    console.error('[ConfigStorage] Failed to export configurations:', error)
+    log.error('Failed to export configurations:', error)
     throw new Error('Failed to export configurations. Please try again.')
   }
 }
@@ -274,7 +277,7 @@ export async function importConfigs(jsonData: string): Promise<{
         // Encrypt API key if it exists and is not already encrypted
         let configToSave = { ...config }
         if (config.config?.apiKey && !hasEncryptionSalt(config.config.apiKey)) {
-          console.info(`[ConfigStorage] Encrypting API key for imported provider: ${config.id}`)
+          log.debug('Encrypting API key for imported provider')
           const salt = await getMasterSalt()
           const encryptedKey = await encryptApiKey(config.config.apiKey, salt)
 
@@ -295,7 +298,7 @@ export async function importConfigs(jsonData: string): Promise<{
       }
     }
 
-    console.info(`[ConfigStorage] Import complete: ${imported} imported, ${errors.length} errors`)
+    log.info(`Import complete: ${imported} imported, ${errors.length} errors`)
     return { imported, errors }
   } catch (error) {
     if (error instanceof SyntaxError) {
@@ -312,9 +315,9 @@ export async function clearAllConfigs(): Promise<void> {
   try {
     const db = await initDB()
     await db.clear(STORE_NAME)
-    console.info('[ConfigStorage] Cleared all configurations')
+    log.info('Cleared all configurations')
   } catch (error) {
-    console.error('[ConfigStorage] Failed to clear configurations:', error)
+    log.error('Failed to clear configurations:', error)
     throw new Error('Failed to clear configurations.')
   }
 }
@@ -328,7 +331,7 @@ export async function clearAllData(): Promise<void> {
     const db = await initDB()
     await db.clear(STORE_NAME)
     await db.clear(ENCRYPTION_STORE)
-    console.info('[ConfigStorage] Cleared all IndexedDB data')
+    log.info('Cleared all IndexedDB data')
 
     // Clear localStorage items with 'modelpk-' prefix
     const keysToRemove: string[] = []
@@ -340,14 +343,14 @@ export async function clearAllData(): Promise<void> {
     }
 
     keysToRemove.forEach(key => localStorage.removeItem(key))
-    console.info(`[ConfigStorage] Cleared ${keysToRemove.length} localStorage items`)
+    log.info(`Cleared ${keysToRemove.length} localStorage items`)
 
     // Reset master salt
     masterSalt = null
 
-    console.info('[ConfigStorage] Cleared all website data')
+    log.info('Cleared all website data')
   } catch (error) {
-    console.error('[ConfigStorage] Failed to clear all data:', error)
+    log.error('Failed to clear all data:', error)
     throw new Error('Failed to clear all data.')
   }
 }

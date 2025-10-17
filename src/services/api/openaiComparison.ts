@@ -1,6 +1,9 @@
 import type { ComparisonAPIRequest } from './comparisonService'
 import type { TokenUsage } from '@/schemas/comparisonSchema'
 import { DEFAULT_BASE_URLS } from '@/schemas/providerConfigSchema'
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('OpenAI')
 
 export async function sendOpenAIComparison(
   request: ComparisonAPIRequest
@@ -87,7 +90,7 @@ export async function sendOpenAIComparison(
       tokenUsage,
     }
   } catch (error) {
-    console.error('[OpenAI Comparison] Error:', error)
+    log.error('API request failed:', error)
 
     // Check for CORS error
     if (error instanceof TypeError && error.message === 'Failed to fetch') {

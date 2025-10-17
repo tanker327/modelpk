@@ -23,6 +23,10 @@ interface TestResultsState {
   results: Record<ProviderId, TestResult>
 }
 
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('ConfigPage')
+
 export default function ConfigPage() {
   // Use local state for configs instead of atom (simpler for now)
   const [configs, setConfigs] = useState<ProviderConfig[]>(
@@ -194,9 +198,9 @@ export default function ConfigPage() {
                     'This action cannot be undone!',
                     async () => {
                       try {
-                        console.info('[ConfigPage] Clearing all provider configurations...')
+                        log.debug('Clearing all provider configurations...')
                         await clearAllConfigs()
-                        console.info('[ConfigPage] Provider configurations cleared successfully')
+                        log.debug('Provider configurations cleared successfully')
                         showAlert(
                           'Success',
                           'All provider configurations have been cleared.\n\nThe page will now reload.'
@@ -205,7 +209,7 @@ export default function ConfigPage() {
                           window.location.reload()
                         }, 2000)
                       } catch (error) {
-                        console.error('[ConfigPage] Failed to clear configurations:', error)
+                        log.error('Failed to clear configurations:', error)
                         showAlert(
                           'Error',
                           `Failed to clear configurations:\n\n${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -253,9 +257,9 @@ export default function ConfigPage() {
                         'Click "Delete All Data" to permanently delete everything, or "Cancel" to keep your data safe.',
                         async () => {
                           try {
-                            console.info('[ConfigPage] Clearing all website data...')
+                            log.debug('Clearing all website data...')
                             await clearAllData()
-                            console.info('[ConfigPage] All website data cleared successfully')
+                            log.debug('All website data cleared successfully')
                             showAlert(
                               'Success',
                               'All website data has been cleared.\n\nThe page will now reload.'
@@ -264,7 +268,7 @@ export default function ConfigPage() {
                               window.location.reload()
                             }, 2000)
                           } catch (error) {
-                            console.error('[ConfigPage] Failed to clear all data:', error)
+                            log.error('Failed to clear all data:', error)
                             showAlert(
                               'Error',
                               `Failed to clear all data:\n\n${error instanceof Error ? error.message : 'Unknown error'}`,

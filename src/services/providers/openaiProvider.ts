@@ -6,6 +6,9 @@ import {
   parseApiErrorResponse,
   handleRateLimitError,
 } from './providerTester'
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('OpenAIProvider')
 
 export async function testOpenAIConnection(config: ProviderConfig): Promise<TestConnectionResult> {
   const apiKey = config.config.apiKey
@@ -65,14 +68,14 @@ export async function testOpenAIConnection(config: ProviderConfig): Promise<Test
       .filter((id: string) => id.startsWith('gpt')) // Filter for GPT models
       .sort()
 
-    console.info(`[OpenAI] Successfully fetched ${models.length} models`)
+    log.debug(`Successfully fetched ${models.length} models`)
 
     return {
       success: true,
       models,
     }
   } catch (error) {
-    console.error('[OpenAI] Connection test failed:', error)
+    log.error('Connection test failed:', error)
     return {
       success: false,
       error: parseHttpError(error),

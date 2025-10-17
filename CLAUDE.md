@@ -137,9 +137,20 @@ Each LLM provider has two service files:
 ### When adding features:
 
 1. **State persistence** - Use `useLocalStorage` for UI state, `configStorage` for provider data
-2. **Error handling** - Always log with `console.error()` or `console.info()` and show user-friendly messages
-3. **API requests** - Follow the provider pattern (tester + comparison service)
-4. **Type safety** - Use Zod schemas for runtime validation, TypeScript for compile-time safety
+2. **Logging** - ALWAYS use the centralized logger from `@/services/logger`, NEVER use `console.log/info/warn/error`
+   ```typescript
+   import { createLogger } from '@/services/logger'
+   const log = createLogger('YourModule')
+
+   log.debug('Detailed info')  // Hidden in production
+   log.info('General info')    // Hidden in production
+   log.warn('Warning')          // Shown in production
+   log.error('Error', error)    // Shown in production
+   ```
+3. **Error handling** - Log errors with `log.error()` and show user-friendly messages
+4. **API requests** - Follow the provider pattern (tester + comparison service)
+5. **Type safety** - Use Zod schemas for runtime validation, TypeScript for compile-time safety
+6. **Security** - Never log sensitive data (API keys, user prompts, etc.) even in debug mode
 
 ## Development Workflow
 

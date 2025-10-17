@@ -1,6 +1,9 @@
 import type { ComparisonAPIRequest } from './comparisonService'
 import type { TokenUsage } from '@/schemas/comparisonSchema'
 import { DEFAULT_BASE_URLS } from '@/schemas/providerConfigSchema'
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('Gemini')
 
 export async function sendGeminiComparison(
   request: ComparisonAPIRequest
@@ -16,7 +19,7 @@ export async function sendGeminiComparison(
   }
 
   try {
-    console.info(`[Gemini] Sending request to ${baseUrl} for model ${request.modelId}`)
+    log.debug('Sending API request')
 
     // Build request body with proper system instruction support
     // Reference: https://ai.google.dev/gemini-api/docs/text-generation
@@ -34,7 +37,7 @@ export async function sendGeminiComparison(
       requestBody.systemInstruction = {
         parts: [{ text: request.systemPrompt }],
       }
-      console.debug(`[Gemini] Using system instruction: ${request.systemPrompt.substring(0, 50)}...`)
+      log.debug('Using system instruction')
     }
 
     // Add generationConfig with advanced parameters if provided
@@ -87,7 +90,7 @@ export async function sendGeminiComparison(
       }
     }
 
-    console.debug(`[Gemini] Received response: ${content.substring(0, 100)}...`)
+    log.debug('Received response')
 
     // Extract token usage (Gemini format)
     const tokenUsage = data.usageMetadata
@@ -105,7 +108,7 @@ export async function sendGeminiComparison(
       tokenUsage,
     }
   } catch (error) {
-    console.error('[Gemini Comparison] Error:', error)
+    log.error('API request failed:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

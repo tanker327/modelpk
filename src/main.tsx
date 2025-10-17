@@ -5,6 +5,7 @@ import { EcosystemProvider } from '@zedux/react'
 import './index.css'
 import App from './App.tsx'
 import { ecosystem } from './state/ecosystem'
+import { logger } from './services/logger'
 
 // Automatically detect base path from where index.html is loaded
 // This allows the app to work at any URL depth (/, /modelpk/, /apps/modelpk/, etc.)
@@ -19,7 +20,7 @@ const getBasePath = () => {
 }
 
 const basename = getBasePath()
-console.info('[Router] Base path detected:', basename)
+logger.info('Base path detected:', basename)
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

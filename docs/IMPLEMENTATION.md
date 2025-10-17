@@ -174,10 +174,14 @@ The `parseApiErrorResponse()` utility extracts error messages from different API
 ## Security Considerations
 
 1. **Client-side storage**: API keys stored in IndexedDB (browser-scoped)
-2. **No logging**: API keys are never logged to console
-3. **Masked display**: UI shows masked keys (e.g., `************sk-abc`)
-4. **HTTPS only**: Recommended for production deployment
-5. **Origin isolation**: IndexedDB scoped to app origin
+2. **Encrypted storage**: API keys encrypted using Web Crypto API (AES-GCM) before storage
+3. **Centralized logging**: All logging uses `@/services/logger` (loglevel), never `console.*`
+   - Info/debug logs hidden in production
+   - API keys and sensitive data never logged
+   - See `docs/logging-implementation.md` for details
+4. **Masked display**: UI shows masked keys (e.g., `************sk-abc`)
+5. **HTTPS only**: Recommended for production deployment
+6. **Origin isolation**: IndexedDB scoped to app origin
 
 ## Performance Optimizations
 

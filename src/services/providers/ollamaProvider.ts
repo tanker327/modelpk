@@ -1,6 +1,10 @@
 import type { ProviderConfig } from '@/schemas/providerConfigSchema'
 import { DEFAULT_BASE_URLS } from '@/schemas/providerConfigSchema'
 import { type TestConnectionResult, parseHttpError, parseApiErrorResponse } from './providerTester'
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('OllamaProvider')
+
 
 export async function testOllamaConnection(config: ProviderConfig): Promise<TestConnectionResult> {
   const endpoint = config.config.endpoint || DEFAULT_BASE_URLS.ollama
@@ -41,14 +45,14 @@ export async function testOllamaConnection(config: ProviderConfig): Promise<Test
       }
     }
 
-    console.info(`[Ollama] Successfully fetched ${models.length} models`)
+    log.debug(`Successfully fetched ${models.length} models`)
 
     return {
       success: true,
       models,
     }
   } catch (error) {
-    console.error('[Ollama] Connection test failed:', error)
+    log.error('Connection test failed:', error)
 
     // Special handling for Ollama connection errors
     if (error instanceof TypeError && error.message.includes('Failed to fetch')) {

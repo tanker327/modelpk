@@ -6,6 +6,10 @@ import {
   parseApiErrorResponse,
   handleRateLimitError,
 } from './providerTester'
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('xAIProvider')
+
 
 export async function testXAIConnection(config: ProviderConfig): Promise<TestConnectionResult> {
   const apiKey = config.config.apiKey
@@ -66,14 +70,14 @@ export async function testXAIConnection(config: ProviderConfig): Promise<TestCon
 
     const models = data.data.map((model: any) => model.id).sort()
 
-    console.info(`[xAI] Successfully fetched ${models.length} models`)
+    log.debug(`Successfully fetched ${models.length} models`)
 
     return {
       success: true,
       models,
     }
   } catch (error) {
-    console.error('[xAI] Connection test failed:', error)
+    log.error('Connection test failed:', error)
     return {
       success: false,
       error: parseHttpError(error),

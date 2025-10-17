@@ -72,7 +72,7 @@ export function ConfirmDialog({
       await onConfirm()
       onOpenChange(false)
     } catch (error) {
-      console.error('Confirm action failed:', error)
+      log.error('Confirm action failed:', error)
     } finally {
       setIsLoading(false)
     }

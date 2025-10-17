@@ -1,5 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('useLocalStorage')
+
 export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((val: T) => T)) => void] {
   // Get from localStorage or use initial value
   const [storedValue, setStoredValue] = useState<T>(() => {
@@ -7,7 +11,7 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
       const item = window.localStorage.getItem(key)
       return item ? JSON.parse(item) : initialValue
     } catch (error) {
-      console.error(`Error loading ${key} from localStorage:`, error)
+      log.error(`Error loading ${key} from localStorage:`, error)
       return initialValue
     }
   })
@@ -29,7 +33,7 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
       valueRef.current = valueToStore
       window.localStorage.setItem(key, JSON.stringify(valueToStore))
     } catch (error) {
-      console.error(`Error saving ${key} to localStorage:`, error)
+      log.error(`Error saving ${key} to localStorage:`, error)
     }
   }, [key])
 

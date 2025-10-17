@@ -6,6 +6,9 @@ import {
   parseApiErrorResponse,
   handleRateLimitError,
 } from './providerTester'
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('GeminiProvider')
 
 export async function testGeminiConnection(config: ProviderConfig): Promise<TestConnectionResult> {
   const apiKey = config.config.apiKey
@@ -71,14 +74,14 @@ export async function testGeminiConnection(config: ProviderConfig): Promise<Test
       .filter((name: string) => name.includes('gemini'))
       .sort()
 
-    console.info(`[Gemini] Successfully fetched ${models.length} models`)
+    log.debug(`Successfully fetched ${models.length} models`)
 
     return {
       success: true,
       models,
     }
   } catch (error) {
-    console.error('[Gemini] Connection test failed:', error)
+    log.error('Connection test failed:', error)
     return {
       success: false,
       error: parseHttpError(error),

@@ -1,6 +1,10 @@
 import type { ComparisonAPIRequest } from './comparisonService'
 import type { TokenUsage } from '@/schemas/comparisonSchema'
 import { DEFAULT_BASE_URLS } from '@/schemas/providerConfigSchema'
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('Anthropic')
+
 
 export async function sendAnthropicComparison(
   request: ComparisonAPIRequest
@@ -81,7 +85,7 @@ export async function sendAnthropicComparison(
       tokenUsage,
     }
   } catch (error) {
-    console.error('[Anthropic Comparison] Error:', error)
+    log.error('API request failed:', error)
 
     // Check for CORS error
     if (error instanceof TypeError && error.message === 'Failed to fetch') {

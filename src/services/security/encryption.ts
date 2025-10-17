@@ -16,6 +16,10 @@
  * - For production apps with high security requirements, use a backend proxy instead
  */
 
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('Encryption')
+
 const ENCRYPTION_ALGORITHM = 'AES-GCM'
 const KEY_LENGTH = 256
 const IV_LENGTH = 12 // 96 bits for GCM
@@ -120,14 +124,14 @@ export async function encryptApiKey(plaintext: string, salt: Uint8Array): Promis
   try {
     // Check if Web Crypto API is available (requires HTTPS or localhost)
     if (!isCryptoAvailable()) {
-      console.warn('[Encryption] Web Crypto API not available (HTTP context). Using base64 encoding instead.')
-      console.warn('[Encryption] ⚠️ For production, use HTTPS to enable proper encryption!')
+      log.warn('Web Crypto API not available (HTTP context). Using base64 encoding instead.')
+      log.warn('⚠️ For production, use HTTPS to enable proper encryption!')
       // Fallback: Just base64 encode with a marker
       const encoded = btoa(plaintext)
       return `PLAIN:${encoded}`
     }
 
-    console.info('[Encryption] Encrypting API key')
+    log.debug('Encrypting API key')
 
     // Generate IV
     const iv = generateIV()
@@ -154,7 +158,7 @@ export async function encryptApiKey(plaintext: string, salt: Uint8Array): Promis
 
     return `${saltB64}:${ivB64}:${encryptedB64}`
   } catch (error) {
-    console.error('[Encryption] Failed to encrypt API key:', error)
+    log.error('Failed to encrypt API key:', error)
     throw new Error('Failed to encrypt API key')
   }
 }
@@ -199,7 +203,7 @@ export async function decryptApiKey(encrypted: string): Promise<string> {
     const decoder = new TextDecoder()
     return decoder.decode(decrypted)
   } catch (error) {
-    console.error('[Encryption] Failed to decrypt API key:', error)
+    log.error('Failed to decrypt API key:', error)
     throw new Error('Failed to decrypt API key. The encryption may be corrupted.')
   }
 }
@@ -208,6 +212,6 @@ export async function decryptApiKey(encrypted: string): Promise<string> {
  * Generate a new master salt
  */
 export function generateMasterSalt(): Uint8Array {
-  console.info('[Encryption] Generating new master salt')
+  log.debug('Generating new master salt')
   return generateSalt()
 }

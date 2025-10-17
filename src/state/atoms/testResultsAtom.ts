@@ -43,7 +43,7 @@ export const testResultsActions = {
         },
       },
     }
-    console.info(`[testResults] Started test for ${providerId}`)
+    log.debug(`[testResults] Started test for ${providerId}`)
   },
 
   /**
@@ -62,7 +62,7 @@ export const testResultsActions = {
         },
       },
     }
-    console.info(`[testResults] Test succeeded for ${providerId} with ${models.length} models`)
+    log.debug(`[testResults] Test succeeded for ${providerId} with ${models.length} models`)
   },
 
   /**
@@ -81,7 +81,7 @@ export const testResultsActions = {
         },
       },
     }
-    console.error(`[testResults] Test failed for ${providerId}:`, error)
+    log.error(`[testResults] Test failed for ${providerId}:`, error)
   },
 
   /**
@@ -117,7 +117,7 @@ export const testResultsActions = {
         },
       },
     }
-    console.info(`[testResults] Cleared test result for ${providerId}`)
+    log.debug(`[testResults] Cleared test result for ${providerId}`)
   },
 
   /**
@@ -134,6 +134,6 @@ export const testResultsActions = {
         openrouter: { providerId: 'openrouter', status: 'idle' },
       },
     }
-    console.info('[testResults] Cleared all test results')
+    log.debug('[testResults] Cleared all test results')
   },
 }

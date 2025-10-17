@@ -6,6 +6,10 @@ import {
   parseApiErrorResponse,
   handleRateLimitError,
 } from './providerTester'
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('OpenRouterProvider')
+
 
 export async function testOpenRouterConnection(config: ProviderConfig): Promise<TestConnectionResult> {
   const apiKey = config.config.apiKey
@@ -64,14 +68,14 @@ export async function testOpenRouterConnection(config: ProviderConfig): Promise<
       .map((model: any) => model.id)
       .sort()
 
-    console.info(`[OpenRouter] Successfully fetched ${models.length} models`)
+    log.debug(`Successfully fetched ${models.length} models`)
 
     return {
       success: true,
       models,
     }
   } catch (error) {
-    console.error('[OpenRouter] Connection test failed:', error)
+    log.error('Connection test failed:', error)
     return {
       success: false,
       error: parseHttpError(error),

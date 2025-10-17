@@ -1,6 +1,9 @@
 import type { ComparisonAPIRequest } from './comparisonService'
 import type { TokenUsage } from '@/schemas/comparisonSchema'
 import { DEFAULT_BASE_URLS } from '@/schemas/providerConfigSchema'
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('OpenRouter')
 
 export async function sendOpenRouterComparison(
   request: ComparisonAPIRequest
@@ -24,7 +27,7 @@ export async function sendOpenRouterComparison(
 
     messages.push({ role: 'user', content: request.userPrompt })
 
-    console.info(`[OpenRouter] Sending request to model: ${request.modelId}`)
+    log.debug('Sending API request')
 
     // Build request body with advanced parameters
     const requestBody: Record<string, unknown> = {
@@ -88,11 +91,7 @@ export async function sendOpenRouterComparison(
 
       const errorMessage = parts.join('')
 
-      console.error('[OpenRouter] API Error:', {
-        status: response.status,
-        statusText: response.statusText,
-        errorData,
-      })
+      log.error('API Error:', { status: response.status, statusText: response.statusText })
 
       return {
         success: false,
@@ -104,7 +103,7 @@ export async function sendOpenRouterComparison(
     const content = data.choices?.[0]?.message?.content
 
     if (!content) {
-      console.error('[OpenRouter] No content in response:', data)
+      log.error('No content in response')
       return {
         success: false,
         error: 'No response content received from OpenRouter',
@@ -122,7 +121,7 @@ export async function sendOpenRouterComparison(
         }
       : undefined
 
-    console.info(`[OpenRouter] Successfully received response from ${request.modelId}`)
+    log.debug('Successfully received response')
 
     return {
       success: true,
@@ -130,7 +129,7 @@ export async function sendOpenRouterComparison(
       tokenUsage,
     }
   } catch (error) {
-    console.error('[OpenRouter Comparison] Error:', error)
+    log.error('API request failed:', error)
 
     // Check for CORS error
     if (error instanceof TypeError && error.message === 'Failed to fetch') {

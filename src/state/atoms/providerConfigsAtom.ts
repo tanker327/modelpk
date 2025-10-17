@@ -2,6 +2,9 @@ import { atom } from '@zedux/react'
 import type { ProviderConfig, ProviderId } from '@/schemas/providerConfigSchema'
 import { DEFAULT_PROVIDERS } from '@/schemas/providerConfigSchema'
 import * as configStorage from '@/services/storage/configStorage'
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('ProviderConfigsAtom')
 
 export interface ProviderConfigsState {
   configs: ProviderConfig[]
@@ -31,7 +34,7 @@ export const providerConfigsActions = {
     const configIndex = currentConfigs.findIndex((c) => c.id === providerId)
 
     if (configIndex === -1) {
-      console.error(`[providerConfigs] Provider ${providerId} not found`)
+      log.error('Provider not found')
       return
     }
 
@@ -52,9 +55,9 @@ export const providerConfigsActions = {
     // Persist to IndexedDB
     try {
       await configStorage.saveConfig(updatedConfig)
-      console.info(`[providerConfigs] Updated configuration for ${providerId}`)
+      log.debug('Updated configuration')
     } catch (error) {
-      console.error('[providerConfigs] Failed to save configuration:', error)
+      log.error('Failed to save configuration:', error)
       throw error
     }
   },
@@ -66,7 +69,7 @@ export const providerConfigsActions = {
     const config = currentConfigs.find((c) => c.id === providerId)
 
     if (!config) {
-      console.error(`[providerConfigs] Provider ${providerId} not found`)
+      log.error('Provider not found')
       return
     }
 
@@ -80,7 +83,7 @@ export const providerConfigsActions = {
     const defaultConfig = DEFAULT_PROVIDERS.find((p) => p.id === providerId)
 
     if (!defaultConfig) {
-      console.error(`[providerConfigs] No default config found for ${providerId}`)
+      log.error('No default config found')
       return
     }
 
@@ -94,9 +97,9 @@ export const providerConfigsActions = {
     // Delete from IndexedDB
     try {
       await configStorage.deleteConfig(providerId)
-      console.info(`[providerConfigs] Deleted configuration for ${providerId}`)
+      log.debug('Deleted configuration')
     } catch (error) {
-      console.error('[providerConfigs] Failed to delete configuration:', error)
+      log.error('Failed to delete configuration:', error)
       throw error
     }
   },
@@ -129,15 +132,15 @@ export const providerConfigsActions = {
 
       currentConfigs = mergedConfigs
 
-      console.info(
-        `[providerConfigs] Loaded ${savedConfigs.length} saved configurations, merged with defaults`
+      log.debug(
+        `Loaded ${savedConfigs.length} saved configurations, merged with defaults`
       )
 
       // Migration: Encrypt any unencrypted API keys
       // This happens automatically when configs are saved next time via saveConfig
       // No need for explicit migration here as saveConfig handles it
     } catch (error) {
-      console.error('[providerConfigs] Failed to load configurations:', error)
+      log.error('Failed to load configurations:', error)
     }
   },
 
