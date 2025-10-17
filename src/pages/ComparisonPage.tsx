@@ -407,9 +407,14 @@ export default function ComparisonPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold text-gray-900">AI Racers</h1>
-          <Link to="/config">
-            <Button variant="outline">Configure Providers</Button>
-          </Link>
+          <div className="flex gap-2">
+            <Link to="/pricing">
+              <Button variant="outline">View Pricing</Button>
+            </Link>
+            <Link to="/config">
+              <Button variant="outline">Configure Providers</Button>
+            </Link>
+          </div>
         </div>
 
         {/* Provider Selection */}
