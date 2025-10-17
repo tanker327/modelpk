@@ -18,12 +18,23 @@ export async function sendAnthropicComparison(
   try {
     const body: Record<string, unknown> = {
       model: request.modelId,
-      max_tokens: 1024,
+      max_tokens: request.advancedParameters?.maxTokens || 1024,
       messages: [{ role: 'user', content: request.userPrompt }],
     }
 
     if (request.systemPrompt) {
       body.system = request.systemPrompt
+    }
+
+    // Add advanced parameters if provided
+    if (request.advancedParameters) {
+      const params = request.advancedParameters
+      if (params.temperature !== undefined) body.temperature = params.temperature
+      if (params.topP !== undefined) body.top_p = params.topP
+      if (params.topK !== undefined) body.top_k = params.topK
+      if (params.stopSequences !== undefined && params.stopSequences.length > 0) {
+        body.stop_sequences = params.stopSequences
+      }
     }
 
     const response = await fetch(`${baseUrl}/messages`, {

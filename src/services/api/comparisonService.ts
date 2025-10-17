@@ -1,6 +1,6 @@
 import type { ProviderId } from '@/schemas/providerConfigSchema'
 import type { ProviderConfigData } from '@/schemas/providerConfigSchema'
-import type { TokenUsage } from '@/schemas/comparisonSchema'
+import type { TokenUsage, AdvancedParameters } from '@/schemas/comparisonSchema'
 
 export interface ComparisonAPIRequest {
   providerId: ProviderId
@@ -8,6 +8,7 @@ export interface ComparisonAPIRequest {
   systemPrompt?: string
   userPrompt: string
   config: ProviderConfigData
+  advancedParameters?: AdvancedParameters
 }
 
 export interface ComparisonAPIResponse {

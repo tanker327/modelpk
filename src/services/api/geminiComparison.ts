@@ -21,10 +21,7 @@ export async function sendGeminiComparison(
     // Build request body with proper system instruction support
     // Reference: https://ai.google.dev/gemini-api/docs/text-generation
     // system_instruction.parts is an array of Part objects
-    const requestBody: {
-      contents: Array<{ parts: Array<{ text: string }> }>
-      systemInstruction?: { parts: Array<{ text: string }> }
-    } = {
+    const requestBody: Record<string, unknown> = {
       contents: [
         {
           parts: [{ text: request.userPrompt }],
@@ -38,6 +35,24 @@ export async function sendGeminiComparison(
         parts: [{ text: request.systemPrompt }],
       }
       console.debug(`[Gemini] Using system instruction: ${request.systemPrompt.substring(0, 50)}...`)
+    }
+
+    // Add generationConfig with advanced parameters if provided
+    if (request.advancedParameters) {
+      const params = request.advancedParameters
+      const generationConfig: Record<string, unknown> = {}
+
+      if (params.temperature !== undefined) generationConfig.temperature = params.temperature
+      if (params.maxTokens !== undefined) generationConfig.maxOutputTokens = params.maxTokens
+      if (params.topP !== undefined) generationConfig.topP = params.topP
+      if (params.topK !== undefined) generationConfig.topK = params.topK
+      if (params.stopSequences !== undefined && params.stopSequences.length > 0) {
+        generationConfig.stopSequences = params.stopSequences
+      }
+
+      if (Object.keys(generationConfig).length > 0) {
+        requestBody.generationConfig = generationConfig
+      }
     }
 
     // Use x-goog-api-key header instead of URL parameter for better security

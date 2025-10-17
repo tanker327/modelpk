@@ -9,12 +9,26 @@ export const ProviderModelSelectionSchema = z.object({
 
 export type ProviderModelSelection = z.infer<typeof ProviderModelSelectionSchema>
 
+// Advanced parameters for model generation
+export const AdvancedParametersSchema = z.object({
+  temperature: z.number().min(0).max(2).optional(),
+  maxTokens: z.number().min(1).optional(),
+  topP: z.number().min(0).max(1).optional(),
+  topK: z.number().min(0).optional(),
+  frequencyPenalty: z.number().min(-2).max(2).optional(),
+  presencePenalty: z.number().min(-2).max(2).optional(),
+  stopSequences: z.array(z.string()).optional(),
+})
+
+export type AdvancedParameters = z.infer<typeof AdvancedParametersSchema>
+
 // Comparison request
 export const ComparisonRequestSchema = z.object({
   testName: z.string().optional(),
   systemPrompt: z.string().optional(),
   userPrompt: z.string().min(1, 'User prompt is required'),
   selections: z.array(ProviderModelSelectionSchema).min(1, 'At least one model must be selected'),
+  advancedParameters: AdvancedParametersSchema.optional(),
 })
 
 export type ComparisonRequest = z.infer<typeof ComparisonRequestSchema>

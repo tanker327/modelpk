@@ -29,10 +29,32 @@ export async function sendOllamaComparison(
       content: request.userPrompt,
     })
 
-    const requestBody = {
+    const requestBody: Record<string, unknown> = {
       model: request.modelId,
       messages,
       stream: false,
+    }
+
+    // Add options with advanced parameters if provided
+    if (request.advancedParameters) {
+      const params = request.advancedParameters
+      const options: Record<string, unknown> = {}
+
+      if (params.temperature !== undefined) options.temperature = params.temperature
+      if (params.topP !== undefined) options.top_p = params.topP
+      if (params.topK !== undefined) options.top_k = params.topK
+      if (params.frequencyPenalty !== undefined) options.frequency_penalty = params.frequencyPenalty
+      if (params.presencePenalty !== undefined) options.presence_penalty = params.presencePenalty
+      if (params.stopSequences !== undefined && params.stopSequences.length > 0) {
+        options.stop = params.stopSequences
+      }
+
+      // Ollama uses num_predict for max tokens
+      if (params.maxTokens !== undefined) options.num_predict = params.maxTokens
+
+      if (Object.keys(options).length > 0) {
+        requestBody.options = options
+      }
     }
 
     const response = await fetch(`${endpoint}/api/chat`, {

@@ -3,18 +3,59 @@ import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Slider } from '@/components/ui/slider'
 import { ResponsePanel } from '@/components/comparison/ResponsePanel'
 import { providerConfigsActions } from '@/state/atoms/providerConfigsAtom'
 import type { ProviderConfig, ProviderId } from '@/schemas/providerConfigSchema'
-import type { ComparisonResponse } from '@/schemas/comparisonSchema'
+import type { ComparisonResponse, AdvancedParameters } from '@/schemas/comparisonSchema'
 import { sendComparisonRequest } from '@/services/api/comparisonService'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { useAlert } from '@/components/ui/alert-dialog'
 import { calculateCost } from '@/services/pricing/pricingService'
+import { MdRefresh, MdInfoOutline } from 'react-icons/md'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 interface ProviderSelection {
   providerId: ProviderId
   modelIds: string[]
+}
+
+// Parameter info data
+const PARAMETER_INFO: Record<string, { title: string; description: string }> = {
+  temperature: {
+    title: 'Temperature',
+    description: 'Controls randomness in the output. Lower values (0.0-0.5) make responses more focused and deterministic. Higher values (1.0-2.0) make responses more creative and varied. Default is usually 1.0.',
+  },
+  maxTokens: {
+    title: 'Max Tokens',
+    description: 'The maximum number of tokens (words/pieces) the model can generate in its response. Each model has its own maximum limit. Setting this helps control response length and costs.',
+  },
+  topP: {
+    title: 'Top P (Nucleus Sampling)',
+    description: 'An alternative to temperature. The model considers only the smallest set of tokens whose cumulative probability is at least P. Lower values (0.1-0.5) make output more focused, higher values (0.9-1.0) allow more diversity. Default is 1.0.',
+  },
+  topK: {
+    title: 'Top K',
+    description: 'Limits the model to consider only the K most likely next tokens at each step. Lower values make output more focused and predictable. Not all models support this parameter.',
+  },
+  frequencyPenalty: {
+    title: 'Frequency Penalty',
+    description: 'Reduces the likelihood of repeating tokens based on their frequency in the text so far. Positive values (0.1-2.0) discourage repetition. Negative values encourage it. Range: -2.0 to 2.0, default is 0.',
+  },
+  presencePenalty: {
+    title: 'Presence Penalty',
+    description: 'Reduces the likelihood of repeating any token that has appeared in the text so far, regardless of frequency. Positive values encourage the model to talk about new topics. Range: -2.0 to 2.0, default is 0.',
+  },
+  stopSequences: {
+    title: 'Stop Sequences',
+    description: 'Custom strings that will cause the model to stop generating when encountered. Useful for structured outputs or controlling response format. For example: "###", "END", "STOP".',
+  },
 }
 
 export default function ComparisonPage() {
@@ -24,10 +65,20 @@ export default function ComparisonPage() {
   // Alert hook
   const { showAlert, AlertComponent } = useAlert()
 
+  // Info dialog state
+  const [infoDialog, setInfoDialog] = useState<{ open: boolean; paramKey: string }>({
+    open: false,
+    paramKey: '',
+  })
+
   // Form state - cached in localStorage
   const [testName, setTestName] = useLocalStorage('airacers-testName', '')
   const [systemPrompt, setSystemPrompt] = useLocalStorage('airacers-systemPrompt', 'You are a helpful assistant.')
   const [userPrompt, setUserPrompt] = useLocalStorage('airacers-userPrompt', '')
+
+  // Advanced parameters state - cached in localStorage
+  const [advancedParams, setAdvancedParams] = useLocalStorage<AdvancedParameters>('airacers-advancedParams', {})
+  const [isAdvancedExpanded, setIsAdvancedExpanded] = useLocalStorage('airacers-isAdvancedExpanded', false)
 
   // Selection state - cached in localStorage
   const [providerSelections, setProviderSelections] = useLocalStorage<ProviderSelection[]>('airacers-providerSelections', [])
@@ -128,6 +179,7 @@ export default function ComparisonPage() {
     setTestName('')
     setSystemPrompt('You are a helpful assistant.')
     setUserPrompt('')
+    setAdvancedParams({})
     setIsPromptsExpanded(true)
     setResponses({})
   }
@@ -158,6 +210,7 @@ export default function ComparisonPage() {
         systemPrompt: systemPrompt || undefined,
         userPrompt,
         config: config.config,
+        advancedParameters: Object.keys(advancedParams).length > 0 ? advancedParams : undefined,
       })
 
       setResponses((prev) => ({
@@ -247,6 +300,7 @@ export default function ComparisonPage() {
           systemPrompt: systemPrompt || undefined,
           userPrompt,
           config: config.config,
+          advancedParameters: Object.keys(advancedParams).length > 0 ? advancedParams : undefined,
         })
 
         setResponses((prev) => ({
@@ -399,9 +453,34 @@ export default function ComparisonPage() {
     )
   }
 
+  // Helper component for info icons
+  const InfoIcon = ({ paramKey }: { paramKey: string }) => (
+    <button
+      type="button"
+      onClick={() => setInfoDialog({ open: true, paramKey })}
+      className="inline-flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
+      aria-label={`Info about ${paramKey}`}
+    >
+      <MdInfoOutline size={16} />
+    </button>
+  )
+
   return (
     <>
       <AlertComponent />
+
+      {/* Info Dialog */}
+      <Dialog open={infoDialog.open} onOpenChange={(open) => setInfoDialog({ ...infoDialog, open })}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{PARAMETER_INFO[infoDialog.paramKey]?.title || 'Parameter Info'}</DialogTitle>
+            <DialogDescription className="text-sm leading-relaxed pt-2">
+              {PARAMETER_INFO[infoDialog.paramKey]?.description || 'No information available.'}
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
       <div className="min-h-screen bg-gray-50 p-4 md:p-8">
         <div className="w-full mx-auto">
         {/* Header */}
@@ -603,6 +682,241 @@ export default function ComparisonPage() {
                   placeholder="e.g., Write a short poem about AI..."
                   className="w-full px-3 py-2 border border-input rounded-md min-h-[120px]"
                 />
+              </div>
+
+              {/* Advanced Parameters Section */}
+              <div className="border-t pt-4">
+                <button
+                  type="button"
+                  onClick={() => setIsAdvancedExpanded(!isAdvancedExpanded)}
+                  className="flex items-center gap-2 text-sm text-gray-700 hover:text-gray-900 font-medium"
+                >
+                  <span className="text-gray-500 text-xs">{isAdvancedExpanded ? '▼' : '▶'}</span>
+                  Advanced Parameters (optional)
+                </button>
+
+                {isAdvancedExpanded && (
+                  <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 bg-gray-50 p-6 rounded-lg">
+                    {/* Temperature */}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <Label htmlFor="temperature" className="text-sm font-medium">
+                            Temperature
+                          </Label>
+                          <InfoIcon paramKey="temperature" />
+                        </div>
+                        <span className="text-sm text-gray-700 font-mono bg-white px-2 py-0.5 rounded border border-gray-200">
+                          {advancedParams.temperature?.toFixed(2) ?? '1.00'}
+                        </span>
+                      </div>
+                      <Slider
+                        id="temperature"
+                        min={0}
+                        max={2}
+                        step={0.01}
+                        value={[advancedParams.temperature ?? 1.0]}
+                        onValueChange={(values) =>
+                          setAdvancedParams({
+                            ...advancedParams,
+                            temperature: values[0],
+                          })
+                        }
+                      />
+                      <p className="text-xs text-gray-500">
+                        Controls randomness. Higher = more creative.
+                      </p>
+                    </div>
+
+                    {/* Max Tokens */}
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-1.5">
+                        <Label htmlFor="maxTokens" className="text-sm font-medium">
+                          Max Tokens
+                        </Label>
+                        <InfoIcon paramKey="maxTokens" />
+                      </div>
+                      <Input
+                        id="maxTokens"
+                        type="number"
+                        min="1"
+                        value={advancedParams.maxTokens ?? ''}
+                        onChange={(e) =>
+                          setAdvancedParams({
+                            ...advancedParams,
+                            maxTokens: e.target.value ? parseInt(e.target.value) : undefined,
+                          })
+                        }
+                        placeholder="e.g., 2000"
+                        className="text-sm"
+                      />
+                      <p className="text-xs text-gray-500">
+                        Maximum length of response.
+                      </p>
+                    </div>
+
+                    {/* Top P */}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <Label htmlFor="topP" className="text-sm font-medium">
+                            Top P
+                          </Label>
+                          <InfoIcon paramKey="topP" />
+                        </div>
+                        <span className="text-sm text-gray-700 font-mono bg-white px-2 py-0.5 rounded border border-gray-200">
+                          {advancedParams.topP?.toFixed(2) ?? '1.00'}
+                        </span>
+                      </div>
+                      <Slider
+                        id="topP"
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        value={[advancedParams.topP ?? 1.0]}
+                        onValueChange={(values) =>
+                          setAdvancedParams({
+                            ...advancedParams,
+                            topP: values[0],
+                          })
+                        }
+                      />
+                      <p className="text-xs text-gray-500">
+                        Nucleus sampling threshold.
+                      </p>
+                    </div>
+
+                    {/* Top K */}
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-1.5">
+                        <Label htmlFor="topK" className="text-sm font-medium">
+                          Top K
+                        </Label>
+                        <InfoIcon paramKey="topK" />
+                      </div>
+                      <Input
+                        id="topK"
+                        type="number"
+                        min="0"
+                        value={advancedParams.topK ?? ''}
+                        onChange={(e) =>
+                          setAdvancedParams({
+                            ...advancedParams,
+                            topK: e.target.value ? parseInt(e.target.value) : undefined,
+                          })
+                        }
+                        placeholder="e.g., 40"
+                        className="text-sm"
+                      />
+                      <p className="text-xs text-gray-500">
+                        Consider only top K tokens.
+                      </p>
+                    </div>
+
+                    {/* Frequency Penalty */}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <Label htmlFor="frequencyPenalty" className="text-sm font-medium">
+                            Frequency Penalty
+                          </Label>
+                          <InfoIcon paramKey="frequencyPenalty" />
+                        </div>
+                        <span className="text-sm text-gray-700 font-mono bg-white px-2 py-0.5 rounded border border-gray-200">
+                          {advancedParams.frequencyPenalty?.toFixed(2) ?? '0.00'}
+                        </span>
+                      </div>
+                      <Slider
+                        id="frequencyPenalty"
+                        min={-2}
+                        max={2}
+                        step={0.01}
+                        value={[advancedParams.frequencyPenalty ?? 0]}
+                        onValueChange={(values) =>
+                          setAdvancedParams({
+                            ...advancedParams,
+                            frequencyPenalty: values[0],
+                          })
+                        }
+                      />
+                      <p className="text-xs text-gray-500">
+                        Reduces repetition of tokens. Range: -2 to 2
+                      </p>
+                    </div>
+
+                    {/* Presence Penalty */}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <Label htmlFor="presencePenalty" className="text-sm font-medium">
+                            Presence Penalty
+                          </Label>
+                          <InfoIcon paramKey="presencePenalty" />
+                        </div>
+                        <span className="text-sm text-gray-700 font-mono bg-white px-2 py-0.5 rounded border border-gray-200">
+                          {advancedParams.presencePenalty?.toFixed(2) ?? '0.00'}
+                        </span>
+                      </div>
+                      <Slider
+                        id="presencePenalty"
+                        min={-2}
+                        max={2}
+                        step={0.01}
+                        value={[advancedParams.presencePenalty ?? 0]}
+                        onValueChange={(values) =>
+                          setAdvancedParams({
+                            ...advancedParams,
+                            presencePenalty: values[0],
+                          })
+                        }
+                      />
+                      <p className="text-xs text-gray-500">
+                        Encourages new topics. Range: -2 to 2
+                      </p>
+                    </div>
+
+                    {/* Stop Sequences - Full width */}
+                    <div className="md:col-span-2 space-y-4 pt-2">
+                      <div className="flex items-center gap-1.5">
+                        <Label htmlFor="stopSequences" className="text-sm font-medium">
+                          Stop Sequences (comma-separated)
+                        </Label>
+                        <InfoIcon paramKey="stopSequences" />
+                      </div>
+                      <Input
+                        id="stopSequences"
+                        type="text"
+                        value={advancedParams.stopSequences?.join(', ') ?? ''}
+                        onChange={(e) =>
+                          setAdvancedParams({
+                            ...advancedParams,
+                            stopSequences: e.target.value
+                              ? e.target.value.split(',').map((s) => s.trim()).filter(Boolean)
+                              : undefined,
+                          })
+                        }
+                        placeholder="e.g., ###, END, STOP"
+                        className="text-sm"
+                      />
+                      <p className="text-xs text-gray-500">
+                        Sequences where the model will stop generating.
+                      </p>
+                    </div>
+
+                    {/* Reset Advanced Parameters Button */}
+                    <div className="md:col-span-2 pt-2 flex justify-end">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setAdvancedParams({})}
+                      >
+                        <MdRefresh className="mr-1.5" size={16} />
+                        Reset Advanced Parameters
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Actions - inside expanded view */}

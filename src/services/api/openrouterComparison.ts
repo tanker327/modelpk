@@ -26,6 +26,26 @@ export async function sendOpenRouterComparison(
 
     console.info(`[OpenRouter] Sending request to model: ${request.modelId}`)
 
+    // Build request body with advanced parameters
+    const requestBody: Record<string, unknown> = {
+      model: request.modelId,
+      messages,
+    }
+
+    // Add advanced parameters if provided (OpenAI-compatible)
+    if (request.advancedParameters) {
+      const params = request.advancedParameters
+      if (params.temperature !== undefined) requestBody.temperature = params.temperature
+      if (params.maxTokens !== undefined) requestBody.max_tokens = params.maxTokens
+      if (params.topP !== undefined) requestBody.top_p = params.topP
+      if (params.topK !== undefined) requestBody.top_k = params.topK
+      if (params.frequencyPenalty !== undefined) requestBody.frequency_penalty = params.frequencyPenalty
+      if (params.presencePenalty !== undefined) requestBody.presence_penalty = params.presencePenalty
+      if (params.stopSequences !== undefined && params.stopSequences.length > 0) {
+        requestBody.stop = params.stopSequences
+      }
+    }
+
     const response = await fetch(`${baseUrl}/chat/completions`, {
       method: 'POST',
       headers: {
@@ -34,10 +54,7 @@ export async function sendOpenRouterComparison(
         'HTTP-Referer': 'https://ai-racers.app', // Optional: identifies your app
         'X-Title': 'AI Racers', // Optional: sets app title
       },
-      body: JSON.stringify({
-        model: request.modelId,
-        messages,
-      }),
+      body: JSON.stringify(requestBody),
     })
 
     if (!response.ok) {
