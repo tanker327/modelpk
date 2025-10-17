@@ -1,10 +1,10 @@
 services:
-  ai-racers:
+  modelpk:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ai-racers:latest
-    container_name: ai-racers
+    image: modelpk:latest
+    container_name: modelpk
     ports:
       - "3000:80"
     restart: unless-stopped
@@ -17,11 +17,11 @@ services:
       start_period: 5s
       retries: 3
     labels:
-      - "com.ai-racers.description=AI Racers - Model Comparison Tool"
-      - "com.ai-racers.version=0.0.1"
+      - "com.modelpk.description=ModelPK - AI Model Comparison Tool"
+      - "com.modelpk.version=0.0.1"
     networks:
-      - ai-racers-network
+      - modelpk-network
 
 networks:
-  ai-racers-network:
+  modelpk-network:
     driver: bridge

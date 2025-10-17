@@ -31,7 +31,7 @@ The IndexedDB database MUST use a consistent, well-defined schema to ensure data
 
 **Given** the user visits the application for the first time
 **When** the application initializes
-**Then** an IndexedDB database named `ai-racers-config` is created
+**Then** an IndexedDB database named `modelpk-config` is created
 **And** a `providers` object store is created with `id` as the key path
 **And** the database version is set to 1
 
@@ -140,7 +140,7 @@ The application MUST support configuration export and import to allow users to b
 **When** the user clicks "Export Configurations"
 **Then** a JSON file is downloaded containing all configurations
 **And** sensitive data (API keys) are included in the export
-**And** the filename includes a timestamp (e.g., `ai-racers-config-2025-10-14.json`)
+**And** the filename includes a timestamp (e.g., `modelpk-config-2025-10-14.json`)
 
 #### Scenario: User imports configurations from backup
 

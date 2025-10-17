@@ -2,7 +2,7 @@
 
 ## Overview
 
-AI Racers can be deployed at any URL path (root, subdirectory, or nested paths) thanks to relative path configuration.
+ModelPK can be deployed at any URL path (root, subdirectory, or nested paths) thanks to relative path configuration.
 
 ## Build Configuration
 
@@ -13,8 +13,8 @@ The app is configured to work at any URL path automatically:
 
 This allows the app to work at:
 - Root level: `https://example.com/`
-- Subdirectory: `https://example.com/ai-racers/`
-- Nested paths: `https://example.com/apps/ai-racers/`
+- Subdirectory: `https://example.com/modelpk/`
+- Nested paths: `https://example.com/apps/modelpk/`
 
 **No configuration changes needed** - the same build works everywhere!
 
@@ -35,13 +35,13 @@ npm run build
 
 ```bash
 # Build the Docker image
-docker build -t ai-racers .
+docker build -t modelpk .
 
 # Run at root level (http://example.com/)
-docker run -d -p 80:80 ai-racers
+docker run -d -p 80:80 modelpk
 
-# Run at subdirectory (http://example.com/ai-racers/)
-# Copy dist files to /ai-racers/ in your web server
+# Run at subdirectory (http://example.com/modelpk/)
+# Copy dist files to /modelpk/ in your web server
 ```
 
 **Using docker compose:**
@@ -62,7 +62,7 @@ npm run build
 **2. Copy dist files to your nginx directory:**
 ```bash
 # For subdirectory deployment
-scp -r dist/* user@server:/var/www/html/ai-racers/
+scp -r dist/* user@server:/var/www/html/modelpk/
 ```
 
 **3. Configure nginx:**
@@ -81,16 +81,16 @@ server {
 }
 ```
 
-For **subdirectory deployment** (`http://example.com/ai-racers/`):
+For **subdirectory deployment** (`http://example.com/modelpk/`):
 ```nginx
 server {
     listen 80;
     server_name example.com;
     root /var/www/html;
 
-    location /ai-racers/ {
-        alias /var/www/html/ai-racers/;
-        try_files $uri $uri/ /ai-racers/index.html;
+    location /modelpk/ {
+        alias /var/www/html/modelpk/;
+        try_files $uri $uri/ /modelpk/index.html;
         index index.html;
     }
 }
@@ -129,18 +129,18 @@ For **subdirectory deployment** with Apache:
 
 **1. Copy files:**
 ```bash
-scp -r dist/* user@server:/var/www/html/ai-racers/
+scp -r dist/* user@server:/var/www/html/modelpk/
 ```
 
 **2. Create `.htaccess` in the subdirectory:**
 ```apache
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /ai-racers/
+  RewriteBase /modelpk/
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /ai-racers/index.html [L]
+  RewriteRule . /modelpk/index.html [L]
 </IfModule>
 ```
 
@@ -167,14 +167,14 @@ npm run build
 **AWS S3 + CloudFront:**
 ```bash
 npm run build
-aws s3 sync dist/ s3://your-bucket/ai-racers/ --delete
+aws s3 sync dist/ s3://your-bucket/modelpk/ --delete
 ```
 
 ## Troubleshooting
 
 ### Assets returning 404
 
-**Problem:** Assets are loading from wrong path (e.g., `/assets/...` instead of `/ai-racers/assets/...`)
+**Problem:** Assets are loading from wrong path (e.g., `/assets/...` instead of `/modelpk/assets/...`)
 
 **Solution:**
 1. Ensure `vite.config.ts` has `base: './'`
@@ -213,7 +213,7 @@ Before deploying to production:
 
 ## Environment Variables
 
-AI Racers runs entirely in the browser and doesn't use environment variables. All configuration is done through the UI and stored locally in IndexedDB.
+ModelPK runs entirely in the browser and doesn't use environment variables. All configuration is done through the UI and stored locally in IndexedDB.
 
 ## Updating the Deployment
 
@@ -227,7 +227,7 @@ git pull origin main
 npm run build
 
 # Redeploy dist/ folder or rebuild Docker image
-docker build -t ai-racers .
+docker build -t modelpk .
 docker compose up -d
 ```
 
@@ -237,15 +237,15 @@ You can deploy multiple instances at different paths:
 
 ```nginx
 # Dev instance
-location /ai-racers-dev/ {
-    alias /var/www/html/ai-racers-dev/;
-    try_files $uri $uri/ /ai-racers-dev/index.html;
+location /modelpk-dev/ {
+    alias /var/www/html/modelpk-dev/;
+    try_files $uri $uri/ /modelpk-dev/index.html;
 }
 
 # Prod instance
-location /ai-racers/ {
-    alias /var/www/html/ai-racers/;
-    try_files $uri $uri/ /ai-racers/index.html;
+location /modelpk/ {
+    alias /var/www/html/modelpk/;
+    try_files $uri $uri/ /modelpk/index.html;
 }
 ```
 

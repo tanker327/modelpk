@@ -7,7 +7,7 @@ import App from './App.tsx'
 import { ecosystem } from './state/ecosystem'
 
 // Automatically detect base path from where index.html is loaded
-// This allows the app to work at any URL depth (/, /ai-racers/, /apps/ai-racers/, etc.)
+// This allows the app to work at any URL depth (/, /modelpk/, /apps/modelpk/, etc.)
 const getBasePath = () => {
   const base = document.querySelector('base')?.getAttribute('href')
   if (base) return base

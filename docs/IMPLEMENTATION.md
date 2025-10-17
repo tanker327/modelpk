@@ -102,7 +102,7 @@ Located in `src/state/atoms/testResultsAtom.ts`
 
 ## IndexedDB Schema
 
-**Database:** `ai-racers-config`
+**Database:** `modelpk-config`
 **Version:** 1
 **Store:** `providers` (keyPath: 'id')
 
@@ -245,7 +245,7 @@ Clear IndexedDB in browser DevTools:
 1. Open DevTools (F12)
 2. Go to Application tab
 3. Expand IndexedDB
-4. Right-click `ai-racers-config` → Delete
+4. Right-click `modelpk-config` → Delete
 
 ### State Not Updating
 

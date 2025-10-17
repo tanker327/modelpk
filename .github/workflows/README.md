@@ -40,10 +40,10 @@ Once the workflow runs successfully, pull and run your image:
 
 ```bash
 # Pull latest
-docker pull ghcr.io/YOUR_GITHUB_USERNAME/ai-racers:latest
+docker pull ghcr.io/YOUR_GITHUB_USERNAME/modelpk:latest
 
 # Run
-docker run -d -p 3000:80 ghcr.io/YOUR_GITHUB_USERNAME/ai-racers:latest
+docker run -d -p 3000:80 ghcr.io/YOUR_GITHUB_USERNAME/modelpk:latest
 ```
 
 **Note:** Replace `YOUR_GITHUB_USERNAME` with your actual GitHub username or organization name.
@@ -54,7 +54,7 @@ By default, GitHub Container Registry images are private. To make it public:
 
 1. Go to your GitHub profile
 2. Click on "Packages" tab
-3. Find the `ai-racers` package
+3. Find the `modelpk` package
 4. Click on "Package settings"
 5. Scroll down to "Danger Zone"
 6. Click "Change visibility" and select "Public"

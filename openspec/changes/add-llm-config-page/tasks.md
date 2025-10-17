@@ -13,7 +13,7 @@
 ### 2. Implement IndexedDB storage service
 - Install IndexedDB wrapper library (`idb` or `localforage`)
 - Create `src/services/storage/configStorage.ts`
-- Implement database initialization with `ai-racers-config` database name
+- Implement database initialization with `modelpk-config` database name
 - Create `providers` object store with `id` as keyPath
 - Implement CRUD operations: saveConfig, getConfig, getAllConfigs, deleteConfig
 - Implement export/import functions: exportConfigs, importConfigs

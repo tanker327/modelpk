@@ -66,7 +66,7 @@ interface TestResult {
 ### IndexedDB Schema
 
 ```javascript
-Database: 'ai-racers-config'
+Database: 'modelpk-config'
 Version: 1
 Stores:
   - providers (keyPath: 'id')

@@ -1,6 +1,6 @@
 # Docker Deployment Guide
 
-This guide explains how to build and run AI Racers using Docker.
+This guide explains how to build and run ModelPK using Docker.
 
 ## Prerequisites
 
@@ -28,22 +28,22 @@ This guide explains how to build and run AI Racers using Docker.
 
 1. **Build the image**:
    ```bash
-   docker build -t ai-racers:latest .
+   docker build -t modelpk:latest .
    ```
 
 2. **Run the container**:
    ```bash
    docker run -d \
-     --name ai-racers \
+     --name modelpk \
      -p 3000:80 \
      --restart unless-stopped \
-     ai-racers:latest
+     modelpk:latest
    ```
 
 3. **Stop the container**:
    ```bash
-   docker stop ai-racers
-   docker rm ai-racers
+   docker stop modelpk
+   docker rm modelpk
    ```
 
 ## Docker Configuration
@@ -91,14 +91,14 @@ The `docker-compose.yml` file includes:
 docker compose logs -f
 
 # Docker CLI
-docker logs -f ai-racers
+docker logs -f modelpk
 ```
 
 ### Health Check
 
 ```bash
 # Check container health status
-docker inspect --format='{{.State.Health.Status}}' ai-racers
+docker inspect --format='{{.State.Health.Status}}' modelpk
 
 # Access health endpoint directly
 curl http://localhost:3000/health
@@ -111,10 +111,10 @@ curl http://localhost:3000/health
 docker compose up -d --build
 
 # Or with Docker CLI
-docker build -t ai-racers:latest . && \
-docker stop ai-racers && \
-docker rm ai-racers && \
-docker run -d --name ai-racers -p 3000:80 --restart unless-stopped ai-racers:latest
+docker build -t modelpk:latest . && \
+docker stop modelpk && \
+docker rm modelpk && \
+docker run -d --name modelpk -p 3000:80 --restart unless-stopped modelpk:latest
 ```
 
 ### Custom Port
@@ -127,7 +127,7 @@ ports:
   - "8080:80"  # Change 3000 to 8080
 
 # Docker CLI
-docker run -d --name ai-racers -p 8080:80 --restart unless-stopped ai-racers:latest
+docker run -d --name modelpk -p 8080:80 --restart unless-stopped modelpk:latest
 ```
 
 ## Troubleshooting
@@ -162,12 +162,12 @@ docker run -d --name ai-racers -p 8080:80 --restart unless-stopped ai-racers:lat
 
 1. Check if nginx is running inside container:
    ```bash
-   docker exec ai-racers ps aux
+   docker exec modelpk ps aux
    ```
 
 2. Test health endpoint:
    ```bash
-   docker exec ai-racers wget --spider http://localhost/health
+   docker exec modelpk wget --spider http://localhost/health
    ```
 
 ## Production Considerations
@@ -216,20 +216,20 @@ deploy:
 
 ```yaml
 - name: Build Docker image
-  run: docker build -t ai-racers:${{ github.sha }} .
+  run: docker build -t modelpk:${{ github.sha }} .
 
 - name: Push to registry
-  run: docker push ai-racers:${{ github.sha }}
+  run: docker push modelpk:${{ github.sha }}
 ```
 
 ### Docker Registry
 
 ```bash
 # Tag for registry
-docker tag ai-racers:latest registry.example.com/ai-racers:latest
+docker tag modelpk:latest registry.example.com/modelpk:latest
 
 # Push to registry
-docker push registry.example.com/ai-racers:latest
+docker push registry.example.com/modelpk:latest
 ```
 
 ## Support
