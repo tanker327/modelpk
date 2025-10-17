@@ -5,8 +5,7 @@ import { formatDuration } from '@/services/api/comparisonService'
 import { calculateCost } from '@/services/pricing/pricingService'
 import MarkdownPreview from '@uiw/react-markdown-preview'
 import ReactJson from '@microlink/react-json-view'
-import { Switch } from '@/components/ui/switch'
-import { Label } from '@/components/ui/label'
+import { Toggle } from '@/components/ui/toggle'
 
 interface ResponsePanelProps {
   providerId: ProviderId
@@ -139,15 +138,25 @@ export function ResponsePanel({
               >
                 📋
               </button>
-              <div className="flex items-center gap-2">
-                <Label htmlFor="view-toggle" className="text-xs text-gray-600 cursor-pointer w-8 text-right">
-                  {isMarkdownView ? 'MD' : 'Raw'}
-                </Label>
-                <Switch
-                  id="view-toggle"
-                  checked={!isMarkdownView}
-                  onCheckedChange={(checked) => setIsMarkdownView(!checked)}
-                />
+              <div className="flex items-center gap-1">
+                <Toggle
+                  pressed={isMarkdownView}
+                  onPressedChange={setIsMarkdownView}
+                  variant="outline"
+                  size="sm"
+                  aria-label="Toggle markdown view"
+                >
+                  MD
+                </Toggle>
+                <Toggle
+                  pressed={!isMarkdownView}
+                  onPressedChange={(pressed) => setIsMarkdownView(!pressed)}
+                  variant="outline"
+                  size="sm"
+                  aria-label="Toggle raw view"
+                >
+                  Raw
+                </Toggle>
               </div>
             </>
           )}
