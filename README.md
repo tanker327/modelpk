@@ -1,10 +1,10 @@
-# AI Racers
+# ModelPK - AI Model Comparison Arena
 
-A secure, browser-based web application for comparing outputs from multiple AI models side-by-side. Race different LLMs with the same prompt and see which one performs best for your needs.
+A secure, browser-based web application for comparing outputs from multiple AI models side-by-side. Let AI models battle it out (PK-style) with the same prompt and see which one performs best for your needs.
 
 ## 🔒 Security First
 
-**Your API keys never leave your browser.** AI Racers runs entirely in your browser with no backend server:
+**Your API keys never leave your browser.** ModelPK runs entirely in your browser with no backend server:
 
 - ✅ **Encrypted Storage** - All API keys are encrypted using Web Crypto API (AES-GCM) before being stored in IndexedDB
 - ✅ **No Server** - Direct API calls from your browser to LLM providers (OpenAI, Gemini, etc.)
@@ -54,7 +54,7 @@ A secure, browser-based web application for comparing outputs from multiple AI m
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd ai-racers
+cd modelpk
 
 # Install dependencies
 npm install
@@ -75,7 +75,7 @@ The app will be available at `http://localhost:5174`
 
 ### Docker Deployment
 
-Run AI Racers in a container:
+Run ModelPK in a container:
 
 ```bash
 # Build and start
@@ -160,7 +160,7 @@ npm run lint:fix         # Auto-fix issues
 ### Project Structure
 
 ```
-ai-racers/
+modelpk/
 ├── src/
 │   ├── components/       # React components
 │   │   ├── comparison/   # Comparison page components
@@ -221,7 +221,7 @@ This project follows the OpenSpec workflow for all significant changes. See `ope
 A: The app has no backend and all code is open source. You can inspect the Network tab in browser DevTools to verify that API calls only go to official LLM provider endpoints. API keys are encrypted in IndexedDB and never sent anywhere except directly to the provider you're using.
 
 **Q: Why use this instead of switching between ChatGPT, Claude, etc.?**
-A: AI Racers lets you compare responses side-by-side with identical prompts, see which is fastest, and track token usage - all in one place. Perfect for developers, researchers, and anyone choosing between models.
+A: ModelPK lets you compare responses side-by-side with identical prompts, see which is fastest, and track token usage - all in one place. Perfect for developers, researchers, and anyone choosing between models.
 
 **Q: Can I use this offline?**
 A: The app itself can be cached for offline use, but you need an internet connection to make API calls to LLM providers (except Ollama, which runs locally).

@@ -7,7 +7,7 @@ import {
   generateMasterSalt,
 } from '@/services/security/encryption'
 
-const DB_NAME = 'ai-racers-config'
+const DB_NAME = 'modelpk-config'
 const DB_VERSION = 2 // Incremented for new encryption store
 const STORE_NAME = 'providers'
 const ENCRYPTION_STORE = 'encryption'
@@ -330,11 +330,11 @@ export async function clearAllData(): Promise<void> {
     await db.clear(ENCRYPTION_STORE)
     console.info('[ConfigStorage] Cleared all IndexedDB data')
 
-    // Clear localStorage items with 'airacers-' prefix
+    // Clear localStorage items with 'modelpk-' prefix
     const keysToRemove: string[] = []
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i)
-      if (key && key.startsWith('airacers-')) {
+      if (key && key.startsWith('modelpk-')) {
         keysToRemove.push(key)
       }
     }

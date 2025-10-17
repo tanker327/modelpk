@@ -51,8 +51,8 @@ export async function sendOpenRouterComparison(
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`,
-        'HTTP-Referer': 'https://ai-racers.app', // Optional: identifies your app
-        'X-Title': 'AI Racers', // Optional: sets app title
+        'HTTP-Referer': 'https://modelpk.com', // Optional: identifies your app
+        'X-Title': 'ModelPK', // Optional: sets app title
       },
       body: JSON.stringify(requestBody),
     })

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-AI Racers is a React-based web application for comparing outputs from different AI models using the same prompt. The app runs entirely in the browser with no backend, using IndexedDB for persistent storage and direct API calls to various LLM providers.
+ModelPK is a React-based web application for comparing outputs from different AI models using the same prompt (PK = "Player Killing", a gaming term for competitive battles). The app runs entirely in the browser with no backend, using IndexedDB for persistent storage and direct API calls to various LLM providers.
 
 ## Development Commands
 
@@ -72,14 +72,14 @@ export const providerConfigsActions = {
 **Two-layer persistence:**
 
 1. **IndexedDB (via `idb`)** - For provider configurations (API keys, endpoints, selected models)
-   - Database: `ai-racers-config`
+   - Database: `modelpk-config`
    - Stores: `providers`, `encryption`
    - All API keys are encrypted at rest using Web Crypto API
    - See `src/services/storage/configStorage.ts`
 
 2. **localStorage** - For UI state and comparison data
    - Uses custom `useLocalStorage` hook (see `src/hooks/useLocalStorage.ts`)
-   - Keys prefixed with `airacers-`
+   - Keys prefixed with `modelpk-`
    - Used for: test names, prompts, responses, UI collapse states
 
 ### Provider Integration Pattern

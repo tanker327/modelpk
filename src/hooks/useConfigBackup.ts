@@ -42,7 +42,7 @@ export function useConfigBackup(
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
-      link.download = `ai-racers-config-${new Date().toISOString().replace(/:/g, '-').split('.')[0]}.json`
+      link.download = `modelpk-config-${new Date().toISOString().replace(/:/g, '-').split('.')[0]}.json`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)

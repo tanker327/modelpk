@@ -72,21 +72,21 @@ export default function ComparisonPage() {
   })
 
   // Form state - cached in localStorage
-  const [testName, setTestName] = useLocalStorage('airacers-testName', '')
-  const [systemPrompt, setSystemPrompt] = useLocalStorage('airacers-systemPrompt', 'You are a helpful assistant.')
-  const [userPrompt, setUserPrompt] = useLocalStorage('airacers-userPrompt', '')
+  const [testName, setTestName] = useLocalStorage('modelpk-testName', '')
+  const [systemPrompt, setSystemPrompt] = useLocalStorage('modelpk-systemPrompt', 'You are a helpful assistant.')
+  const [userPrompt, setUserPrompt] = useLocalStorage('modelpk-userPrompt', '')
 
   // Advanced parameters state - cached in localStorage
-  const [advancedParams, setAdvancedParams] = useLocalStorage<AdvancedParameters>('airacers-advancedParams', {})
-  const [isAdvancedExpanded, setIsAdvancedExpanded] = useLocalStorage('airacers-isAdvancedExpanded', false)
+  const [advancedParams, setAdvancedParams] = useLocalStorage<AdvancedParameters>('modelpk-advancedParams', {})
+  const [isAdvancedExpanded, setIsAdvancedExpanded] = useLocalStorage('modelpk-isAdvancedExpanded', false)
 
   // Selection state - cached in localStorage
-  const [providerSelections, setProviderSelections] = useLocalStorage<ProviderSelection[]>('airacers-providerSelections', [])
-  const [isSelectionExpanded, setIsSelectionExpanded] = useLocalStorage('airacers-isSelectionExpanded', true)
-  const [isPromptsExpanded, setIsPromptsExpanded] = useLocalStorage('airacers-isPromptsExpanded', true)
+  const [providerSelections, setProviderSelections] = useLocalStorage<ProviderSelection[]>('modelpk-providerSelections', [])
+  const [isSelectionExpanded, setIsSelectionExpanded] = useLocalStorage('modelpk-isSelectionExpanded', true)
+  const [isPromptsExpanded, setIsPromptsExpanded] = useLocalStorage('modelpk-isPromptsExpanded', true)
 
   // Response state - cached in localStorage
-  const [responses, setResponses] = useLocalStorage<Record<string, ComparisonResponse>>('airacers-responses', {})
+  const [responses, setResponses] = useLocalStorage<Record<string, ComparisonResponse>>('modelpk-responses', {})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showThinking, setShowThinking] = useState(false) // Global toggle for thinking vs output
 
@@ -349,7 +349,7 @@ export default function ComparisonPage() {
           <div className="bg-white rounded-lg shadow-lg p-8 space-y-6">
             {/* Welcome Header */}
             <div className="text-center space-y-3">
-              <h1 className="text-4xl font-bold text-gray-900">Welcome to AI Racers!</h1>
+              <h1 className="text-4xl font-bold text-gray-900">Welcome to ModelPK!</h1>
               <p className="text-lg text-gray-600">
                 Compare multiple AI models side-by-side and see which one performs best for your needs
               </p>
@@ -485,7 +485,7 @@ export default function ComparisonPage() {
         <div className="w-full mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">AI Racers</h1>
+          <h1 className="text-3xl font-bold text-gray-900">ModelPK</h1>
           <div className="flex gap-2">
             <Link to="/pricing">
               <Button variant="outline">View Pricing</Button>
