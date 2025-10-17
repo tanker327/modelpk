@@ -15,7 +15,7 @@ export default function IntroPage() {
             </div>
             <div className="flex gap-3">
               <Link to="/pricing">
-                <Button variant="ghost">Model Costs</Button>
+                <Button variant="outline">Model Costs</Button>
               </Link>
               <Link to="/">
                 <Button>Get Started</Button>
@@ -243,7 +243,7 @@ export default function IntroPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link to="/">
-              <Button size="lg" variant="secondary" className="text-lg px-8 py-6">
+              <Button size="lg" className="text-lg px-8 py-6 bg-white text-blue-600 hover:bg-gray-100">
                 Get Started Free
                 <MdRocket className="ml-2" size={20} />
               </Button>

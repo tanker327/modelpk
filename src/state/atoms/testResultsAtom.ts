@@ -1,5 +1,8 @@
 import { atom } from '@zedux/react'
 import type { TestResult, ProviderId } from '@/schemas/providerConfigSchema'
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('TestResults')
 
 // Cache TTL: 5 minutes
 const CACHE_TTL_MS = 5 * 60 * 1000

@@ -1,6 +1,9 @@
 import modelPricing from '@/data/modelPricing.json'
 import type { ProviderId } from '@/schemas/providerConfigSchema'
 import type { TokenUsage } from '@/schemas/comparisonSchema'
+import { createLogger } from '@/services/logger'
+
+const log = createLogger('PricingService')
 
 export interface ModelPrice {
   inputPrice: number
