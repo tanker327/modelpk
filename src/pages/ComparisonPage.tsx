@@ -570,12 +570,24 @@ export default function ComparisonPage() {
         <div className="bg-white rounded-lg shadow p-4 mb-6">
           <button
             onClick={() => setIsSelectionExpanded(!isSelectionExpanded)}
-            className="w-full flex items-center justify-between text-left mb-3"
+            className="w-full flex items-center justify-between text-left mb-3 group hover:bg-gray-50 -mx-2 px-2 py-2 rounded-lg transition-colors"
           >
             <h2 className="text-lg font-semibold">Select Providers & Models</h2>
-            <span className="text-gray-500 text-sm">
-              {isSelectionExpanded ? '▼' : '▶'}
-            </span>
+            <div className={`flex items-center justify-center w-8 h-8 rounded-md transition-all ${
+              isSelectionExpanded
+                ? 'bg-blue-100 text-blue-600 group-hover:bg-blue-200'
+                : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200'
+            }`}>
+              <svg
+                className="w-5 h-5 transition-transform"
+                style={{ transform: isSelectionExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
           </button>
 
           {/* Collapsed view - show selected items */}
@@ -653,7 +665,7 @@ export default function ComparisonPage() {
         <div className="bg-white rounded-lg shadow p-4 mb-6">
           <button
             onClick={() => setIsPromptsExpanded(!isPromptsExpanded)}
-            className="w-full flex items-center justify-between text-left mb-3"
+            className="w-full flex items-center justify-between text-left mb-3 group hover:bg-gray-50 -mx-2 px-2 py-2 rounded-lg transition-colors"
           >
             <div className="flex items-center gap-3">
               <h2 className="text-lg font-semibold">Prompts</h2>
@@ -688,9 +700,21 @@ export default function ComparisonPage() {
                 return null
               })()}
             </div>
-            <span className="text-gray-500 text-sm">
-              {isPromptsExpanded ? '▼' : '▶'}
-            </span>
+            <div className={`flex items-center justify-center w-8 h-8 rounded-md transition-all ${
+              isPromptsExpanded
+                ? 'bg-blue-100 text-blue-600 group-hover:bg-blue-200'
+                : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200'
+            }`}>
+              <svg
+                className="w-5 h-5 transition-transform"
+                style={{ transform: isPromptsExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
           </button>
 
           {/* Collapsed view - show prompts summary */}
