@@ -1056,9 +1056,9 @@ export default function ComparisonPage() {
             <div className="flex gap-4 overflow-x-auto pb-4">
               <style>{`
                 .flex.gap-4.overflow-x-auto > * {
-                  flex: ${Object.keys(responses).length <= 2 ? '1 1 0' : '0 0 auto'};
-                  width: ${Object.keys(responses).length <= 2 ? 'auto' : `max(400px, calc((100vw - 8rem - ${Object.keys(responses).length + 1}rem) / ${Object.keys(responses).length}))`};
-                  min-width: ${Object.keys(responses).length <= 2 ? '400px' : '400px'};
+                  flex: ${Object.keys(responses).length <= 3 ? '1 1 0' : '0 0 auto'};
+                  width: ${Object.keys(responses).length <= 3 ? 'auto' : `max(400px, calc((100vw - 8rem - ${Object.keys(responses).length + 1}rem) / ${Object.keys(responses).length}))`};
+                  min-width: ${Object.keys(responses).length <= 3 ? '400px' : '400px'};
                 }
               `}</style>
               {(() => {
