@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { MdRocket, MdAttachMoney, MdSettings } from 'react-icons/md'
+import { FaGithub } from 'react-icons/fa'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ModelTag } from '@/components/config/ModelTag'
@@ -83,17 +88,84 @@ export default function ConfigPage() {
     <>
       <AlertComponent />
       <ConfirmComponent />
-      <div className="min-h-screen bg-gray-50 p-8">
-        <div className="w-full mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Provider Configuration</h1>
-            <p className="text-gray-600">Configure your LLM API providers to start racing models</p>
+
+      {/* Floating Header */}
+      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-200 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link to="/" className="flex items-center gap-2">
+              <MdRocket className="text-blue-600" size={28} />
+              <span className="text-2xl font-bold text-gray-900">ModelPK</span>
+            </Link>
+            <TooltipProvider>
+              <div className="flex gap-3">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link to="/pk">
+                      <Button variant="outline" size="icon" className="font-semibold">
+                        PK
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Start Model Comparison</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link to="/pricing">
+                      <Button variant="outline" size="icon">
+                        <MdAttachMoney size={20} />
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>View Model Pricing</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link to="/config">
+                      <Button variant="outline" size="icon">
+                        <MdSettings size={20} />
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Configure Providers</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <a href="https://github.com/tanker327/modelpk" target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" size="icon">
+                        <FaGithub size={20} />
+                      </Button>
+                    </a>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>View on GitHub</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </TooltipProvider>
           </div>
-          <Link to="/">
-            <Button variant="outline">Back to Home</Button>
-          </Link>
         </div>
+      </nav>
+
+      {/* Spacer for fixed header */}
+      <div className="h-16"></div>
+
+      <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Page Header */}
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">Provider Configuration</h1>
+            <p className="text-gray-600 text-lg">Configure your LLM API providers to start racing models</p>
+          </div>
 
         {/* Security Warning for HTTP */}
         <SecurityWarning />
@@ -116,15 +188,30 @@ export default function ConfigPage() {
           ))}
         </div>
 
+        {/* CTA Button */}
+        <div className="mt-8 flex justify-center">
+          <Link to="/pk">
+            <Button size="lg" className="text-2xl px-16 py-8 h-auto font-bold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
+              Done with Config, Let's PK Now!
+              <MdRocket className="ml-3 animate-bounce" size={32} />
+            </Button>
+          </Link>
+        </div>
+
         {/* Backup & Restore Section */}
-        <div className="bg-white rounded-lg shadow p-6 mt-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Backup & Restore</h2>
-          <p className="text-sm text-gray-600 mb-4">
-            Export or import your configurations to backup or transfer between devices.
-          </p>
-          <p className="text-xs text-orange-600 mb-4">
-            ⚠️ Warning: Exported files contain your API keys in readable format. Keep them secure!
-          </p>
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle>Backup & Restore</CardTitle>
+            <CardDescription>
+              Export or import your configurations to backup or transfer between devices.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Alert variant="warning" className="mb-4">
+              <AlertDescription>
+                <span className="font-semibold">⚠️ Warning:</span> Exported files contain your API keys in readable format. Keep them secure!
+              </AlertDescription>
+            </Alert>
 
           {/* Hidden file input */}
           <input
@@ -164,26 +251,32 @@ export default function ConfigPage() {
               {exportMessage.type === 'success' ? '✓' : '✗'} {exportMessage.text}
             </div>
           )}
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Danger Zone Section */}
-        <div className="bg-white rounded-lg shadow p-6 mt-8 border-2 border-red-200">
-          <div className="flex items-center gap-2 mb-2">
-            <h2 className="text-xl font-semibold text-red-900">Danger Zone</h2>
-            <span className="text-red-600 text-lg">⚠️</span>
-          </div>
-          <p className="text-sm text-gray-600 mb-6">
-            These actions cannot be undone. Please proceed with caution.
-          </p>
+        <Card className="mt-8 border-2 border-red-200">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <CardTitle className="text-red-900">Danger Zone</CardTitle>
+              <span className="text-red-600 text-xl">⚠️</span>
+            </div>
+            <CardDescription>
+              These actions cannot be undone. Please proceed with caution.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
 
           <div className="space-y-4">
             {/* Clear Provider Configurations */}
-            <div className="flex items-center justify-between p-4 bg-red-50 border border-red-200 rounded-lg">
+            <Alert variant="destructive" className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex-1">
-                <h3 className="font-semibold text-gray-900 mb-1">Clear All Provider Configurations</h3>
-                <p className="text-sm text-gray-600">
-                  Remove all API keys, endpoints, and selected models. Provider list will reset to defaults.
-                </p>
+                <AlertDescription>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Clear All Provider Configurations</h3>
+                  <p className="text-sm text-gray-600">
+                    Remove all API keys, endpoints, and selected models. Provider list will reset to defaults.
+                  </p>
+                </AlertDescription>
               </div>
               <Button
                 variant="destructive"
@@ -223,19 +316,21 @@ export default function ConfigPage() {
                     }
                   )
                 }}
-                className="ml-4 flex-shrink-0"
+                className="flex-shrink-0 w-full sm:w-auto"
               >
                 Clear Providers
               </Button>
-            </div>
+            </Alert>
 
             {/* Clear All Website Data */}
-            <div className="flex items-center justify-between p-4 bg-red-50 border border-red-200 rounded-lg">
+            <Alert variant="destructive" className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex-1">
-                <h3 className="font-semibold text-gray-900 mb-1">Clear All Website Data</h3>
-                <p className="text-sm text-gray-600">
-                  Remove all data including provider configs, test history, prompts, and responses.
-                </p>
+                <AlertDescription>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Clear All Website Data</h3>
+                  <p className="text-sm text-gray-600">
+                    Remove all data including provider configs, test history, prompts, and responses.
+                  </p>
+                </AlertDescription>
               </div>
               <Button
                 variant="destructive"
@@ -288,14 +383,15 @@ export default function ConfigPage() {
                     }
                   )
                 }}
-                className="ml-4 flex-shrink-0"
+                className="flex-shrink-0 w-full sm:w-auto"
               >
                 Clear All Data
               </Button>
-            </div>
+            </Alert>
           </div>
+          </CardContent>
+        </Card>
         </div>
-      </div>
       </div>
     </>
   )
@@ -424,27 +520,29 @@ function ProviderCard({ config, testResult, onTestUpdate }: ProviderCardProps) {
   const canTest = needsApiKey ? apiKey.length > 0 : endpoint.length > 0
 
   return (
-    <div className={`bg-white rounded-lg shadow p-6 ${isDisabled ? 'opacity-60' : ''}`}>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex-1">
-          <h2 className="text-xl font-semibold text-gray-900">{config.name}</h2>
-          {isDisabled && (
-            <p className="text-sm text-orange-600 mt-1">
-              ⚠ Cannot make requests from front-end UI directly. Please use OpenRouter.
-            </p>
-          )}
+    <Card className={isDisabled ? 'opacity-60' : ''}>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            <CardTitle>{config.name}</CardTitle>
+            {isDisabled && (
+              <CardDescription className="text-orange-600 mt-1">
+                ⚠ Cannot make requests from front-end UI directly. Please use OpenRouter.
+              </CardDescription>
+            )}
+          </div>
+          <Button
+            onClick={handleTest}
+            disabled={!canTest || testing || isDisabled}
+            size="sm"
+            variant={testResult?.status === 'success' ? 'default' : 'outline'}
+          >
+            {testing ? 'Testing...' : testResult?.status === 'success' ? 'Retest' : 'Test'}
+          </Button>
         </div>
-        <Button
-          onClick={handleTest}
-          disabled={!canTest || testing || isDisabled}
-          size="sm"
-          variant={testResult?.status === 'success' ? 'default' : 'outline'}
-        >
-          {testing ? 'Testing...' : testResult?.status === 'success' ? 'Retest' : 'Test'}
-        </Button>
-      </div>
+      </CardHeader>
 
-      <div className="space-y-4">
+      <CardContent className="space-y-4">
         {needsApiKey && (
           <div className="space-y-2">
             <Label htmlFor={`${config.id}-api-key`}>API Key</Label>
@@ -563,7 +661,7 @@ function ProviderCard({ config, testResult, onTestUpdate }: ProviderCardProps) {
             )}
           </div>
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }

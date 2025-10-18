@@ -7,8 +7,8 @@ import IntroPage from '@/pages/IntroPage'
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<ComparisonPage />} />
-      <Route path="/intro" element={<IntroPage />} />
+      <Route path="/" element={<IntroPage />} />
+      <Route path="/pk" element={<ComparisonPage />} />
       <Route path="/config" element={<ConfigPage />} />
       <Route path="/pricing" element={<PricingPage />} />
     </Routes>

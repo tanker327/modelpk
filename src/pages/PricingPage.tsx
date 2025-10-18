@@ -1,5 +1,9 @@
 import { useState, useMemo, memo, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { MdRocket, MdAttachMoney, MdSettings } from 'react-icons/md'
+import { FaGithub } from 'react-icons/fa'
 import modelPricingData from '@/data/modelPricing.json'
 
 interface ModelPriceData {
@@ -142,7 +146,6 @@ const ProviderTable = memo(({
 ProviderTable.displayName = 'ProviderTable'
 
 export function PricingPage() {
-  const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedProvider, setSelectedProvider] = useState<string>('all')
 
@@ -211,24 +214,83 @@ export function PricingPage() {
     setSelectedProvider(e.target.value)
   }, [])
 
-  const handleBackClick = useCallback(() => {
-    navigate('/')
-  }, [navigate])
-
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-4xl font-bold text-gray-900">Model Pricing</h1>
-            <button
-              onClick={handleBackClick}
-              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors"
-            >
-              ← Back to Comparison
-            </button>
+    <>
+      {/* Floating Header */}
+      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-200 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link to="/" className="flex items-center gap-2">
+              <MdRocket className="text-blue-600" size={28} />
+              <span className="text-2xl font-bold text-gray-900">ModelPK</span>
+            </Link>
+            <TooltipProvider>
+              <div className="flex gap-3">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link to="/pk">
+                      <Button variant="outline" size="icon" className="font-semibold">
+                        PK
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Start Model Comparison</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link to="/pricing">
+                      <Button variant="outline" size="icon">
+                        <MdAttachMoney size={20} />
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>View Model Pricing</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link to="/config">
+                      <Button variant="outline" size="icon">
+                        <MdSettings size={20} />
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Configure Providers</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <a href="https://github.com/tanker327/modelpk" target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" size="icon">
+                        <FaGithub size={20} />
+                      </Button>
+                    </a>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>View on GitHub</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </TooltipProvider>
           </div>
+        </div>
+      </nav>
+
+      {/* Spacer for fixed header */}
+      <div className="h-16"></div>
+
+      <div className="min-h-screen bg-gray-50 px-4 py-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">Model Pricing</h1>
           <p className="text-gray-600">
             Last Updated: <span className="font-semibold">{pricingData.lastUpdated}</span> • All
             prices in <span className="font-semibold">{pricingData.currency}</span> per 1 million
@@ -306,7 +368,8 @@ export function PricingPage() {
             provider sources before making cost-sensitive decisions.
           </p>
         </div>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

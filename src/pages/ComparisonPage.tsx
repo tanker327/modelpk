@@ -16,7 +16,9 @@ import { sendComparisonRequest } from '@/services/api/comparisonService'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { useAlert } from '@/components/ui/alert-dialog'
 import { calculateCost } from '@/services/pricing/pricingService'
-import { MdRefresh, MdInfoOutline, MdClose, MdSend } from 'react-icons/md'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { MdRefresh, MdInfoOutline, MdClose, MdSend, MdAttachMoney, MdSettings, MdRocket } from 'react-icons/md'
+import { FaGithub } from 'react-icons/fa'
 import {
   Dialog,
   DialogContent,
@@ -485,20 +487,78 @@ export default function ComparisonPage() {
         </DialogContent>
       </Dialog>
 
-      <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-        <div className="w-full mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">ModelPK</h1>
-          <div className="flex gap-2">
-            <Link to="/pricing">
-              <Button variant="outline">Model Costs</Button>
+      {/* Floating Header */}
+      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-200 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link to="/" className="flex items-center gap-2">
+              <MdRocket className="text-blue-600" size={28} />
+              <span className="text-2xl font-bold text-gray-900">ModelPK</span>
             </Link>
-            <Link to="/config">
-              <Button variant="outline">Configure Providers</Button>
-            </Link>
+            <TooltipProvider>
+              <div className="flex gap-3">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link to="/pk">
+                      <Button variant="outline" size="icon" className="font-semibold">
+                        PK
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Start Model Comparison</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link to="/pricing">
+                      <Button variant="outline" size="icon">
+                        <MdAttachMoney size={20} />
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>View Model Pricing</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link to="/config">
+                      <Button variant="outline" size="icon">
+                        <MdSettings size={20} />
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Configure Providers</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <a href="https://github.com/tanker327/modelpk" target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" size="icon">
+                        <FaGithub size={20} />
+                      </Button>
+                    </a>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>View on GitHub</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </TooltipProvider>
           </div>
         </div>
+      </nav>
+
+      {/* Spacer for fixed header */}
+      <div className="h-16"></div>
+
+      <div className="min-h-screen bg-gray-50 px-4 md:px-8 py-8">
+        <div className="w-full mx-auto">
 
         {/* Provider Selection */}
         <div className="bg-white rounded-lg shadow p-4 mb-6">
@@ -939,7 +999,7 @@ export default function ComparisonPage() {
                   }
                 >
                   <MdSend className="mr-1.5" size={18} />
-                  {isSubmitting ? 'Running...' : 'Submit'}
+                    {isSubmitting ? 'Running...' : 'PK Now'}
                 </Button>
               </div>
             </div>

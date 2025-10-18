@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { MdRocket, MdSpeed, MdCompare, MdCode, MdSecurity, MdCloudOff } from 'react-icons/md'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { MdRocket, MdSpeed, MdCompare, MdCode, MdSecurity, MdCloudOff, MdAttachMoney, MdSettings } from 'react-icons/md'
+import { FaGithub } from 'react-icons/fa'
 
 export default function IntroPage() {
   return (
@@ -13,14 +15,61 @@ export default function IntroPage() {
               <MdRocket className="text-blue-600" size={28} />
               <span className="text-2xl font-bold text-gray-900">ModelPK</span>
             </div>
-            <div className="flex gap-3">
-              <Link to="/pricing">
-                <Button variant="outline">Model Costs</Button>
-              </Link>
-              <Link to="/">
-                <Button>Get Started</Button>
-              </Link>
-            </div>
+            <TooltipProvider>
+              <div className="flex gap-3">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link to="/pk">
+                      <Button variant="outline" size="icon" className="font-semibold">
+                        PK
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Start Model Comparison</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link to="/pricing">
+                      <Button variant="outline" size="icon">
+                        <MdAttachMoney size={20} />
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>View Model Pricing</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link to="/config">
+                      <Button variant="outline" size="icon">
+                        <MdSettings size={20} />
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Configure Providers</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <a href="https://github.com/tanker327/modelpk" target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" size="icon">
+                        <FaGithub size={20} />
+                      </Button>
+                    </a>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>View on GitHub</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </TooltipProvider>
           </div>
         </div>
       </nav>
@@ -47,15 +96,10 @@ export default function IntroPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link to="/">
-              <Button size="lg" className="text-lg px-8 py-6">
-                Start Comparing
-                <MdRocket className="ml-2" size={20} />
-              </Button>
-            </Link>
-            <Link to="/config">
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6">
-                Configure Providers
+            <Link to="/pk">
+              <Button size="lg" className="text-2xl px-16 py-8 h-auto font-bold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
+                Start to PK
+                <MdRocket className="ml-3 animate-bounce" size={32} />
               </Button>
             </Link>
           </div>
@@ -107,8 +151,8 @@ export default function IntroPage() {
                 100% Client-Side
               </h3>
               <p className="text-gray-600 leading-relaxed">
-                No backend servers. All API calls happen directly from your browser.
-                Your prompts and API keys never touch our servers.
+                Runs entirely in your browser with no backend infrastructure.
+                Your prompts and API keys stay completely private on your device.
               </p>
             </div>
 
@@ -244,7 +288,7 @@ export default function IntroPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link to="/">
               <Button size="lg" className="text-lg px-8 py-6 bg-white text-blue-600 hover:bg-gray-100">
-                Get Started Free
+                Start to PK
                 <MdRocket className="ml-2" size={20} />
               </Button>
             </Link>
