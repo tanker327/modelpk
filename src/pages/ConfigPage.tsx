@@ -337,45 +337,47 @@ export default function ConfigPage() {
                 onClick={() => {
                   showConfirm(
                     'WARNING: Delete ALL Data',
-                    '🚨 This will delete ALL data from AI Racers!\n\n' +
+                    '🚨 This will delete ALL data from ModelPK!\n\n' +
                     'This includes:\n' +
                     '• All provider configurations and API keys\n' +
                     '• All test names and prompts\n' +
                     '• All response history\n' +
                     '• All saved preferences\n\n' +
                     'Are you absolutely sure? This action cannot be undone!',
-                    () => {
-                      // Second confirmation
-                      showConfirm(
-                        'FINAL WARNING',
-                        '⚠️ This is your last chance to cancel.\n\n' +
-                        'Click "Delete All Data" to permanently delete everything, or "Cancel" to keep your data safe.',
-                        async () => {
-                          try {
-                            log.debug('Clearing all website data...')
-                            await clearAllData()
-                            log.debug('All website data cleared successfully')
-                            showAlert(
-                              'Success',
-                              'All website data has been cleared.\n\nThe page will now reload.'
-                            )
-                            setTimeout(() => {
-                              window.location.reload()
-                            }, 2000)
-                          } catch (error) {
-                            log.error('Failed to clear all data:', error)
-                            showAlert(
-                              'Error',
-                              `Failed to clear all data:\n\n${error instanceof Error ? error.message : 'Unknown error'}`,
-                              'destructive'
-                            )
+                    async () => {
+                      // Show second confirmation after first one closes
+                      setTimeout(() => {
+                        showConfirm(
+                          'FINAL WARNING',
+                          '⚠️ This is your last chance to cancel.\n\n' +
+                          'Click "Delete All Data" to permanently delete everything, or "Cancel" to keep your data safe.',
+                          async () => {
+                            try {
+                              log.debug('Clearing all website data...')
+                              await clearAllData()
+                              log.debug('All website data cleared successfully')
+                              showAlert(
+                                'Success',
+                                'All website data has been cleared.\n\nThe page will now reload.'
+                              )
+                              setTimeout(() => {
+                                window.location.reload()
+                              }, 2000)
+                            } catch (error) {
+                              log.error('Failed to clear all data:', error)
+                              showAlert(
+                                'Error',
+                                `Failed to clear all data:\n\n${error instanceof Error ? error.message : 'Unknown error'}`,
+                                'destructive'
+                              )
+                            }
+                          },
+                          {
+                            confirmText: 'Delete All Data',
+                            variant: 'destructive',
                           }
-                        },
-                        {
-                          confirmText: 'Delete All Data',
-                          variant: 'destructive',
-                        }
-                      )
+                        )
+                      }, 100)
                     },
                     {
                       confirmText: 'Continue',
