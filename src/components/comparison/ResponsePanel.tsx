@@ -6,6 +6,8 @@ import { calculateCost } from '@/services/pricing/pricingService'
 import MarkdownPreview from '@uiw/react-markdown-preview'
 import ReactJson from '@microlink/react-json-view'
 import { Toggle } from '@/components/ui/toggle'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { useConfirm } from '@/components/ui/alert-dialog'
 
 interface ResponsePanelProps {
   providerId: ProviderId
@@ -22,6 +24,7 @@ interface ResponsePanelProps {
   isMostExpensive?: boolean
   showThinking?: boolean
   onRefresh?: () => void
+  onRemove?: () => void
 }
 
 import { createLogger } from '@/services/logger'
@@ -43,10 +46,14 @@ export function ResponsePanel({
   isMostExpensive,
   showThinking = false,
   onRefresh,
+  onRemove,
 }: ResponsePanelProps) {
-  const [isMarkdownView, setIsMarkdownView] = useState(true)
+  const [isMarkdownView, setIsMarkdownView] = useState(false)
   const [isStatsExpanded, setIsStatsExpanded] = useState(false)
   const [showCopyNotification, setShowCopyNotification] = useState(false)
+
+  // Confirmation dialog
+  const { showConfirm, ConfirmComponent } = useConfirm()
 
   const handleCopy = async () => {
     if (!response) return
@@ -100,8 +107,30 @@ export function ResponsePanel({
   // Calculate cost if token usage is available
   const costEstimate = tokenUsage ? calculateCost(providerId, modelName, tokenUsage) : null
 
+  // Handle refresh with confirmation
+  const handleRefresh = () => {
+    if (!onRefresh) return
+
+    const actionText = status === 'pending' ? 'fetch' : 'refresh'
+    const actionTextCap = status === 'pending' ? 'Fetch' : 'Refresh'
+
+    showConfirm(
+      `${actionTextCap} Result`,
+      `Are you sure you want to ${actionText} the result for ${providerName} - ${modelName}?\n\nThis will send a new API request and may incur costs.`,
+      () => {
+        onRefresh()
+      },
+      {
+        confirmText: actionTextCap,
+        variant: 'default',
+      }
+    )
+  }
+
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 flex flex-col relative">
+    <>
+      <ConfirmComponent />
+      <div className="bg-white rounded-lg shadow-md p-4 flex flex-col relative">
       {/* Copy Notification */}
       {showCopyNotification && (
         <div className="absolute top-2 right-2 z-10 bg-green-500 text-white px-3 py-2 rounded shadow-lg text-sm flex items-center gap-2 animate-fade-in">
@@ -126,7 +155,7 @@ export function ResponsePanel({
         <div className="flex items-center gap-2 flex-shrink-0">
           {onRefresh && (status === 'pending' || status === 'success' || status === 'error') && (
             <button
-              onClick={onRefresh}
+              onClick={handleRefresh}
               className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded transition-colors flex items-center gap-1"
               title={status === 'pending' ? 'Fetch this result' : 'Refresh this result'}
             >
@@ -142,27 +171,34 @@ export function ResponsePanel({
               >
                 📋
               </button>
-              <div className="flex items-center gap-1">
-                <Toggle
-                  pressed={isMarkdownView}
-                  onPressedChange={setIsMarkdownView}
-                  variant="outline"
-                  size="sm"
-                  aria-label="Toggle markdown view"
-                >
-                  MD
-                </Toggle>
-                <Toggle
-                  pressed={!isMarkdownView}
-                  onPressedChange={(pressed) => setIsMarkdownView(!pressed)}
-                  variant="outline"
-                  size="sm"
-                  aria-label="Toggle raw view"
-                >
-                  Raw
-                </Toggle>
-              </div>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Toggle
+                      pressed={isMarkdownView}
+                      onPressedChange={setIsMarkdownView}
+                      size="sm"
+                      aria-label="Toggle markdown view"
+                      className={isMarkdownView ? 'bg-blue-600 text-white hover:bg-blue-700' : ''}
+                    >
+                      MD
+                    </Toggle>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Render using markdown view</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </>
+          )}
+          {onRemove && (
+            <button
+              onClick={onRemove}
+              className="px-1.5 py-1 text-xs text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+              title="Remove this result and unselect model"
+            >
+              ✕
+            </button>
           )}
         </div>
       </div>
@@ -337,6 +373,7 @@ export function ResponsePanel({
           )}
         </button>
       )}
-    </div>
+      </div>
+    </>
   )
 }

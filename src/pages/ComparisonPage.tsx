@@ -190,6 +190,12 @@ export default function ComparisonPage() {
     setResponses({})
   }
 
+  const handleRemove = (providerId: ProviderId, modelId: string) => {
+    log.debug(`Removing result for ${providerId}-${modelId}`)
+    // Call handleModelToggle to unselect the model (which also removes the result)
+    handleModelToggle(providerId, modelId)
+  }
+
   const handleRefresh = async (providerId: ProviderId, modelId: string) => {
     const key = `${providerId}-${modelId}`
     const config = configs.find((c) => c.id === providerId)
@@ -519,7 +525,7 @@ export default function ComparisonPage() {
                     </Link>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>View Model Pricing</p>
+                    <p>View Latest Model Cost</p>
                   </TooltipContent>
                 </Tooltip>
 
@@ -1118,6 +1124,7 @@ export default function ComparisonPage() {
                       isMostExpensive={isMostExpensive}
                       showThinking={showThinking}
                       onRefresh={() => handleRefresh(response.providerId, response.modelId)}
+                      onRemove={() => handleRemove(response.providerId, response.modelId)}
                     />
                   )
                 })

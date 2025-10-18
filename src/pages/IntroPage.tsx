@@ -39,7 +39,7 @@ export default function IntroPage() {
                     </Link>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>View Model Pricing</p>
+                    <p>View Latest Model Cost</p>
                   </TooltipContent>
                 </Tooltip>
 
@@ -294,7 +294,7 @@ export default function IntroPage() {
             </Link>
             <Link to="/pricing">
               <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-transparent text-white border-white hover:bg-white/10">
-                View Model Costs
+                View Latest Model Cost
               </Button>
             </Link>
           </div>

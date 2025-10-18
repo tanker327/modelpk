@@ -248,7 +248,7 @@ export function PricingPage() {
                     </Link>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>View Model Pricing</p>
+                    <p>View Latest Model Cost</p>
                   </TooltipContent>
                 </Tooltip>
 
