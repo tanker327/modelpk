@@ -179,7 +179,7 @@ export function ResponsePanel({
                       onPressedChange={setIsMarkdownView}
                       size="sm"
                       aria-label="Toggle markdown view"
-                      className={isMarkdownView ? 'bg-blue-600 text-white hover:bg-blue-700' : ''}
+                        className={isMarkdownView ? 'bg-blue-400 text-white hover:bg-blue-600' : ''}
                     >
                       MD
                     </Toggle>
