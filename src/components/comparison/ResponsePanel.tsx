@@ -111,8 +111,15 @@ export function ResponsePanel({
   const handleRefresh = () => {
     if (!onRefresh) return
 
-    const actionText = status === 'pending' ? 'fetch' : 'refresh'
-    const actionTextCap = status === 'pending' ? 'Fetch' : 'Refresh'
+    // If pending (no result yet), fetch directly without confirmation
+    if (status === 'pending') {
+      onRefresh()
+      return
+    }
+
+    // If there's already a result (success or error), show confirmation
+    const actionText = 'refresh'
+    const actionTextCap = 'Refresh'
 
     showConfirm(
       `${actionTextCap} Result`,
