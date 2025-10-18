@@ -1,6 +1,6 @@
 # AI Model Pricing Documentation
 
-**Last Updated:** 2025-01-16
+**Last Updated:** 2025-10-18
 **Currency:** USD
 
 This document provides a comprehensive overview of pricing for all AI models supported by AI Racers. All prices are per 1 million tokens unless otherwise specified.
@@ -129,7 +129,7 @@ This document provides a comprehensive overview of pricing for all AI models sup
 | grok-4-fast-non-reasoning | $0.20 | $0.50 | 2M | Without reasoning overhead |
 
 **Extended Context Pricing (>128K tokens):**
-- Input: $0.50 per 1M tokens
+- Input: $0.40 per 1M tokens
 - Output: $1.00 per 1M tokens
 - Cached Input: $0.05 per 1M tokens
 
@@ -211,7 +211,7 @@ OpenRouter provides unified access to multiple AI providers. Pricing may include
 
 ### How Pricing is Verified
 
-All pricing data in this document has been verified against official sources as of 2025-01-16:
+All pricing data in this document has been verified against official sources as of 2025-10-18:
 
 1. **OpenAI:** Verified via web search and official API documentation
 2. **Google Gemini:** Verified via official pricing page (ai.google.dev/gemini-api/docs/pricing)

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-01-16",
+  "lastUpdated": "2025-10-18",
   "currency": "USD",
   "models": {
     "openai": {
@@ -171,21 +171,21 @@
         "outputPrice": 0.50,
         "unit": "per 1M tokens",
         "contextWindow": 2000000,
-        "notes": "Unified reasoning/non-reasoning model. Extended context (>128K): $0.50 input, $1.00 output"
+        "notes": "Extended context (>128K): $0.40 input, $1.00 output. Cached tokens: $0.05 input"
       },
       "grok-4-fast-reasoning": {
         "inputPrice": 0.20,
         "outputPrice": 0.50,
         "unit": "per 1M tokens",
         "contextWindow": 2000000,
-        "notes": "Extended context (>128K): $0.50 input, $1.00 output"
+        "notes": "Extended context (>128K): $0.40 input, $1.00 output. Cached tokens: $0.05 input"
       },
       "grok-4-fast-non-reasoning": {
         "inputPrice": 0.20,
         "outputPrice": 0.50,
         "unit": "per 1M tokens",
         "contextWindow": 2000000,
-        "notes": "Extended context (>128K): $0.50 input, $1.00 output"
+        "notes": "Extended context (>128K): $0.40 input, $1.00 output. Cached tokens: $0.05 input"
       },
       "grok-beta": {
         "inputPrice": 5.00,
