@@ -53,7 +53,7 @@ A secure, browser-based web application for comparing outputs from multiple AI m
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone git@github.com:tanker327/modelpk.git
 cd modelpk
 
 # Install dependencies
@@ -204,11 +204,24 @@ This app doesn't need a backend because:
 
 ## 📝 License
 
-Private project
+MIT License - See [LICENSE](LICENSE) file for details
 
 ## 🤝 Contributing
 
-This project follows the OpenSpec workflow for all significant changes. See `openspec/` directory for specifications and `CLAUDE.md` for development guidelines.
+Contributions are welcome! This project follows the OpenSpec workflow for all significant changes.
+
+**Before contributing:**
+1. Check existing [issues](https://github.com/tanker327/modelpk/issues) and [pull requests](https://github.com/tanker327/modelpk/pulls)
+2. Read `CLAUDE.md` for development guidelines and architecture patterns
+3. For significant changes, see the `openspec/` directory for the proposal workflow
+
+**Development setup:**
+```bash
+git clone git@github.com:tanker327/modelpk.git
+cd modelpk
+npm install
+npm run dev
+```
 
 ## 🐛 Known Issues
 
@@ -234,7 +247,7 @@ A: The app is free. You only pay for the API calls you make to LLM providers at 
 
 ## 📧 Support
 
-For issues, feature requests, or questions, please open an issue on GitHub.
+For issues, feature requests, or questions, please open an issue on [GitHub](https://github.com/tanker327/modelpk/issues).
 
 ---
 

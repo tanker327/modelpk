@@ -237,4 +237,4 @@ docker push registry.example.com/modelpk:latest
 For issues or questions:
 - Check the logs first
 - Review this documentation
-- Open an issue on the project repository
+- Open an issue on the [project repository](https://github.com/tanker327/modelpk/issues)

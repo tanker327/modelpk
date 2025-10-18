@@ -3,6 +3,14 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:tanker327/modelpk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tanker327/modelpk/issues"
+  },
+  "homepage": "https://github.com/tanker327/modelpk#readme",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

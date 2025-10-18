@@ -220,8 +220,8 @@ ModelPK runs entirely in the browser and doesn't use environment variables. All 
 To update to a new version:
 
 ```bash
-# Pull latest changes
-git pull origin main
+# Pull latest changes from repository
+git pull git@github.com:tanker327/modelpk.git main
 
 # Rebuild
 npm run build
@@ -281,4 +281,4 @@ If you encounter issues:
 1. Check browser console for errors
 2. Check web server error logs
 3. Verify nginx/apache configuration
-4. Open an issue on GitHub
+4. Open an issue on [GitHub](https://github.com/tanker327/modelpk/issues)
