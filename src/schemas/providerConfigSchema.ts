@@ -71,13 +71,13 @@ export const DEFAULT_PROVIDERS: Omit<ProviderConfig, 'config'>[] = [
     enabled: false,
   },
   {
-    id: 'ollama',
-    name: 'Ollama',
+    id: 'openrouter',
+    name: 'OpenRouter',
     enabled: false,
   },
   {
-    id: 'openrouter',
-    name: 'OpenRouter',
+    id: 'ollama',
+    name: 'Ollama',
     enabled: false,
   },
 ]

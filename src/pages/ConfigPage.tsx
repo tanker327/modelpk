@@ -537,7 +537,7 @@ function ProviderCard({ config, testResult, onTestUpdate }: ProviderCardProps) {
             size="sm"
             variant={testResult?.status === 'success' ? 'default' : 'outline'}
           >
-            {testing ? 'Testing...' : testResult?.status === 'success' ? 'Retest' : 'Test'}
+            {testing ? 'Loading...' : testResult?.status === 'success' ? 'Reload Models' : 'Load All Models to Select'}
           </Button>
         </div>
       </CardHeader>
