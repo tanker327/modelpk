@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Home / Intro Page -->
+  <url>
+    <loc>https://modelpk.com/</loc>
+    <lastmod>2025-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://modelpk.com/logo.svg</image:loc>
+      <image:title>ModelPK Logo - AI Model Comparison Arena</image:title>
+      <image:caption>ModelPK - Compare multiple AI models side-by-side</image:caption>
+    </image:image>
+  </url>
+
+  <!-- PK / Comparison Page -->
+  <url>
+    <loc>https://modelpk.com/pk</loc>
+    <lastmod>2025-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Config Page -->
+  <url>
+    <loc>https://modelpk.com/config</loc>
+    <lastmod>2025-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Pricing Page -->
+  <url>
+    <loc>https://modelpk.com/pricing</loc>
+    <lastmod>2025-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>

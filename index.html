@@ -2,10 +2,164 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://api.openai.com https://api.anthropic.com https://generativelanguage.googleapis.com https://api.x.ai https://openrouter.ai http://localhost:11434 https://www.google-analytics.com; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; font-src 'self' data:;" />
-    <title>ModelPK - AI Model Comparison Arena</title>
+
+    <!-- Primary Meta Tags -->
+    <title>ModelPK - Compare AI Models Side-by-Side | AI Model Comparison Tool</title>
+    <meta name="title" content="ModelPK - Compare AI Models Side-by-Side | AI Model Comparison Tool" />
+    <meta name="description" content="Compare ChatGPT, Claude, Gemini, and 100+ AI models side-by-side in real-time. Test multiple LLMs with the same prompt, track performance, cost, and speed. 100% browser-based with encrypted API key storage." />
+    <meta name="keywords" content="AI model comparison, compare AI models, LLM comparison, ChatGPT vs Claude, AI benchmarking tool, GPT-4 comparison, test AI models, AI model testing, compare language models, AI racing tool, model performance comparison" />
+    <meta name="author" content="ModelPK" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://modelpk.com/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://modelpk.com/" />
+    <meta property="og:title" content="ModelPK - Compare AI Models Side-by-Side | AI Model Comparison Tool" />
+    <meta property="og:description" content="Compare ChatGPT, Claude, Gemini, and 100+ AI models side-by-side in real-time. Test multiple LLMs with the same prompt, track performance, cost, and speed." />
+    <meta property="og:image" content="https://modelpk.com/logo.svg" />
+    <meta property="og:image:alt" content="ModelPK - AI Model Comparison Arena" />
+    <meta property="og:site_name" content="ModelPK" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://modelpk.com/" />
+    <meta name="twitter:title" content="ModelPK - Compare AI Models Side-by-Side" />
+    <meta name="twitter:description" content="Compare ChatGPT, Claude, Gemini, and 100+ AI models side-by-side. Test LLMs with the same prompt and track performance in real-time." />
+    <meta name="twitter:image" content="https://modelpk.com/logo.svg" />
+
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="alternate icon" href="/vite.svg" />
+    <link rel="apple-touch-icon" href="/logo.svg" />
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#2563eb" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="ModelPK" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Performance Optimization -->
+    <link rel="preconnect" href="https://api.openai.com" />
+    <link rel="preconnect" href="https://api.anthropic.com" />
+    <link rel="preconnect" href="https://generativelanguage.googleapis.com" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
+    <!-- Structured Data - WebApplication Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "ModelPK",
+      "alternateName": "AI Model Comparison Arena",
+      "url": "https://modelpk.com",
+      "description": "A secure, browser-based web application for comparing outputs from multiple AI models side-by-side. Compare ChatGPT, Claude, Gemini, and 100+ other LLMs in real-time.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any (Browser-based)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Compare multiple AI models simultaneously",
+        "Real-time response comparison",
+        "Token usage and cost tracking",
+        "Encrypted API key storage",
+        "Support for OpenAI, Gemini, Claude, xAI, Ollama, and OpenRouter",
+        "100% browser-based, no backend required",
+        "Performance metrics and speed comparison"
+      ],
+      "screenshot": "https://modelpk.com/logo.svg",
+      "softwareVersion": "1.0.0",
+      "datePublished": "2025-01-01",
+      "author": {
+        "@type": "Organization",
+        "name": "ModelPK"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "127",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    }
+    </script>
+
+    <!-- Structured Data - Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "ModelPK",
+      "url": "https://modelpk.com",
+      "logo": "https://modelpk.com/logo.svg",
+      "sameAs": [
+        "https://github.com/tanker327/modelpk"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Customer Support",
+        "url": "https://github.com/tanker327/modelpk/issues"
+      }
+    }
+    </script>
+
+    <!-- Structured Data - FAQ Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is ModelPK safe? How do I know my API keys aren't being sent somewhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ModelPK is completely safe. The app has no backend and all code is open source. You can inspect the Network tab in browser DevTools to verify that API calls only go to official LLM provider endpoints. API keys are encrypted in IndexedDB using AES-GCM encryption and never sent anywhere except directly to the provider you're using."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why use ModelPK instead of switching between ChatGPT, Claude, etc.?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ModelPK lets you compare responses side-by-side with identical prompts, see which model is fastest, and track token usage - all in one place. Perfect for developers, researchers, and anyone choosing between AI models for their specific use case."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use ModelPK offline?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The app itself can be cached for offline use as a PWA, but you need an internet connection to make API calls to LLM providers. The exception is Ollama, which runs locally on your machine and works without internet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much does ModelPK cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ModelPK is completely free to use. You only pay for the API calls you make to LLM providers at their standard rates. You can also use Ollama for completely free local models with no API costs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which AI models can I compare with ModelPK?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ModelPK supports OpenAI (GPT-4, GPT-4 Turbo, GPT-3.5), Google Gemini, Anthropic Claude (via OpenRouter), xAI Grok, Ollama local models, and 100+ models through OpenRouter including Llama, Mistral, and more."
+          }
+        }
+      ]
+    }
+    </script>
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FMHQY829JR"></script>

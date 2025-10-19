@@ -3,12 +3,20 @@ import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { MdRocket, MdSpeed, MdCompare, MdCode, MdSecurity, MdCloudOff, MdAttachMoney, MdSettings } from 'react-icons/md'
 import { FaGithub } from 'react-icons/fa'
+import { SEO } from '@/components/SEO'
 
 export default function IntroPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <>
+      <SEO
+        title="ModelPK - Compare AI Models Side-by-Side | ChatGPT, Claude, Gemini"
+        description="Compare ChatGPT, Claude, Gemini, and 100+ AI models side-by-side in real-time. Test multiple LLMs with the same prompt, track performance, cost, and speed. 100% browser-based with encrypted API key storage."
+        canonical="https://modelpk.com/"
+        keywords="AI model comparison, compare AI models, LLM comparison, ChatGPT vs Claude, AI benchmarking tool, GPT-4 comparison, test AI models, compare language models"
+      />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-200 z-50">
+      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-200 z-50" role="navigation" aria-label="Main navigation">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-2">
@@ -75,24 +83,24 @@ export default function IntroPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8" role="banner">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
-            <MdSpeed />
+          <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-6" role="status">
+            <MdSpeed aria-hidden="true" />
             <span>Battle-test your AI models</span>
           </div>
 
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
-            Compare AI Models
+            Compare AI Models Side-by-Side
             <br />
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Side-by-Side
+              ChatGPT, Claude, Gemini & 100+ LLMs
             </span>
           </h1>
 
           <p className="text-xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
-            ModelPK lets you race multiple AI models against each other with the same prompt.
-            Compare quality, speed, and cost to find the perfect model for your use case.
+            Test multiple AI models simultaneously with the same prompt. Compare ChatGPT, Claude, Gemini, and other LLMs in real-time.
+            Track performance, speed, token usage, and cost - all in your browser with encrypted API key storage.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -107,105 +115,105 @@ export default function IntroPage() {
       </section>
 
       {/* Features Grid */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50" aria-labelledby="features-heading">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-16">
-            Why Choose ModelPK?
+          <h2 id="features-heading" className="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-16">
+            Why Choose ModelPK for AI Model Comparison?
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" role="list">
             {/* Feature 1 */}
-            <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
-              <div className="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+            <article className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100" role="listitem">
+              <div className="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-6" aria-hidden="true">
                 <MdCompare className="text-blue-600" size={28} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Real-Time Comparison
+                Real-Time AI Model Comparison
               </h3>
               <p className="text-gray-600 leading-relaxed">
-                Send the same prompt to multiple models simultaneously and see results appear in real-time.
-                Compare quality, creativity, and accuracy instantly.
+                Send the same prompt to multiple AI models simultaneously and see results appear in real-time.
+                Compare GPT-4, Claude, Gemini quality, creativity, and accuracy instantly.
               </p>
-            </div>
+            </article>
 
             {/* Feature 2 */}
-            <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
-              <div className="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
+            <article className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100" role="listitem">
+              <div className="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center mb-6" aria-hidden="true">
                 <MdSpeed className="text-purple-600" size={28} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Performance Metrics
+                LLM Performance Metrics & Benchmarking
               </h3>
               <p className="text-gray-600 leading-relaxed">
-                Track response time, token usage, and cost for each model.
-                Identify the fastest and most cost-effective options for your needs.
+                Track response time, token usage, and cost for each AI model.
+                Identify the fastest and most cost-effective LLM options for your needs.
               </p>
-            </div>
+            </article>
 
             {/* Feature 3 */}
-            <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
-              <div className="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center mb-6">
+            <article className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100" role="listitem">
+              <div className="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center mb-6" aria-hidden="true">
                 <MdCloudOff className="text-green-600" size={28} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                100% Client-Side
+                100% Browser-Based & Private
               </h3>
               <p className="text-gray-600 leading-relaxed">
                 Runs entirely in your browser with no backend infrastructure.
-                Your prompts and API keys stay completely private on your device.
+                Your prompts and API keys stay completely private on your device. No data collection.
               </p>
-            </div>
+            </article>
 
             {/* Feature 4 */}
-            <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
-              <div className="w-14 h-14 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
+            <article className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100" role="listitem">
+              <div className="w-14 h-14 bg-orange-100 rounded-lg flex items-center justify-center mb-6" aria-hidden="true">
                 <MdSecurity className="text-orange-600" size={28} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Secure Storage
+                Encrypted API Key Storage
               </h3>
               <p className="text-gray-600 leading-relaxed">
-                API keys are encrypted using Web Crypto API before storage in IndexedDB.
+                API keys are encrypted using Web Crypto API (AES-GCM) before storage in IndexedDB.
                 Your credentials stay safe and secure on your device.
               </p>
-            </div>
+            </article>
 
             {/* Feature 5 */}
-            <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
-              <div className="w-14 h-14 bg-red-100 rounded-lg flex items-center justify-center mb-6">
+            <article className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100" role="listitem">
+              <div className="w-14 h-14 bg-red-100 rounded-lg flex items-center justify-center mb-6" aria-hidden="true">
                 <MdCode className="text-red-600" size={28} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Multiple Providers
+                Multiple AI Provider Support
               </h3>
               <p className="text-gray-600 leading-relaxed">
-                Support for OpenAI, Anthropic, Google Gemini, xAI, Ollama, and OpenRouter.
+                Support for OpenAI ChatGPT, Anthropic Claude, Google Gemini, xAI Grok, Ollama, and OpenRouter.
                 Mix and match models from different providers in one comparison.
               </p>
-            </div>
+            </article>
 
             {/* Feature 6 */}
-            <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100">
-              <div className="w-14 h-14 bg-pink-100 rounded-lg flex items-center justify-center mb-6">
+            <article className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow border border-gray-100" role="listitem">
+              <div className="w-14 h-14 bg-pink-100 rounded-lg flex items-center justify-center mb-6" aria-hidden="true">
                 <MdRocket className="text-pink-600" size={28} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Advanced Parameters
+                Advanced LLM Parameters
               </h3>
               <p className="text-gray-600 leading-relaxed">
                 Fine-tune model behavior with temperature, top-p, frequency penalty,
-                and more. Perfect for power users and developers.
+                and more. Perfect for AI developers and power users.
               </p>
-            </div>
+            </article>
           </div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-20 px-4 sm:px-6 lg:px-8" aria-labelledby="how-it-works-heading">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-16">
-            How It Works
+          <h2 id="how-it-works-heading" className="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-16">
+            How to Compare AI Models with ModelPK
           </h2>
 
           <div className="space-y-12">
@@ -302,20 +310,29 @@ export default function IntroPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 py-12 px-4 sm:px-6 lg:px-8">
+      <footer className="bg-gray-900 text-gray-400 py-12 px-4 sm:px-6 lg:px-8" role="contentinfo">
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <MdRocket className="text-blue-400" size={24} />
+            <MdRocket className="text-blue-400" size={24} aria-hidden="true" />
             <span className="text-xl font-bold text-white">ModelPK</span>
           </div>
           <p className="text-sm">
             Compare AI models side-by-side. Built with React, powered by your browser.
           </p>
+          <p className="mt-4 text-sm">
+            Test ChatGPT, Claude, Gemini, Grok, and 100+ LLMs in real-time.
+          </p>
           <div className="mt-6 text-xs text-gray-500">
-            All API calls are made directly from your browser. No backend servers.
+            All API calls are made directly from your browser. No backend servers. Your data stays private.
+          </div>
+          <div className="mt-4 text-xs text-gray-500">
+            <a href="/humans.txt" className="hover:text-gray-300 underline">Credits</a> |
+            <a href="https://github.com/tanker327/modelpk" className="hover:text-gray-300 underline ml-2" target="_blank" rel="noopener noreferrer">GitHub</a> |
+            <a href="https://github.com/tanker327/modelpk/issues" className="hover:text-gray-300 underline ml-2" target="_blank" rel="noopener noreferrer">Support</a>
           </div>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   )
 }

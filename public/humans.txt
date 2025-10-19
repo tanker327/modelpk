@@ -1,0 +1,27 @@
+/* TEAM */
+
+Project: ModelPK - AI Model Comparison Arena
+Site: https://modelpk.com
+GitHub: https://github.com/tanker327/modelpk
+Contact: https://github.com/tanker327/modelpk/issues
+
+/* THANKS */
+
+Thanks to the open-source community for amazing tools:
+- React Team for React
+- Vite Team for blazing fast builds
+- Tailwind CSS for utility-first CSS
+- Radix UI for accessible components
+- Anthropic, OpenAI, Google, and xAI for their APIs
+
+/* SITE */
+
+Last update: 2025/10/18
+Language: English
+Doctype: HTML5
+IDE: VS Code, Claude Code
+Tech Stack: React, TypeScript, Vite, Tailwind CSS, Zedux
+Security: Web Crypto API (AES-GCM), IndexedDB
+Standards: W3C, WCAG 2.1, Schema.org
+Components: shadcn/ui, Radix UI
+Testing: Jest, Testing Library

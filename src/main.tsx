@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
+import { HelmetProvider } from 'react-helmet-async'
 import { EcosystemProvider } from '@zedux/react'
 import './index.css'
 import App from './App.tsx'
@@ -24,10 +25,12 @@ logger.info('Base path detected:', basename)
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter basename={basename}>
-      <EcosystemProvider ecosystem={ecosystem}>
-        <App />
-      </EcosystemProvider>
-    </BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter basename={basename}>
+        <EcosystemProvider ecosystem={ecosystem}>
+          <App />
+        </EcosystemProvider>
+      </BrowserRouter>
+    </HelmetProvider>
   </StrictMode>,
 )

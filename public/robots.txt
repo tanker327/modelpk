@@ -1,0 +1,29 @@
+# ModelPK - AI Model Comparison Arena
+# https://modelpk.com
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://modelpk.com/sitemap.xml
+
+# Specific bot configurations
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Block if there are any admin or private paths (none currently)
+# User-agent: *
+# Disallow: /admin/

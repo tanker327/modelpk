@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { MdRocket, MdAttachMoney, MdSettings } from 'react-icons/md'
 import { FaGithub } from 'react-icons/fa'
+import { SEO } from '@/components/SEO'
 import modelPricingData from '@/data/modelPricing.json'
 
 interface ModelPriceData {
@@ -216,6 +217,12 @@ export function PricingPage() {
 
   return (
     <>
+      <SEO
+        title="AI Model Pricing - Compare Costs | OpenAI, Gemini, Claude Pricing"
+        description="Compare AI model pricing from OpenAI, Google Gemini, Anthropic Claude, xAI, and more. Up-to-date pricing per 1M tokens, context windows, and cost comparison."
+        canonical="https://modelpk.com/pricing"
+        keywords="AI model pricing, LLM cost comparison, ChatGPT pricing, Claude pricing, Gemini pricing, AI API costs, token pricing"
+      />
       {/* Floating Header */}
       <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-200 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

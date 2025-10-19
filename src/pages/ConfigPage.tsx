@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label'
 import { ModelTag } from '@/components/config/ModelTag'
 import { ModelTypeahead } from '@/components/config/ModelTypeahead'
 import { SecurityWarning } from '@/components/SecurityWarning'
+import { SEO } from '@/components/SEO'
 import { providerConfigsActions } from '@/state/atoms/providerConfigsAtom'
 import type { ProviderConfig, TestResult, ProviderId } from '@/schemas/providerConfigSchema'
 import { DEFAULT_BASE_URLS, DEFAULT_PROVIDERS } from '@/schemas/providerConfigSchema'
@@ -86,6 +87,12 @@ export default function ConfigPage() {
 
   return (
     <>
+      <SEO
+        title="Configure AI Providers - Add API Keys | ModelPK"
+        description="Configure OpenAI, Gemini, Claude, xAI, and Ollama providers. Add API keys and select models for comparison. Secure, encrypted storage in your browser."
+        canonical="https://modelpk.com/config"
+        keywords="AI API configuration, OpenAI API key, Gemini API, Claude API, configure LLM providers"
+      />
       <AlertComponent />
       <ConfirmComponent />
 

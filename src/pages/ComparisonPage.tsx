@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { createLogger } from '@/services/logger'
+import { SEO } from '@/components/SEO'
 
 const log = createLogger('ComparisonPage')
 
@@ -479,6 +480,12 @@ export default function ComparisonPage() {
 
   return (
     <>
+      <SEO
+        title="PK Arena - Compare AI Models in Real-Time | ModelPK"
+        description="Test and compare AI models side-by-side. Race ChatGPT, Claude, Gemini, and other LLMs with the same prompt. Track speed, cost, and performance metrics in real-time."
+        canonical="https://modelpk.com/pk"
+        keywords="AI model testing, LLM comparison tool, ChatGPT speed test, Claude vs GPT-4, AI performance testing, model benchmarking"
+      />
       <AlertComponent />
 
       {/* Info Dialog */}

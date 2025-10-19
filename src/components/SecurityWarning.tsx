@@ -1,17 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 
 export function SecurityWarning() {
-  const [isInsecure, setIsInsecure] = useState(false)
   const [isDismissed, setIsDismissed] = useState(false)
 
-  useEffect(() => {
-    // Check if running on HTTP (not HTTPS or localhost)
+  // Compute insecure state directly without effect
+  const isInsecure = useMemo(() => {
     const isHttp = window.location.protocol === 'http:'
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-
-    if (isHttp && !isLocalhost) {
-      setIsInsecure(true)
-    }
+    return isHttp && !isLocalhost
   }, [])
 
   if (!isInsecure || isDismissed) {
