@@ -63,6 +63,11 @@ export async function sendComparisonRequest(
         result = await sendOpenRouterComparison(request)
         break
       }
+      case 'deepseek': {
+        const { sendDeepSeekComparison } = await import('./deepseekComparison')
+        result = await sendDeepSeekComparison(request)
+        break
+      }
       default:
         throw new Error(`Unknown provider: ${request.providerId}`)
     }

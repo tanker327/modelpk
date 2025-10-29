@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-10-18",
+  "lastUpdated": "2025-10-29",
   "currency": "USD",
   "models": {
     "openai": {
@@ -208,6 +208,36 @@
         "notes": "Free - runs locally"
       }
     },
+    "deepseek": {
+      "deepseek-chat": {
+        "inputPrice": 0.28,
+        "outputPrice": 0.42,
+        "unit": "per 1M tokens",
+        "contextWindow": 128000,
+        "notes": "Cache hit: $0.028 input. DeepSeek-V3.2-Exp (Non-thinking Mode)"
+      },
+      "deepseek-reasoner": {
+        "inputPrice": 0.28,
+        "outputPrice": 0.42,
+        "unit": "per 1M tokens",
+        "contextWindow": 128000,
+        "notes": "Cache hit: $0.028 input. DeepSeek-V3.2-Exp (Thinking Mode)"
+      },
+      "deepseek-v3": {
+        "inputPrice": 0.28,
+        "outputPrice": 0.42,
+        "unit": "per 1M tokens",
+        "contextWindow": 128000,
+        "notes": "Cache hit: $0.028 input"
+      },
+      "deepseek-v3.2-exp": {
+        "inputPrice": 0.28,
+        "outputPrice": 0.42,
+        "unit": "per 1M tokens",
+        "contextWindow": 128000,
+        "notes": "Cache hit: $0.028 input"
+      }
+    },
     "openrouter": {
       "anthropic/claude-3.5-sonnet": {
         "inputPrice": 3.00,
@@ -296,6 +326,7 @@
     "anthropic": "Prices from https://www.anthropic.com/pricing",
     "xai": "Prices from https://x.ai/api",
     "ollama": "All Ollama models are free as they run locally",
-    "openrouter": "Prices from https://openrouter.ai/models - may include markup"
+    "openrouter": "Prices from https://openrouter.ai/models - may include markup",
+    "deepseek": "Prices from https://api-docs.deepseek.com/quick_start/pricing - includes cache pricing"
   }
 }

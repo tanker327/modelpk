@@ -20,6 +20,7 @@ let testResultsState: TestResultsState = {
     xai: { providerId: 'xai', status: 'idle' },
     ollama: { providerId: 'ollama', status: 'idle' },
     openrouter: { providerId: 'openrouter', status: 'idle' },
+    deepseek: { providerId: 'deepseek', status: 'idle' },
   },
 }
 
@@ -135,6 +136,7 @@ export const testResultsActions = {
         xai: { providerId: 'xai', status: 'idle' },
         ollama: { providerId: 'ollama', status: 'idle' },
         openrouter: { providerId: 'openrouter', status: 'idle' },
+        deepseek: { providerId: 'deepseek', status: 'idle' },
       },
     }
     log.debug('[testResults] Cleared all test results')

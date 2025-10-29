@@ -1,6 +1,6 @@
 # AI Model Pricing Documentation
 
-**Last Updated:** 2025-10-18
+**Last Updated:** 2025-10-29
 **Currency:** USD
 
 This document provides a comprehensive overview of pricing for all AI models supported by AI Racers. All prices are per 1 million tokens unless otherwise specified.
@@ -14,6 +14,7 @@ This document provides a comprehensive overview of pricing for all AI models sup
 - [Anthropic Claude Models](#anthropic-claude-models)
 - [xAI Grok Models](#xai-grok-models)
 - [Ollama Models](#ollama-models)
+- [DeepSeek Models](#deepseek-models)
 - [OpenRouter Models](#openrouter-models)
 - [Pricing Verification](#pricing-verification)
 
@@ -156,6 +157,27 @@ This document provides a comprehensive overview of pricing for all AI models sup
 
 ---
 
+## DeepSeek Models
+
+**Source:** [https://api-docs.deepseek.com/quick_start/pricing](https://api-docs.deepseek.com/quick_start/pricing)
+
+### DeepSeek V3 Series
+
+| Model | Input Price | Output Price | Context Window | Notes |
+|-------|-------------|--------------|----------------|-------|
+| deepseek-chat | $0.28 | $0.42 | 128K | Cache hit: $0.028 input. V3.2-Exp (Non-thinking Mode) |
+| deepseek-reasoner | $0.28 | $0.42 | 128K | Cache hit: $0.028 input. V3.2-Exp (Thinking Mode) |
+| deepseek-v3 | $0.28 | $0.42 | 128K | Cache hit: $0.028 input |
+| deepseek-v3.2-exp | $0.28 | $0.42 | 128K | Cache hit: $0.028 input |
+
+**Cache Pricing:**
+- Cache Miss: $0.28 per 1M input tokens
+- Cache Hit: $0.028 per 1M input tokens (90% discount)
+
+**Note:** DeepSeek offers exceptional value, being significantly cheaper than comparable models. The context caching feature provides significant savings (90% off) for repeated prompts.
+
+---
+
 ## OpenRouter Models
 
 **Source:** [https://openrouter.ai/models](https://openrouter.ai/models)
@@ -211,13 +233,14 @@ OpenRouter provides unified access to multiple AI providers. Pricing may include
 
 ### How Pricing is Verified
 
-All pricing data in this document has been verified against official sources as of 2025-10-18:
+All pricing data in this document has been verified against official sources as of 2025-10-29:
 
 1. **OpenAI:** Verified via web search and official API documentation
 2. **Google Gemini:** Verified via official pricing page (ai.google.dev/gemini-api/docs/pricing)
 3. **Anthropic Claude:** Verified via official pricing page (claude.com/pricing)
 4. **xAI Grok:** Verified via official API documentation (docs.x.ai/docs/models)
-5. **OpenRouter:** Pricing reflects pass-through costs with potential markup
+5. **DeepSeek:** Verified via official pricing page (api-docs.deepseek.com/quick_start/pricing)
+6. **OpenRouter:** Pricing reflects pass-through costs with potential markup
 
 ### Fuzzy Model Matching
 
@@ -273,6 +296,7 @@ Several providers offer significant discounts for cached tokens:
 - **OpenAI GPT-5:** 90% discount on repeated input tokens
 - **Anthropic Claude:** Up to 90% discount with prompt caching
 - **xAI Grok:** 75% discount on cached input tokens
+- **DeepSeek:** 90% discount on cache hits ($0.028 vs $0.28 per 1M tokens)
 
 These discounts are not reflected in the cost estimates shown in the UI.
 
