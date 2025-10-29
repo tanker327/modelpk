@@ -165,16 +165,16 @@ This document provides a comprehensive overview of pricing for all AI models sup
 
 | Model | Input Price | Output Price | Context Window | Notes |
 |-------|-------------|--------------|----------------|-------|
-| deepseek-chat | $0.56 | $1.68 | 64K | Cache hit: $0.07 input. Now using V3.2-Exp model |
-| deepseek-reasoner | $0.56 | $1.68 | 64K | Cache hit: $0.07 input. Thinking mode with reasoning tokens |
-| deepseek-v3 | $0.56 | $1.68 | 64K | Cache hit: $0.07 input |
-| deepseek-v3.2-exp | $0.028 | $1.68 | 64K | Experimental model with 50% reduced input cost |
+| deepseek-chat | $0.28 | $0.42 | 128K | Cache hit: $0.028 input. V3.2-Exp (Non-thinking Mode) |
+| deepseek-reasoner | $0.28 | $0.42 | 128K | Cache hit: $0.028 input. V3.2-Exp (Thinking Mode) |
+| deepseek-v3 | $0.28 | $0.42 | 128K | Cache hit: $0.028 input |
+| deepseek-v3.2-exp | $0.28 | $0.42 | 128K | Cache hit: $0.028 input |
 
 **Cache Pricing:**
-- Cache Miss: $0.56 per 1M input tokens
-- Cache Hit: $0.07 per 1M input tokens (87.5% discount)
+- Cache Miss: $0.28 per 1M input tokens
+- Cache Hit: $0.028 per 1M input tokens (90% discount)
 
-**Note:** DeepSeek offers exceptional value, being up to 30x cheaper than comparable models. The context caching feature provides significant savings for repeated prompts.
+**Note:** DeepSeek offers exceptional value, being significantly cheaper than comparable models. The context caching feature provides significant savings (90% off) for repeated prompts.
 
 ---
 
@@ -296,7 +296,7 @@ Several providers offer significant discounts for cached tokens:
 - **OpenAI GPT-5:** 90% discount on repeated input tokens
 - **Anthropic Claude:** Up to 90% discount with prompt caching
 - **xAI Grok:** 75% discount on cached input tokens
-- **DeepSeek:** 87.5% discount on cache hits ($0.07 vs $0.56 per 1M tokens)
+- **DeepSeek:** 90% discount on cache hits ($0.028 vs $0.28 per 1M tokens)
 
 These discounts are not reflected in the cost estimates shown in the UI.
 

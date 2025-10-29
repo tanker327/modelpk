@@ -210,32 +210,32 @@
     },
     "deepseek": {
       "deepseek-chat": {
-        "inputPrice": 0.56,
-        "outputPrice": 1.68,
+        "inputPrice": 0.28,
+        "outputPrice": 0.42,
         "unit": "per 1M tokens",
-        "contextWindow": 64000,
-        "notes": "Cache hit: $0.07 input. Now using V3.2-Exp model"
+        "contextWindow": 128000,
+        "notes": "Cache hit: $0.028 input. DeepSeek-V3.2-Exp (Non-thinking Mode)"
       },
       "deepseek-reasoner": {
-        "inputPrice": 0.56,
-        "outputPrice": 1.68,
+        "inputPrice": 0.28,
+        "outputPrice": 0.42,
         "unit": "per 1M tokens",
-        "contextWindow": 64000,
-        "notes": "Cache hit: $0.07 input. Thinking mode with reasoning tokens"
+        "contextWindow": 128000,
+        "notes": "Cache hit: $0.028 input. DeepSeek-V3.2-Exp (Thinking Mode)"
       },
       "deepseek-v3": {
-        "inputPrice": 0.56,
-        "outputPrice": 1.68,
+        "inputPrice": 0.28,
+        "outputPrice": 0.42,
         "unit": "per 1M tokens",
-        "contextWindow": 64000,
-        "notes": "Cache hit: $0.07 input"
+        "contextWindow": 128000,
+        "notes": "Cache hit: $0.028 input"
       },
       "deepseek-v3.2-exp": {
-        "inputPrice": 0.028,
-        "outputPrice": 1.68,
+        "inputPrice": 0.28,
+        "outputPrice": 0.42,
         "unit": "per 1M tokens",
-        "contextWindow": 64000,
-        "notes": "Experimental model with 50% reduced input cost"
+        "contextWindow": 128000,
+        "notes": "Cache hit: $0.028 input"
       }
     },
     "openrouter": {
