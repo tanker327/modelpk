@@ -23,7 +23,9 @@
 import log from 'loglevel'
 
 // Configure log level based on environment
-const LOG_LEVEL = import.meta.env.PROD ? 'warn' : 'info'
+// Use process.env.NODE_ENV which works in both Vite and Jest
+const isProduction = process.env.NODE_ENV === 'production'
+const LOG_LEVEL = isProduction ? 'warn' : 'info'
 
 // Set the log level
 log.setLevel(LOG_LEVEL as log.LogLevelDesc)
@@ -88,7 +90,8 @@ export function setLogLevel(level: 'trace' | 'debug' | 'info' | 'warn' | 'error'
   logger.setLevel(level)
 }
 
-// Log the current log level on startup (only in development)
-if (import.meta.env.DEV) {
+// Log the current log level on startup (only in development, not in tests)
+const isDevelopment = process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test'
+if (isDevelopment) {
   logger.info(`Log level set to: ${LOG_LEVEL}`)
 }
