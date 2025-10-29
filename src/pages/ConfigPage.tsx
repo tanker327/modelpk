@@ -21,6 +21,7 @@ import { testAnthropicConnection } from '@/services/providers/anthropicProvider'
 import { testXAIConnection } from '@/services/providers/xaiProvider'
 import { testOllamaConnection } from '@/services/providers/ollamaProvider'
 import { testOpenRouterConnection } from '@/services/providers/openrouterProvider'
+import { testDeepSeekConnection } from '@/services/providers/deepseekProvider'
 import { useConfigBackup } from '@/hooks/useConfigBackup'
 import { clearAllConfigs, clearAllData } from '@/services/storage/configStorage'
 import { useAlert, useConfirm } from '@/components/ui/alert-dialog'
@@ -46,6 +47,7 @@ export default function ConfigPage() {
       xai: { providerId: 'xai', status: 'idle' },
       ollama: { providerId: 'ollama', status: 'idle' },
       openrouter: { providerId: 'openrouter', status: 'idle' },
+      deepseek: { providerId: 'deepseek', status: 'idle' },
     },
   })
   const [loading, setLoading] = useState(true)
@@ -494,6 +496,9 @@ function ProviderCard({ config, testResult, onTestUpdate }: ProviderCardProps) {
           break
         case 'openrouter':
           result = await testOpenRouterConnection(testConfig)
+          break
+        case 'deepseek':
+          result = await testDeepSeekConnection(testConfig)
           break
         default:
           result = { success: false, error: 'Unknown provider' }

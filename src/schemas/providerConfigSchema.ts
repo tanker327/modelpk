@@ -8,6 +8,7 @@ export const ProviderIdSchema = z.enum([
   'xai',
   'ollama',
   'openrouter',
+  'deepseek',
 ])
 
 export type ProviderId = z.infer<typeof ProviderIdSchema>
@@ -80,6 +81,11 @@ export const DEFAULT_PROVIDERS: Omit<ProviderConfig, 'config'>[] = [
     name: 'Ollama',
     enabled: false,
   },
+  {
+    id: 'deepseek',
+    name: 'DeepSeek',
+    enabled: false,
+  },
 ]
 
 // Default base URLs for providers
@@ -90,6 +96,7 @@ export const DEFAULT_BASE_URLS: Record<ProviderId, string> = {
   xai: 'https://api.x.ai/v1',
   ollama: 'http://localhost:11434',
   openrouter: 'https://openrouter.ai/api/v1',
+  deepseek: 'https://api.deepseek.com/v1',
 }
 
 // Validation helpers
