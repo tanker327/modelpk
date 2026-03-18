@@ -1,6 +1,6 @@
 # AI Model Pricing Documentation
 
-**Last Updated:** 2025-10-29
+**Last Updated:** 2026-03-18
 **Currency:** USD
 
 This document provides a comprehensive overview of pricing for all AI models supported by AI Racers. All prices are per 1 million tokens unless otherwise specified.
@@ -24,30 +24,54 @@ This document provides a comprehensive overview of pricing for all AI models sup
 
 **Source:** [https://openai.com/api/pricing/](https://openai.com/api/pricing/)
 
+### GPT-5.4 Series (Latest)
+
+| Model | Input Price | Output Price | Context Window | Notes |
+|-------|-------------|--------------|----------------|-------|
+| gpt-5.4 | $2.50 | $15.00 | 1.05M | Latest flagship, 50% batch discount |
+| gpt-5.4-mini | $0.75 | $4.50 | 400K | |
+| gpt-5.4-nano | $0.20 | $1.25 | 400K | |
+
 ### GPT-5 Series
 
 | Model | Input Price | Output Price | Context Window | Notes |
 |-------|-------------|--------------|----------------|-------|
-| gpt-5 | $1.25 | $10.00 | 272K | 90% cache discount on repeated tokens |
-| gpt-5-mini | $0.25 | $2.00 | 272K | 80% of GPT-5 performance at 20% cost |
-| gpt-5-nano | $0.05 | $0.40 | 272K | Most economical GPT-5 variant |
+| gpt-5.2 | $1.75 | $14.00 | 400K | |
+| gpt-5 | $1.25 | $10.00 | 400K | 90% cache discount on repeated tokens |
+| gpt-5-mini | $0.25 | $2.00 | 400K | |
 
-### GPT-4 Series
-
-| Model | Input Price | Output Price | Context Window | Notes |
-|-------|-------------|--------------|----------------|-------|
-| gpt-4o | $2.50 | $10.00 | 128K | Optimized for chat |
-| gpt-4o-mini | $0.15 | $0.60 | 128K | Cost-efficient with vision |
-| gpt-4-turbo | $10.00 | $30.00 | 128K | High-performance variant |
-| gpt-4 | $30.00 | $60.00 | 8K | Legacy model |
-
-### GPT-3.5 Series
+### GPT-4.1 Series
 
 | Model | Input Price | Output Price | Context Window | Notes |
 |-------|-------------|--------------|----------------|-------|
-| gpt-3.5-turbo | $0.50 | $1.50 | 16K | Fast and cost-effective |
+| gpt-4.1 | $2.00 | $8.00 | 1M | |
+| gpt-4.1-mini | $0.40 | $1.60 | 1M | |
+| gpt-4.1-nano | $0.10 | $0.40 | 1M | Most economical OpenAI model |
 
-**Model Matching:** The pricing service automatically matches versioned models (e.g., `gpt-5-mini-2025-08-07`) to their base pricing.
+### Reasoning Models (o-series)
+
+| Model | Input Price | Output Price | Context Window | Notes |
+|-------|-------------|--------------|----------------|-------|
+| o3 | $2.00 | $8.00 | 200K | Reasoning tokens billed as output |
+| o3-mini | $1.10 | $4.40 | 200K | Reasoning tokens billed as output |
+| o4-mini | $1.10 | $4.40 | 200K | Reasoning tokens billed as output |
+| o1 | $15.00 | $60.00 | 200K | Legacy reasoning model |
+
+### GPT-4o Series
+
+| Model | Input Price | Output Price | Context Window | Notes |
+|-------|-------------|--------------|----------------|-------|
+| gpt-4o | $2.50 | $10.00 | 128K | |
+| gpt-4o-mini | $0.15 | $0.60 | 128K | |
+
+### Legacy Models
+
+| Model | Input Price | Output Price | Context Window | Notes |
+|-------|-------------|--------------|----------------|-------|
+| gpt-4-turbo | $10.00 | $30.00 | 128K | Legacy |
+| gpt-3.5-turbo | $0.25 | $0.75 | 16K | Superseded by GPT-4o Mini |
+
+**Model Matching:** The pricing service automatically matches versioned models (e.g., `gpt-5.4-mini-2026-03-17`) to their base pricing.
 
 ---
 
@@ -55,28 +79,34 @@ This document provides a comprehensive overview of pricing for all AI models sup
 
 **Source:** [https://ai.google.dev/gemini-api/docs/pricing](https://ai.google.dev/gemini-api/docs/pricing)
 
+### Gemini 3 Series (Preview)
+
+| Model | Input Price | Output Price | Context Window | Notes |
+|-------|-------------|--------------|----------------|-------|
+| gemini-3-pro | $2.00 | $12.00 | 1M | Preview. Extended context (>200K): $4.00 in, $18.00 out |
+| gemini-3-flash | $0.50 | $3.00 | 1M | Preview |
+
 ### Gemini 2.5 Series
 
 | Model | Input Price | Output Price | Context Window | Notes |
 |-------|-------------|--------------|----------------|-------|
-| gemini-2.5-pro | $1.25 | $10.00 | 2M | Extended context (>200K): $2.50 in, $15.00 out |
-| gemini-2.5-flash | $0.30 | $2.50 | 1M | Balanced performance |
+| gemini-2.5-pro | $1.25 | $10.00 | 2M | Extended context (>200K): $2.50 in, $20.00 out |
+| gemini-2.5-flash | $0.30 | $2.50 | 1M | Flat pricing regardless of context |
 | gemini-2.5-flash-lite | $0.10 | $0.40 | 1M | Fastest, most cost-efficient |
 
-### Gemini 2.0 Series
+### Gemini 2.0 Series (Deprecated)
 
 | Model | Input Price | Output Price | Context Window | Notes |
 |-------|-------------|--------------|----------------|-------|
-| gemini-2.0-flash | $0.10 | $0.40 | 1M | Fast processing |
-| gemini-2.0-flash-lite | $0.075 | $0.30 | 1M | Even more economical |
-| gemini-2.0-flash-exp | $0.00 | $0.00 | 1M | Free during preview |
+| gemini-2.0-flash | $0.10 | $0.40 | 1M | Deprecated, shutting down June 1, 2026 |
+| gemini-2.0-flash-lite | $0.075 | $0.30 | 1M | Deprecated |
 
 ### Gemini 1.5 Series
 
 | Model | Input Price | Output Price | Context Window | Notes |
 |-------|-------------|--------------|----------------|-------|
 | gemini-1.5-pro | $1.25 | $5.00 | 2M | Advanced reasoning |
-| gemini-1.5-flash | $0.075 | $0.30 | 1M | 70%+ price reduction |
+| gemini-1.5-flash | $0.075 | $0.30 | 1M | |
 
 ### Gemini 1.0 Series
 
@@ -90,13 +120,28 @@ This document provides a comprehensive overview of pricing for all AI models sup
 
 **Source:** [https://claude.com/pricing](https://claude.com/pricing)
 
+### Claude 4.6 Series (Latest)
+
+| Model | Input Price | Output Price | Context Window | Notes |
+|-------|-------------|--------------|----------------|-------|
+| claude-opus-4.6 | $5.00 | $25.00 | 1M | Latest flagship, 1M context at standard pricing |
+| claude-sonnet-4.6 | $3.00 | $15.00 | 1M | 1M context at standard pricing |
+
+### Claude 4.5 Series
+
+| Model | Input Price | Output Price | Context Window | Notes |
+|-------|-------------|--------------|----------------|-------|
+| claude-opus-4.5 | $5.00 | $25.00 | 1M | |
+| claude-sonnet-4.5 | $3.00 | $15.00 | 1M | 1M context now at standard pricing (no surcharge) |
+| claude-haiku-4.5 | $1.00 | $5.00 | 200K | Fast and efficient |
+
 ### Claude 4.x Series
 
 | Model | Input Price | Output Price | Context Window | Notes |
 |-------|-------------|--------------|----------------|-------|
-| claude-opus-4.1 | $15.00 | $75.00 | 200K | Highest capability |
-| claude-sonnet-4.5 | $3.00 | $15.00 | 200K | Extended context (>200K): $6.00 in, $22.50 out |
-| claude-haiku-4.5 | $1.00 | $5.00 | 200K | Fast and efficient |
+| claude-opus-4.1 | $15.00 | $75.00 | 200K | |
+| claude-opus-4 | $15.00 | $75.00 | 200K | |
+| claude-sonnet-4 | $3.00 | $15.00 | 200K | |
 
 ### Claude 3.5 Series
 
@@ -113,7 +158,7 @@ This document provides a comprehensive overview of pricing for all AI models sup
 | claude-3-sonnet-20240229 | $3.00 | $15.00 | 200K | Balanced |
 | claude-3-haiku-20240307 | $0.25 | $1.25 | 200K | Fastest, most affordable |
 
-**Note:** Prompt caching available with up to 90% cost savings on cached tokens.
+**Note:** Prompt caching available with up to 90% cost savings on cached tokens. Batch API offers 50% discount.
 
 ---
 
@@ -121,27 +166,35 @@ This document provides a comprehensive overview of pricing for all AI models sup
 
 **Source:** [https://x.ai/api](https://x.ai/api) | [https://docs.x.ai/docs/models](https://docs.x.ai/docs/models)
 
-### Grok 4 Fast Series
+### Grok 4 Series
 
 | Model | Input Price | Output Price | Context Window | Notes |
 |-------|-------------|--------------|----------------|-------|
-| grok-4-fast | $0.20 | $0.50 | 2M | Unified reasoning/non-reasoning |
-| grok-4-fast-reasoning | $0.20 | $0.50 | 2M | With reasoning capabilities |
-| grok-4-fast-non-reasoning | $0.20 | $0.50 | 2M | Without reasoning overhead |
+| grok-4 | $3.00 | $15.00 | 256K | Flagship. Cached: $0.75 input |
+| grok-4.20-beta | $2.00 | $6.00 | 2M | Beta. Reasoning & non-reasoning variants. Cached: $0.20 input |
 
-**Extended Context Pricing (>128K tokens):**
-- Input: $0.40 per 1M tokens
-- Output: $1.00 per 1M tokens
-- Cached Input: $0.05 per 1M tokens
-
-### Grok Beta Series
+### Grok Fast Series
 
 | Model | Input Price | Output Price | Context Window | Notes |
 |-------|-------------|--------------|----------------|-------|
-| grok-beta | $5.00 | $15.00 | 131K | Earlier version |
-| grok-vision-beta | $5.00 | $15.00 | 8K | With vision capabilities |
+| grok-4.1-fast | $0.20 | $0.50 | 2M | Latest fast model. Cached: $0.05 input |
+| grok-4-fast | $0.20 | $0.50 | 2M | Extended context (>128K): $0.40 in, $1.00 out |
 
-**Note:** Grok 4 Fast offers significantly better value than Beta models.
+### Grok 3 Series
+
+| Model | Input Price | Output Price | Context Window | Notes |
+|-------|-------------|--------------|----------------|-------|
+| grok-3 | $3.00 | $15.00 | 131K | Cached: $0.75 input |
+| grok-3-mini | $0.30 | $0.50 | 131K | Cached: $0.07 input |
+
+### Grok Beta Series (Legacy)
+
+| Model | Input Price | Output Price | Context Window | Notes |
+|-------|-------------|--------------|----------------|-------|
+| grok-beta | $5.00 | $15.00 | 131K | Legacy |
+| grok-vision-beta | $5.00 | $15.00 | 8K | Legacy, with vision |
+
+**Note:** Batch API offers 50% discount. New user credits: $25 free on signup.
 
 ---
 
@@ -161,20 +214,18 @@ This document provides a comprehensive overview of pricing for all AI models sup
 
 **Source:** [https://api-docs.deepseek.com/quick_start/pricing](https://api-docs.deepseek.com/quick_start/pricing)
 
-### DeepSeek V3 Series
+### DeepSeek V3.2 (Current)
 
 | Model | Input Price | Output Price | Context Window | Notes |
 |-------|-------------|--------------|----------------|-------|
-| deepseek-chat | $0.28 | $0.42 | 128K | Cache hit: $0.028 input. V3.2-Exp (Non-thinking Mode) |
-| deepseek-reasoner | $0.28 | $0.42 | 128K | Cache hit: $0.028 input. V3.2-Exp (Thinking Mode) |
-| deepseek-v3 | $0.28 | $0.42 | 128K | Cache hit: $0.028 input |
-| deepseek-v3.2-exp | $0.28 | $0.42 | 128K | Cache hit: $0.028 input |
+| deepseek-chat | $0.28 | $0.42 | 128K | Cache hit: $0.028 input. V3.2 (Non-thinking Mode) |
+| deepseek-reasoner | $0.28 | $0.42 | 128K | Cache hit: $0.028 input. V3.2 (Thinking Mode) |
 
 **Cache Pricing:**
 - Cache Miss: $0.28 per 1M input tokens
 - Cache Hit: $0.028 per 1M input tokens (90% discount)
 
-**Note:** DeepSeek offers exceptional value, being significantly cheaper than comparable models. The context caching feature provides significant savings (90% off) for repeated prompts.
+**Note:** DeepSeek-V3.2 replaces both the older DeepSeek-V3 and DeepSeek-R1 with a unified model. The deprecated `deepseek-v3` and `deepseek-v3.2-exp` model IDs have been removed.
 
 ---
 
@@ -233,12 +284,12 @@ OpenRouter provides unified access to multiple AI providers. Pricing may include
 
 ### How Pricing is Verified
 
-All pricing data in this document has been verified against official sources as of 2025-10-29:
+All pricing data in this document has been verified against official sources as of 2026-03-18:
 
-1. **OpenAI:** Verified via web search and official API documentation
+1. **OpenAI:** Verified via official API pricing page (openai.com/api/pricing/)
 2. **Google Gemini:** Verified via official pricing page (ai.google.dev/gemini-api/docs/pricing)
 3. **Anthropic Claude:** Verified via official pricing page (claude.com/pricing)
-4. **xAI Grok:** Verified via official API documentation (docs.x.ai/docs/models)
+4. **xAI Grok:** Verified via official API documentation (docs.x.ai/developers/models)
 5. **DeepSeek:** Verified via official pricing page (api-docs.deepseek.com/quick_start/pricing)
 6. **OpenRouter:** Pricing reflects pass-through costs with potential markup
 
@@ -246,8 +297,8 @@ All pricing data in this document has been verified against official sources as 
 
 The pricing service includes intelligent model name matching:
 
-- **Date suffix removal:** `gpt-5-mini-2025-08-07` → `gpt-5-mini`
-- **Version normalization:** `claude-sonnet-4.5-v2` → `claude-sonnet-4.5`
+- **Date suffix removal:** `gpt-5.4-mini-2026-03-17` → `gpt-5.4-mini`
+- **Version normalization:** `claude-sonnet-4.6-v2` → `claude-sonnet-4.6`
 - **Longest match priority:** More specific model names take precedence
 
 This ensures pricing works automatically for new model versions without requiring JSON updates.
@@ -283,9 +334,9 @@ totalCost = inputCost + outputCost
 
 Some models have different pricing for different context lengths:
 
-- **Gemini 2.5 Pro:** Prices double for prompts > 200K tokens
-- **Claude Sonnet 4.5:** Prices increase 50-100% for prompts > 200K tokens
-- **Grok 4 Fast:** Prices increase 2.5x for contexts > 128K tokens
+- **Gemini 2.5 Pro:** Input doubles, output doubles for prompts > 200K tokens
+- **Gemini 3 Pro:** Input doubles, output 1.5x for prompts > 200K tokens
+- **Grok 4 Fast:** Prices increase 2x for contexts > 128K tokens
 
 The pricing service currently uses base-tier pricing for cost estimates.
 
@@ -294,11 +345,19 @@ The pricing service currently uses base-tier pricing for cost estimates.
 Several providers offer significant discounts for cached tokens:
 
 - **OpenAI GPT-5:** 90% discount on repeated input tokens
-- **Anthropic Claude:** Up to 90% discount with prompt caching
-- **xAI Grok:** 75% discount on cached input tokens
+- **Anthropic Claude:** Up to 90% discount with prompt caching (cache reads at 0.1x base)
+- **xAI Grok:** 75-90% discount on cached input tokens
 - **DeepSeek:** 90% discount on cache hits ($0.028 vs $0.28 per 1M tokens)
 
 These discounts are not reflected in the cost estimates shown in the UI.
+
+### Batch API Discounts
+
+Most providers now offer batch/async API pricing at 50% off standard rates:
+
+- **OpenAI:** 50% off all models via Batch API
+- **Anthropic:** 50% off via Batch API
+- **xAI:** 50% off via Batch API
 
 ### Free Tiers and Limits
 
